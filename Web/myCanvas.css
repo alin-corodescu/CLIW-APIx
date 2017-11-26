@@ -1,3 +1,12 @@
+.header{
+	background-color: blue;
+	display: flex;
+	justify-content: left;
+	padding: 10px 10px 10px 10px;
+}
+.header > .title{
+	font-size:40px;
+}
 .container {
   display: flex;
   justify-content: center;
@@ -27,6 +36,29 @@
 .icon-background{
 	color: black;
 }
+
+
+/* CSS style for transition */
+.transition a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+}
+
+.transition a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.transition a:hover:not(.active) {
+	background-color: #ddd;}
+
+/*----------------------------*/
+
+
+
 @media (max-width:699px){
 	.icon{
 	font-size:24px !important;
