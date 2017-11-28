@@ -1,0 +1,25 @@
+#container {
+    display: flex;
+	align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+}
+body {
+	width: 100%;
+	height: 100%;
+	color: rgba(33,150,243,1);
+}
+html {
+	height:100%;
+}
+#qrButton {
+	background: none;
+	border: none;
+	font-size:4em;
+}
+
+#qrIcon {
+    font-size: 3em;
+    color: rgba(233,30,99,0.7);
+}
