@@ -18,7 +18,5 @@ function updateColorPickerButton() {
         x[i].style.color = color;
         if (x[i].id == "colorButton")
         	x[i].style.backgroundColor = color;
-
-
     }
 }

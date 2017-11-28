@@ -4,7 +4,7 @@
 }
 #colorPicker {
 	position: absolute;
-	display: none;
+	visibility: hidden;
 }
 #colorButton {
 	width: 100px;
@@ -43,6 +43,7 @@
 body {
 	width: 100%;
 	height: 100%;
+	background-image: url("../memphis-colorful.png");
 }
 html {
 	height:100%;
