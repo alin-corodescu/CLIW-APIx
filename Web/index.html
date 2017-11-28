@@ -6,30 +6,32 @@
 	<link rel="stylesheet" type="text/css" href=".\css\shared.css">
 	<link rel="stylesheet" type="text/css" href=".\css\icons.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<script src=".\js\toggle.js"></script>
 	<meta charset="UTF-8">
 	<title>APix</title>
 </head>
 
 	<body class="body">
       	
-      <header class="header">
-	 	<div class="header-home">
-	 		<h2>LOGO APix: Doodling around with friends!<h2>
-		</div>
-	 	<ul class="header-functions">
-	        <li> <a href="#"> <h3>Log in</h3> </a> </li>
-	        <li> <a href="#"><h3>Sign up</h3></a> </li>
-	 	</ul>
-	</header>
-      	<section>
-			<div class="container">
-				<div class="action-bar">
-					<i class="material-icons icon">&#xE2C4;</i>&nbsp;
-					<i class="material-icons icon icon-share">&#xE7F0;</i>&nbsp;
-					<i class="material-icons icon icon-trash">&#xE872;</i>&nbsp;
-				</div>
+	    <header class="header">
+		 	<div class="header-home">
+			 	<div>
+			 		<button onclick="toggle()">LOGO</button>
+			 		APix: Doodling around with friends!
+			 	</div>
 			</div>
-			<div class="container">
+		 	<ul class="header-functions">
+		        <li> <a href="#"> <h3>Log in</h3> </a> </li>
+		        <li> <a href="#"><h3>Sign up</h3></a> </li>
+		 	</ul>
+		</header>
+		<div class="big-container">
+			<div class="action-bar vertical" id="toggle">
+				<i class="material-icons icon">&#xE2C4;</i>&nbsp;
+				<i class="material-icons icon icon-share">&#xE7F0;</i>&nbsp;
+				<i class="material-icons icon icon-trash">&#xE872;</i>&nbsp;
+			</div>
+	      	<div class="canvas-container">
 				<canvas class="apix-canvas">
 				</canvas>
 				<aside class="canvas-options">
@@ -42,7 +44,8 @@
 					</div>
 				</aside>
 			</div>
-			<div class="container">
+		</div>
+		<div class="container">
 				<nav class="transition">
 					<a href="#">&laquo;</a>
 					<a href="#">1</a>
@@ -53,16 +56,11 @@
 					<a href="#">6</a>
 					<a href="#">&raquo;</a>
 				</nav>
-			</div>
-		</section>
-
-		<section class="container">
-			<footer>
-			  <p>Faculty of Computer Science Iasi</p>
-			  <p>Contact information: <a href="mailto:APix@info.uaic.ro">
-			  APix@info.uaic.ro.com</a>.</p>
-			</footer>
-		</section>
-
+		</div>
+		<footer>
+		  <p>Faculty of Computer Science Iasi</p>
+		  <p>Contact information: <a href="mailto:APix@info.uaic.ro">
+		  APix@info.uaic.ro.com</a>.</p>
+		</footer>
 	</body>
 </html>
