@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>APix</title>
+  <link rel="stylesheet" href="scholarly.css">
+  <!-- <link rel="stylesheet" href="node_modules/prismjs/themes/prism-coy.css">
+  <script src="node_modules/prismjs/prism.js" defer></script> -->
+</head>
+<body prefix="schema: http://schema.org/ xsd: http://www.w3.org/2001/XMLSchema# sa: https://ns.science.ai/">
+  <header>
+    <p class="title">APix</p>
+    <p class="subtitle">Documentation & Overview</p>
+  </header>
+  <article id="what" typeof="schema:ScholarlyArticle" resource="#">
+    <h1>Documentatie APix</h1>
+    <section>
+      <ol>
+        <li property="schema:author" typeof="sa:ContributorRole">
+          <a property="schema:author" typeof="schema:Person">
+            <span property="schema:givenName">Corodescu</span>
+            <span property="schema:familyName">Alin Andrei, </span>
+          </a>
+          <a property="schema:author" typeof="schema:Person">
+            <span property="schema:givenName">Humă</span>
+            <span property="schema:familyName">Cristian </span>
+          </a>
+
+        </li>
+      </ol>
+    </section>
+    <section typeof="sa:Abstract" id="abstract">
+      <h2>Abstract</h2>
+      <p>
+      	APix este o aplicație web care urmărește să ofere posibilitatea lucrului in echipă, de la distanță, pentru a crea un desen, o diagrama sau orice altceva, ce implică lucru grafic.
+      	Aplicația dorește să ofere un mod inedit de colaborare asupra mediului de lucru, participantii putând lucra de pe desktop, cat si de pe telefon (android mai exact). Aplicația urmărește să ofere posibitatea participării de pe un sistem desktop cât și de pe unul mobil, într-un browser insă pe lânga acestea se va putea utiliza o aplicație android care va juca rol de pointer. Totodată, se oferă posibilitatea export-ului rezultatului sub forma de GIF, PNG şi SVG. Aplicatia va încerca să respecte recomandari legate de HTML 5 cât și de utilizarea javascript-ului.
+    </section>
+    <section typeof="sa:MaterialsAndMethods" id="motivation">
+      <h2>Motivație</h2>
+      <p>
+        Aplicațiile asemănătoare existente la momentul actual ofera într-adevăr foarte multe instrumente digitale pentru a obține diverse efecte, însă nu oferă portabilitatea, spre a putea fi folosite și alte device-uri, nu doar un calculator personal, ci chiar telefonul mobil din buzunar. 
+      <p>
+        Aplicația dorește a eficientiza procesul de creare/colaborare pentru participanți/useri.
+      </p>
+    </section>
+
+
+
+
+
+    <section typeof="sa:Results" id="definition">
+      <h2>Descrierea aplicației</h2>
+      <p>
+        APix este o aplicație web cu suport pe telefoane android, în care se poate desena colobarativ, fie de pe telefon, fie de pe un calculator. Participantii se vor autentifica folosind un cont pentru ca apoi sa poata colabora cu prietenii/colegii lor. Aplicația oferă multiple instrumente de desenat dar și alte funcții suplimentare: import-ul de imagini care vor reprezenta background-ul "pânzei", export-ul sub forma de GIF, PNG şi SVG și utilizarea telefonului mobil (android) drept pointer, un lucru foarte util în cadrul unei prezentări.
+      </p>
+
+      <p>
+        Fiind in primul rând o aplicație web, pentru realizarea acesteia am utilizat HTML5, CSS3 și JavaScript pentru partea de front-end. Pe partea de back-end am utilizat limbajul PHP, care facilitează dezvoltarea rapida și eficientă aplicației. Pentru stocarea de informații soluția aleasă este utilizarea unei baze de date MySql.
+      </p>
+      <p>
+      	Pe partea de Android ...
+      </p>
+
+
+
+    </section>
+
+
+
+    <section id="file-headers">
+      <h2>Arhitectura aplicației</h2>
+      <br>
+	      <img src=".\arhitectura.png" alt="Diagrama arhitecturală"/>
+	      <p class="imagetext">Fig. 1 - Diagrama arhitecturală a aplicației <br>
+	      Arhitectura pune în evidență modularitatea aplicației astfel încât odată cu apariția unor noi surse de interese
+	      (Junio,Linkedin) aceasta va putea ține pasul și nu  va necesita un efort considerabil pentru a o extinde.
+	      </p>
+
+      <h3> Workflow-ul aplicației</h3>
+      <p>
+      	Pentru un nou venit în aplicație lucrurile decurg destul de simplu astfel încât odată intrat el poate desena după bunul plac folosind diversele opțiuni de desenare, își poate exporta munca în formatele oferite și totodată poate importa o imagine ce va servi drept background pentru canvas-ul curent. 
+      	Pentru a lucra în echipă este necesar să se autentifice/înregistreze în aplicație.
+      </p>
+      <p>
+      	Odată apăsat pe butonul de adaugare a altui prieten in sesiune, utilizatorul va fi redirecționat, către pagina de login sau către pagina de înregistrare.
+      </p>
+      <p>
+      	în cazul unui utilizator înregistrat, acesta are acces la aceleasi functionalitați ca și un simplu vizitator, însă acesta își va putea distribui accesul la munca sa, prin butonul de adăugare a altui utilizator.
+      </p>
+    </section>
+
+    <section id="file-headers">
+
+        <h2>Tehnologii</h2>
+        <p>
+          Fiind o aplicație web, pentru realizarea acesteia vom utiliza <i>HTML5</i>, <i>CSS3</i> și <i>JavaScript</i> pentru partea de front-end. De asemenea vom folosi diverse librării precum Material Design ce ne vor oferi diferite feature-uri pentru partea de design și totodată ne vor oferi un ghid spre a oferi un UI plăcut.
+
+          Pe partea de back-end vom folosi limbajul <i>PHP</i>, care facilitează dezvoltarea aplicației într-o manieră rapidă și eficientă. Pentru stocarea de informații soluția aleasă este utilizarea unei baze de date <i>MySql</i>.
+          La nivel de dezvoltare vom folosi <i>GitHub</i> pentru comunicarea şi centralizarea datelor, dar şi pentru stocarea diferitelor versiuni ale aplicaţiei. In momentul in care am sesizat o problema am facut un nou branch care odata cu rezolvarea problemei ne-a ajuns inapoi in master.
+        </p>
+        <p>
+
+        <a href="https://vimeo.com/221390008">  <h2>Prezentare APix - video </h2></a>
+
+
+        <h3>Front-end</h3>
+        <p>Aplicaţia va conţine 2-3 pagini prin care se va realiza interacţiunea cu utilizatorul.</p>
+
+
+         <h4>Pagina principală pentru vizitatori</h4>
+        <p>
+          Pagina principală oferă vizitatorilor o perspectivă asupra aplicației și a tematicii sale.Aceasta pagină, deoarece va fi folosită atât pe desktop, cât și pe mobile, va fi responsive.
+        </p>
+        <img src=".\images\1_Homepage_visitator.png" alt="Home visitors Page"/>
+        <p class="imagetext">Fig. 1 - Pagina principală </p>
+        <br><br>
+
+
+
+
+        <h4>Login</h4>
+        <p>
+          Utilizatorul se va loga pe un cont existent în aplicaţia noastra sau daca nu avea unul, va avea opțiunea de înregistare.
+        </p>
+        <img src=".\images\2_Login.png" alt="Login"/>
+        <p class="imagetext">Fig. 2 - Pagina Login</p>
+        <br><br>
+
+
+
+
+        <h4>Signup</h4>
+        <p>
+          În pagina de înregistrare utilizatorul va trebui să completeze un formular pentru a se înregistra.
+        </p>
+        <img src=".\images\3_Signup.png" alt="Signup Page"/>
+        <p class="imagetext">Fig. 3 - Pagina Signup</p>
+        <br><br>
+
+
+
+        <h3>Back-end</h3>
+        <p>
+          Primul contact al back-endului cu fluxul aplicației are loc în momentul înregistrării/autentificării userilor.
+          Back-end-ul se ocupă cu dirijarea tuturor elementelor ce urmează a fi utilizate de către următoarele module: înregistrare si autentificare.
+        </p>
+        <p>
+          Modulul de autentificare poate fi realizat foarte ușor deoarece vom folosi o bază de date MySql unde vom reține numele și parola utilizatorului. Odată ce vom primi un request cu numele și parola unui utilizator, vom aproba folosirea aplicației de către acel utilizator.
+        </p>
+ 
+
+          <h3>Stocarea datelor</h3>
+          <p class="parent">
+            Am optat să lucrăm cu baza de date MySql.
+          </p>
+          <img src=".\BD.png" alt="BazaDeDate"/>
+          <p class="imagetext">Fig. 8 - BazaDeDate</p>
+          <p>
+            În momentul înregistrării unui utilizator, în baza de date se stochează <i>username-ul</i>, <i>numele</i> (doar dacă nu există deja), <i>parola</i> si <i>email-ul</i>. În baza de date parola unui user se va stoca sub formă de text criptat folosind <i>bcrypt</i>.
+            <p>
+              Vom avea o tabela users care va reține toate informațiile unui utilizator: numele, parola, email-ul și documentele curente pe care le va vrea exportate sub forma de GIF.
+            </p>
+          </p>
+
+          <h2>Etapele intermediare ale dezvoltării proiectului</h2>
+          <ul>
+            <li><b>Saptamana 5:</b> Alegerea proiectului și crearea unei documentații.</li>
+            <li><b>Saptamana 6,7:</b> Stabilirea și implementarea front-end-ului.</li>
+            <li><b>Saptamana 8:</b> Finalizarea componentei de front a aplicatiei.</li>
+            <li><b>Saptamana 12,13,14:</b> Stabilirea detaliată și implementarea back-end-ului.</li>
+          </ul>
+
+         <h3>Distribuirea taskurilor</h3>
+          <ul>
+
+            </ul> </li>
+            <li> Cristian Huma  <ul>
+              <li>Frontend</li>
+              <li>Backend</li>
+              <li>Integrare Github API</li>
+              <li>Documentatie si demo</li>
+            </ul> </li>
+
+            </ul> </li>
+            <li> Corodescu Alin Andrei <ul>
+              <li>Frontend</li>
+              <li>Backend</li>
+              <li>Integrare Android</li>
+              <li>Documentatie si demo</li>
+            </ul> </li>
+
+          </ul>
+
+
+          <h2>Bibliografie</h2>
+          <ul>
+            <li><a href="https://material.io/icons/">https://material.io/icons/</a></li>
+          </ul>
+
+        </section>
+
+
+      </body>
+      </html>
