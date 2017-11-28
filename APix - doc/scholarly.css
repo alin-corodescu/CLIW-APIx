@@ -1,11 +1,4 @@
-﻿
-/*
-  Mostly override colours, plus support the article styling.
-  The latter should be made into a separate CSS at some point, that can just be reused by whoever
-  likes it.
-*/
-
-@import url('./node_modules/normalize.css/normalize.css');
+﻿@import url('./node_modules/normalize.css/normalize.css');
 @import url('./fonts/libre-baskerville-regular.css');
 @import url('./fonts/libre-baskerville-bold.css');
 @import url('./fonts/libre-baskerville-italic.css');
@@ -15,7 +8,7 @@
 }
 body {
   font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
-  background-image: url("background.jpg");
+  background-image: url(".\\images\\background.png");
   text-align: justify;
 }
 header {
