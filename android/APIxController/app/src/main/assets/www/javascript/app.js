@@ -12,5 +12,13 @@ function clickCamera() {
 }
 function updateColorPickerButton() {
 	var color = document.getElementById("colorPicker").value;
-	document.getElementById("colorButton").style.backgroundColor = color;
+	var x = document.getElementsByClassName("recolorable");
+    var i;
+    for (i = 0; i < x.length; i++) {
+        x[i].style.color = color;
+        if (x[i].id == "colorButton")
+        	x[i].style.backgroundColor = color;
+
+
+    }
 }

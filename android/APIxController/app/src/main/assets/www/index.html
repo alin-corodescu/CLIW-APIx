@@ -9,19 +9,19 @@
         <div id="container" >
 	        <input id="colorPicker" name="Color picker" type="color"
 	        	onchange="updateColorPickerButton()"/>
-	        <button class="circle" id="colorButton" onclick="clickColorPicker()"></button>
+	        <button class="circle recolorable" id="colorButton" onclick="clickColorPicker()"></button>
 	    </div>
 	    <div id="container" >
 	    	<div id="child_container">
 	    		<p> Thickness </p>
-	        	<input id="thicknessSlider" name="Thickness Slider" type="range" min="1" max="5" step="1"/>
+	        	<input class="recolorable" id="thicknessSlider" name="Thickness Slider" type="range" min="1" max="5" step="1"/>
 	    	</div>
 	    </div>
 	    <div id="container" >
 	    	<div id="child_container">
 	        	<input id="camera" accept="image/*" type="file" capture>
 	       		<button id="photoButton" onclick="clickCamera()">
-	       			<i class="material-icons" id="photoIcon">photo_camera</i>
+	       			<i class="material-icons recolorable" id="photoIcon">photo_camera</i>
 <!-- 	       			<i class="material-icons icon icon-background" id="photoIcon">&#xE251;</i> -->
 	       		</button>
 	       	</div>

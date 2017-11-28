@@ -4,12 +4,12 @@
 }
 #colorPicker {
 	position: absolute;
-	visibility: hidden;
+	display: none;
 }
 #colorButton {
 	width: 100px;
 	height: 100px;
-	background-color: goldenrod;
+	background-color: rgba(233,30,99,0.7);
 }
 #container {
 	display: flex;
@@ -33,13 +33,12 @@
 	visibility: hidden;
 }
 #photoButton {
-
 	background: none;
 	border: 0;
 }
 #photoIcon {
 	font-size: 7em;
-	color: goldenrod;
+	color: rgba(233,30,99,0.7);
 }
 body {
 	width: 100%;
@@ -56,7 +55,7 @@ input[type=range]{
 input[type=range]::-webkit-slider-runnable-track {
     width: 300px;
     height: 5px;
-    background: #ddd;
+    background: rgba(33,150,243,1);
     border: none;
     border-radius: 3px;
 }
@@ -67,7 +66,7 @@ input[type=range]::-webkit-slider-thumb {
     height: 16px;
     width: 16px;
     border-radius: 50%;
-    background: goldenrod;
+    background: rgba(233,30,99,1);
     margin-top: -4px;
 }
 
