@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
 	<link rel="stylesheet" type="text/css" href="index.css">
 	<link rel="stylesheet" type="text/css" href=".\css\shared.css">
@@ -22,33 +22,32 @@
 	 	</ul>
 	</header>
       	<section>
-      		<div class="container">
-      			<h1>APix is a web application where you can draw with your friends!</h1>
-      		</div>
-      	</section>
-
-      	<section>
 			<div class="container">
-				<i class="material-icons icon">&#xE2C4;</i>&nbsp;
-				<i class="material-icons icon icon-share">&#xE7F0;</i>&nbsp;
-				<i class="material-icons icon icon-trash">&#xE872;</i>&nbsp;
+				<div class="action-bar">
+					<i class="material-icons icon">&#xE2C4;</i>&nbsp;
+					<i class="material-icons icon icon-share">&#xE7F0;</i>&nbsp;
+					<i class="material-icons icon icon-trash">&#xE872;</i>&nbsp;
+				</div>
 			</div>
 			<div class="container">
 				<canvas class="apix-canvas">
 				</canvas>
 				<aside class="canvas-options">
-					<i class="material-icons icon icon-background">&#xE251;</i><br>
-					<i class="material-icons icon icon-android">&#xE859;</i><br>
-					<i class="material-icons">&#xE5D4;</i><br>
-					<input name="Color picker" type="color"/>
+					<div class="action-bar vertical">
+						<i class="material-icons icon icon-background">&#xE251;</i><br>
+						<i class="material-icons icon icon-android">&#xE859;</i><br>
+						<i class="material-icons icon">&#xE5D4;</i><br>
+						<input name="Color picker" type="color" class="color-picker"/>
+						<button class="circle-button"></button>
+					</div>
 				</aside>
 			</div>
 			<div class="container">
 				<nav class="transition">
 					<a href="#">&laquo;</a>
 					<a href="#">1</a>
-					<a class="active" href="#">2</a>
-					<a href="#">3</a>
+					<a href="#">2</a>
+					<a class="active" href="#">3</a>
 					<a href="#">4</a>
 					<a href="#">5</a>
 					<a href="#">6</a>

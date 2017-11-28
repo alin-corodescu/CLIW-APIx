@@ -1,11 +1,12 @@
 .body{
-	background-color: rgba(0, 0, 0, 0.2);
+	background-image: url("memphis-colorful.png");
+	opacity: 1;
 	margin: 0;
 }
 .header{
-	border-radius: 25px;
-	background-color: blue;
+	background-color: rgba(33,150,243,1);
 	display: flex;
+	font-family: sans-serif;
 }
 .header-home{
 	display: flex;
@@ -21,44 +22,79 @@
 .header-functions{
 	flex: 1;
 	text-align: right;
+	font-family: sans-serif;
+
 }
 .header-functions > li {
 	display: inline-block;
 	padding: 0 15px 0 15px;
 }
 .header-functions > li > a{
-	text-decoration: none;
+	color: white;
+
 }
 .apix-canvas{
 	height: 100%;
 	width: 80%;
 	border: solid 1px;
-	background: rgba(76, 175, 80, 0.3)
+	background-color: #FFFEFE;
 }
 .canvas-options{
 	padding-left: 10px;
-	width: 4%;
+
 	display: flex;
 	flex-direction: column;
 }
 
 .transition a {
     color: black;
-    float: left;
+/*    float: left;*/
     padding: 8px 16px;
     text-decoration: none;
-    transition: background-color .3s;
+    font-family: monospace;
+    transition: border .3s;
 }
 
 .transition a.active {
-    background-color: #4CAF50;
+    background-color: rgba(233,30,99,0.5);
+	border : 3px solid rgba(33,150,243,1);
     color: white;
 }
 
 .transition a:hover:not(.active) {
-	background-color: #ddd;}
+	border : 3px solid rgba(33,150,243,1);}
 
 
+.action-bar {
+/*	width : 10%;
+	height : 10%;*/
+	padding: 10px;
+	border : 3px solid rgba(33,150,243,1);
+	background-color: rgba(233,30,99, 1);
+	opacity: 0.3;
+	transition: opacity .5s;
+}
+.action-bar:hover{
+	opacity: 1;
+
+}
+
+.vertical {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.circle-button {
+	border-radius: 50%;
+	border : 2px solid white;
+	width: 20px;
+	height: 20px;
+}
+.color-picker {
+	position:absolute;
+	display: none;
+}
 footer{
 	text-align: center;
 }
