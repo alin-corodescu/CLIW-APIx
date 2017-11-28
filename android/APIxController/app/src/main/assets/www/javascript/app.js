@@ -10,6 +10,18 @@ function clickColorPicker() {
 function clickCamera() {
 	document.getElementById("camera").click();
 }
+
+function switchButton() {
+    var button = document.getElementById("switchButton");
+    if (button.innerText == "On") {
+        button.innerText = "Off"
+        button.style.backgroundColor = "red";
+    }
+    else  {
+        button.innerText = "On"
+        button.style.backgroundColor = "green";
+    }
+}
 function updateColorPickerButton() {
 	var color = document.getElementById("colorPicker").value;
 	var x = document.getElementsByClassName("recolorable");
