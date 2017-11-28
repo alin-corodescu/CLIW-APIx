@@ -14,7 +14,7 @@
 	justify-content: center;
 	flex: 1;
 }
-.header-home > h2{
+.header-home > div{
 	margin:0;
 	padding-left: 20px;
 	color: white;
@@ -33,15 +33,27 @@
 	color: white;
 
 }
+.big-container{
+	display: flex;
+}
+#toggle{
+	margin-left: 10px;
+	margin-top: 10px;
+}
+.canvas-container{
+	margin:10px 10px 10px 10px;
+	display: flex;
+	width: 80%;
+
+}
 .apix-canvas{
 	height: 100%;
-	width: 80%;
+	width: 100%;
 	border: solid 1px;
 	background-color: #FFFEFE;
 }
 .canvas-options{
 	padding-left: 10px;
-
 	display: flex;
 	flex-direction: column;
 }
@@ -82,7 +94,6 @@
 .vertical {
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
 }
 
 .circle-button {
