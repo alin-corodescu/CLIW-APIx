@@ -13,9 +13,10 @@
 	<body class="body">
 	 <div id="sidenav" class="sidenav">
      <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
-     <a href="#" class="sidenavLink"><i class="material-icons icon">&#xE2C4;</i>Import/Export</a>
+     <a href="#" class="sidenavLink"><i class="material-icons icon">&#xE2C4;</i> Export</a>
 	 <a href="#" class="sidenavLink"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
 	 <a href="#" class="sidenavLink"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
+	 <a><i class="material-icons">cast_connected</i> Generate QR code</a>
      </div>	
 	    <header class="header">
 		 	<div class="header-home">
@@ -34,8 +35,8 @@
 						<i class="material-icons icon icon-background">&#xE251;</i><br>
 						<i class="material-icons icon icon-android">&#xE859;</i><br>
 						<i class="material-icons icon">&#xE5D4;</i><br>
-						<input name="Color picker" type="color" class="color-picker"/>
-						<button class="circle-button"></button>
+						<input id="colorPicker" name="Color picker" type="color" class="color-picker" onchange="updateColorPickerButton()"/>
+						<button onclick="clickColorPicker()" id="colorButton" class="circle-button"></button>
 					</div>
 				</aside>
 			</div>

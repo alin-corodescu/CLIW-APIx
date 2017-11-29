@@ -40,3 +40,10 @@ function openNavigation() {
 	changeOpacityOfContainers(0.2);
 	displayLinks(true);
 }
+function clickColorPicker() {
+	document.getElementById("colorPicker").click();
+}
+function updateColorPickerButton() {
+	var color = document.getElementById("colorPicker").value;
+	document.getElementById("colorButton").style.backgroundColor = color;
+}

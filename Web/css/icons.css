@@ -3,6 +3,9 @@
 	color :white;
 	font-size: 1em;
 }
+.icon:hover{
+	color: rgba(33,150,243,1);
+}
 
 /*@media (max-width:699px){
 	.icon{
