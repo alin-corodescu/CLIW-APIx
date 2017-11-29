@@ -51,8 +51,9 @@
 	margin-top: 10px;
 }
 .canvas-container{
-	margin:5% 5% 0 5%;
+	margin:0% 5% 0 5%;
 	display: flex;
+	align-items: center;
 	width: 100%;
 }
 .apix-canvas{
@@ -121,7 +122,6 @@ footer{
 	text-align: center;
 	justify-content: center;
 	width: 100%;
-	position: absolute;
 	/*left*/ : 50%;
 	bottom: 10px;
 }
