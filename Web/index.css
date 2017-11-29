@@ -3,6 +3,17 @@
 	opacity: 1;
 	margin: 0;
 }
+
+#navButton {
+	background : none;
+	border : none;
+	color: white;
+	font-size : 1.5em;
+}
+#navButton:hover {
+	cursor: pointer;
+}
+
 .header{
 	background-color: rgba(33,150,243,1);
 	display: flex;
@@ -40,7 +51,7 @@
 	margin-top: 10px;
 }
 .canvas-container{
-	margin:10px 10px 0 10px;
+	margin:5% 5% 0 5%;
 	display: flex;
 	width: 100%;
 }
@@ -105,5 +116,58 @@
 	display: none;
 }
 footer{
+	display: flex;
+	flex-direction: column;
 	text-align: center;
+	justify-content: center;
+	width: 100%;
+	position: absolute;
+	/*left*/ : 50%;
+	bottom: 10px;
 }
+
+.sidenav {
+	height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgba(33,150,243,1);
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    opacity: 1;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: rgba(233,30,99, 0.7);
+
+}
+
+.sidenav a i {
+	transition: 0.3s;
+}
+
+.sidenav a:hover i {
+	color :rgba(233,30,99, 0.7);
+}
+
+.sidenav .closeButton {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+
