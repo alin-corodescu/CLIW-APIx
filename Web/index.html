@@ -10,13 +10,17 @@
 	<meta charset="UTF-8">
 	<title>APix</title>
 </head>
-
 	<body class="body">
-      	
+	 <div id="sidenav" class="sidenav">
+     <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
+     <a href="#" class="sidenavLink"><i class="material-icons icon">&#xE2C4;</i>Import/Export</a>
+	 <a href="#" class="sidenavLink"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
+	 <a href="#" class="sidenavLink"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
+     </div>	
 	    <header class="header">
 		 	<div class="header-home">
 			 	<div>
-			 		<button onclick="toggle()">LOGO</button>
+			 		<button id="navButton" onclick="openNavigation()">&#9776;</button>
 			 		APix: Doodling around with friends!
 			 	</div>
 			</div>
@@ -26,11 +30,6 @@
 		 	</ul>
 		</header>
 		<div class="container">
-			<div class="action-bar vertical" id="toggle">
-				<i class="material-icons icon">&#xE2C4;</i>&nbsp;
-				<i class="material-icons icon icon-share">&#xE7F0;</i>&nbsp;
-				<i class="material-icons icon icon-trash">&#xE872;</i>&nbsp;
-			</div>
 	      	<div class="canvas-container">
 				<canvas class="apix-canvas">
 				</canvas>
@@ -57,10 +56,12 @@
 					<a href="#">&raquo;</a>
 				</nav>
 		</div>
-		<footer>
+		<footer class="container">
+
 		  <p>Faculty of Computer Science Iasi</p>
 		  <p>Contact information: <a href="mailto:APix@info.uaic.ro">
 		  APix@info.uaic.ro.com</a>.</p>
+
 		</footer>
 	</body>
 </html>
