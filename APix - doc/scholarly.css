@@ -300,7 +300,31 @@ aside[typeof="schema:WPSideBar"] {
 :not(pre) > code[class*='language-'] {
   white-space: normal;
 }
-
+.color-picker{
+  display: none;
+}
+.circle-button {
+  background-color: black;
+  border-radius: 50%;
+  border : 2px solid white;
+  width: 20px;
+  height: 20px;
+}
+.android-page1{
+  float: left;
+  width: 300px;
+  height: 500px;
+  margin-bottom: 10px;
+}
+.android-page2{
+  float: right;
+  width: 300px;
+  height: 5 00px;
+  margin-bottom: 10px;
+}
+#file-headers{
+  margin-top:600px;
+}
 /* wide screen */
 @media screen and (min-width: 1900px) {
   article {
