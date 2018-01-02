@@ -44,6 +44,7 @@ function clickColorPicker() {
 	document.getElementById("colorPicker").click();
 }
 function updateColorPickerButton() {
+	console.log("Changed color!");
 	var color = document.getElementById("colorPicker").value;
 	document.getElementById("colorButton").style.backgroundColor = color;
 }

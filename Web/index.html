@@ -2,15 +2,15 @@
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
-	<link rel="stylesheet" type="text/css" href="index.css">
-	<link rel="stylesheet" type="text/css" href=".\css\shared.css">
+	<link rel="stylesheet" type="text/css" href=".\css\index.css">
 	<link rel="stylesheet" type="text/css" href=".\css\icons.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<script src=".\js\toggle.js"></script>
+	<script src=".\js\canvas.js"></script>
 	<meta charset="UTF-8">
 	<title>APix</title>
 </head>
-	<body class="body">
+	<body onload="init()" class="body">
 	 <div id="sidenav" class="sidenav">
      <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
      <a href="#" class="sidenavLink"><i class="material-icons icon">&#xE2C4;</i> Export</a>
@@ -28,14 +28,14 @@
 		</header>
 		<div class="container">
 	      	<div class="canvas-container">
-				<canvas class="apix-canvas">
+				<canvas class="apix-canvas" id="can"> 
 				</canvas>
 				<aside class="canvas-options">
 					<div class="action-bar vertical">
 						<i class="material-icons icon icon-background">&#xE251;</i><br>
 						<i class="material-icons icon icon-android">&#xE859;</i><br>
 						<i class="material-icons icon">&#xE5D4;</i><br>
-						<input id="colorPicker" name="Color picker" type="color" class="color-picker" onchange="updateColorPickerButton()"/>
+						<input id="colorPicker" name="Color picker" type="color" class="color-picker" onchange="updateColorPickerButton(); color();"/>
 						<button onclick="clickColorPicker()" id="colorButton" class="circle-button"></button>
 					</div>
 				</aside>
