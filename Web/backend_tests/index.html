@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript">
+
+	var conn = new WebSocket('ws://localhost:5000');
+	conn.onopen = function(evt) { console.log("Connection open ...");};
+	// conn.onmessage = function(evt) { console.log( "Received Message: " + evt.data); i.processData(data) };
+	conn.onclose = function(evt) { console.log("Connection closed."); };
+
+	var i = function init() {
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext('2d');
+		var x,y,prevX,prevY;
+		var paint = false;
+
+		conn.onmessage = function(e) {
+			console.log("Received message: " + e.data);
+			processData(e.data);
+		}
+
+		canvas.addEventListener("mouseout", function(e){
+			paint = false
+		})
+		canvas.addEventListener("mousedown", function(e) {
+			currX = e.clientX - canvas.offsetLeft;
+			currY = e.clientY - canvas.offsetTop;
+			paint = true;
+		})
+
+		canvas.addEventListener("mousemove", function(e) {
+			if (paint) {
+				prevX = currX;
+				prevY = currY;
+				currX = e.clientX - canvas.offsetLeft;
+				currY = e.clientY - canvas.offsetTop;
+				draw();
+			}
+		})
+
+		canvas.addEventListener("mouseup", function(e){
+			if (paint) {
+				prevX = currX;
+				prevY = currY;
+				currX = e.clientX - canvas.offsetLeft;
+				currY = e.clientY - canvas.offsetTop;
+				draw();
+				paint = false;
+			}
+		})
+
+		function draw() {
+			ctx.beginPath();
+	        ctx.moveTo(prevX, prevY);
+	        ctx.lineTo(currX, currY);
+	        ctx.strokeStyle = "black";
+	        ctx.lineWidth = 2;
+	        ctx.stroke();
+	        ctx.closePath();
+	        var modification = {
+	        	"px" : prevX,
+	        	"py" : prevY,
+	        	"cx" : currX,
+	        	"cy" : currY
+	        }
+	        conn.send(JSON.stringify(modification))
+		}
+
+		function processData(data) {
+ 			var obj = JSON.parse(data);
+ 			ctx.beginPath();
+ 			ctx.moveTo(obj.px, obj.py);
+ 			ctx.lineTo(obj.cx, obj.cy);
+ 			ctx.strokeStyle = "black";
+	        ctx.lineWidth = 2;
+	        ctx.stroke();
+	        ctx.closePath();
+
+ 		}
+	}
+
+</script>
+<head>
+	<title>
+		Page for testing backend solutions for APIx
+	</title>
+</head>
+<body onload="i()">
+<canvas id="canvas" width="600px" height="600px" style="border: 1px solid black;">
+Hello world!
+</canvas>
+</body>
+</html>
