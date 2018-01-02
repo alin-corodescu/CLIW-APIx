@@ -2,7 +2,7 @@
 <html>
 <script type="text/javascript">
 
-	var conn = new WebSocket('ws://localhost:5000');
+	var conn = new WebSocket('ws://localhost:5000/?sessionID=1');
 	conn.onopen = function(evt) { console.log("Connection open ...");};
 	// conn.onmessage = function(evt) { console.log( "Received Message: " + evt.data); i.processData(data) };
 	conn.onclose = function(evt) { console.log("Connection closed."); };
