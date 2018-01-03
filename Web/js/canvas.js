@@ -1,4 +1,4 @@
- var canvas, ctx, flag = false,
+ var canvas,ctx, flag = false,
         prevX = 0,
         currX = 0,
         prevY = 0,
@@ -7,16 +7,36 @@
 
     var x = "black",
         y = 2;
-    
+
+    var zoomIntensity = 0.2;
+    var width = 600;
+    var height = 200;
+
+    var scale = 1.0;
+    var scaleMultiplier = 0.8;
+    var originx = 0;
+    var originy = 0;
+    var visibleWidth = width;
+    var visibleHeight = height;
+
     function init() {
         canvas = document.getElementById('can');
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        width = canvas.clientWidth;
+        height = canvas.clientHeight;
         ctx = canvas.getContext("2d");
-
-        w = window.getComputedStyle(canvas, null).getPropertyValue("width");
-        h = window.getComputedStyle(canvas, null).getPropertyValue("height");
-
-        console.log(w,h)
     
+         // add button event listeners
+        document.getElementById("plus").addEventListener("click", function(){
+            scale /= scaleMultiplier;
+            zooming(scale);
+        }, false);
+
+        document.getElementById("minus").addEventListener("click", function(){
+            scale *= scaleMultiplier;
+            back_to_draw();
+        }, false);
         canvas.addEventListener("mousemove", function (e) {
             findxy('move', e)
         }, false);
@@ -73,7 +93,7 @@
     function erase() {
         var m = confirm("Want to clear");
         if (m) {
-            ctx.clearRect(0, 0, w, h);
+            ctx.clearRect(0, 0, width, height);
             document.getElementById("canvasimg").style.display = "none";
         }
     }
