@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<script src=".\js\toggle.js"></script>
 	<script src=".\js\canvas.js"></script>
+	<script src="canvas-desktop.js"></script>
 	<meta charset="UTF-8">
 	<title>APix</title>
 </head>
@@ -28,15 +29,20 @@
 		</header>
 		<div class="container">
 	      	<div class="canvas-container">
-				<canvas class="apix-canvas" id="can"> 
-				</canvas>
+	      		<div class="canvas-parent">
+					<canvas class="apix-canvas" id="can"> 
+					</canvas>
+				</div>
 				<aside class="canvas-options">
 					<div class="action-bar vertical">
-						<i class="material-icons icon icon-background">&#xE251;</i><br>
+						<i onclick="upload_background()" class="material-icons icon icon-background">&#xE251;</i>
+						<br>
 						<i class="material-icons icon icon-android">&#xE859;</i><br>
 						<i class="material-icons icon">&#xE5D4;</i><br>
 						<input id="colorPicker" name="Color picker" type="color" class="color-picker" onchange="updateColorPickerButton(); color();"/>
 						<button onclick="clickColorPicker()" id="colorButton" class="circle-button"></button>
+			            <input type="button" id="plus" value="+">
+			            <input type="button" id="minus" value="-">
 					</div>
 				</aside>
 			</div>
