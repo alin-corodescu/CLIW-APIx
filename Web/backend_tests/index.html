@@ -7,6 +7,18 @@
 	// conn.onmessage = function(evt) { console.log( "Received Message: " + evt.data); i.processData(data) };
 	conn.onclose = function(evt) { console.log("Connection closed."); };
 
+	function drawBetweenPoints(x,y,z,t) {
+		var canvas  = document.getElementById("canvas");
+		var ctx = canvas.getContext('2d');
+
+		ctx.beginPath();
+	    ctx.moveTo(x, y);
+	    ctx.lineTo(z, t);
+	    ctx.strokeStyle = "black";
+	    ctx.lineWidth = 2;
+	    ctx.stroke();
+	    ctx.closePath();
+	}
 	var i = function init() {
 		var canvas = document.getElementById("canvas");
 		var ctx = canvas.getContext('2d');
