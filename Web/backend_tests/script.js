@@ -6,6 +6,9 @@ var modes = {
 	SCROLL : 2
 };
 
+var scale = 1.0;
+var originx = 0, originy = 0;
+
 // Returns the position of an element in the page
 function computePosition(element) {
     if(typeof( element.offsetParent ) !== "undefined")
@@ -78,7 +81,6 @@ var main = function () {
     // Here we specify the color, the thickness etc.
     var currentStyle = {color : "black", thickness : 2};
 
-
     // Transforms mouse coordinates into actual canvas coordinates using the current
     // visor state (e.g. zoom, offsets etc)
     function transformCoordinates(visorState, coordinates) {
@@ -110,14 +112,14 @@ var main = function () {
             // Send drawings to the main canvas
             var transformedData = {};
             [transformedData.xFrom, transformedData.yFrom] = transformCoordinates(visorState,
-                                                                [mouseData.xFrom, mouseData.yFrom]);
+                [mouseData.xFrom, mouseData.yFrom]);
             [transformedData.xTo, transformedData.yTo] = transformCoordinates(visorState, [mouseData.xTo, mouseData.yTo]);
 
             // Now we have transformed data at hand
             // Very important : draw on the drawable canvas, not the visor
             draw(drawable_canvas_ctx, transformedData, currentStyle);
 
-        //    TODO send data over the socket (style + transformedData)
+            //    TODO send data over the socket (style + transformedData)
         }
         else {
             var scrollX = mouseData.xTo - mouseData.xFrom;
@@ -150,11 +152,42 @@ var main = function () {
 		mouse_active = false;
 	};
 
-
 	visor.onmouseout = function(event) {
 		// Disable the mouse event
 		mouse_active = false;
 	};
+
+	visor.onmousewheel = function(event){
+	    if( mode !== 1) {
+            event.preventDefault();
+            var scaleStep = 0.25;
+            if (event.deltaY < 0) {
+                scale += scaleStep;
+                updatePaintCanvas();
+            }
+            if (event.deltaY > 0) {
+                scale -= scaleStep;
+                updatePaintCanvas();
+            }
+        }
+    };
+
+    function updatePaintCanvas() {
+        var imageObject = new Image();
+        imageObject.onload = function(){
+            drawable_canvas_ctx.clearRect(0, 0, drawable_canvas.width, drawable_canvas.height);
+            drawable_canvas_ctx.save();
+            drawable_canvas_ctx.translate(drawable_canvas.width*0.5, drawable_canvas.height*0.5);
+            drawable_canvas_ctx.scale(scale, scale);
+            drawable_canvas_ctx.drawImage(imageObject, -drawable_canvas.width*0.5, -drawable_canvas.height*0.5);
+            drawable_canvas_ctx.restore();
+        }
+        imageObject.src = drawable_canvas.toDataURL();
+
+
+
+    }
+
 
     function renderVisor() {
         // FIXME this function needs rewriting to take into account zoom when calling getImageData, as well as merge
