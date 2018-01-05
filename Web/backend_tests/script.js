@@ -6,8 +6,12 @@ var modes = {
 	SCROLL : 2
 };
 
-var scale = 1.0;
-var originx = 0, originy = 0;
+var zoom_type = {
+    IN: 1,
+    OUT: 2
+};
+
+var scale = 1.0, scaleStep = 0.25, scale_type = null, zoomPointX = null, zoomPointY = null;
 
 // Returns the position of an element in the page
 function computePosition(element) {
@@ -51,7 +55,7 @@ var main = function () {
 
 	// This settings here have to be done because canvas CSS width and height do not get propagated
     // to the actual context, it's two different values
-    console.log(window.getComputedStyle(visor).width);
+    // console.log(window.getComputedStyle(visor).width);
 	visor.width = parseInt(window.getComputedStyle(visor).width);
 	visor.height = parseInt(window.getComputedStyle(visor).height);
     background_canvas.width = parseInt(window.getComputedStyle(background_canvas).width);
@@ -71,7 +75,8 @@ var main = function () {
     // Switch between modes
     switch_button.onclick = function (ev) {
         mode = modes.PAINT + modes.SCROLL - mode;
-        console.log("mode is " + mode)};
+        // console.log("mode is " + mode)
+        };
 
 	var mouseData = {};
 
@@ -93,7 +98,7 @@ var main = function () {
     }
 
     function draw(context, points, style) {
-        console.log("drawing points" + JSON.stringify(points));
+        // console.log("drawing points" + JSON.stringify(points));
         context.beginPath();
         context.moveTo(points.xFrom, points.yFrom);
         context.lineTo(points.xTo, points.yTo);
@@ -157,43 +162,42 @@ var main = function () {
 		mouse_active = false;
 	};
 
-	visor.onmousewheel = function(event){
-	    if( mode !== 1) {
+    visor.onmousewheel = function(event) {
+        if (mode !== 1) {
             event.preventDefault();
-            var scaleStep = 0.25;
             if (event.deltaY < 0) {
-                scale += scaleStep;
-                updatePaintCanvas();
+                [zoomPointX, zoomPointY] = computeActualMousePosition(event);
+                scale_type = zoom_type.IN;
             }
             if (event.deltaY > 0) {
-                scale -= scaleStep;
-                updatePaintCanvas();
+                [zoomPointX, zoomPointY] = computeActualMousePosition(event);
+                scale_type = zoom_type.OUT;
             }
         }
     };
-
-    function updatePaintCanvas() {
-        var imageObject = new Image();
-        imageObject.onload = function(){
-            drawable_canvas_ctx.clearRect(0, 0, drawable_canvas.width, drawable_canvas.height);
-            drawable_canvas_ctx.save();
-            drawable_canvas_ctx.translate(drawable_canvas.width*0.5, drawable_canvas.height*0.5);
-            drawable_canvas_ctx.scale(scale, scale);
-            drawable_canvas_ctx.drawImage(imageObject, -drawable_canvas.width*0.5, -drawable_canvas.height*0.5);
-            drawable_canvas_ctx.restore();
-        }
-        imageObject.src = drawable_canvas.toDataURL();
-
-
-
-    }
 
 
     function renderVisor() {
         // FIXME this function needs rewriting to take into account zoom when calling getImageData, as well as merge
         // FIXME background with the drawable canvas before getting the image data
-        var image = drawable_canvas_ctx.getImageData(visorState.offsetX, visorState.offsetY, visor.width, visor.height);
-        visor_ctx.putImageData(image, 0, 0)
+        let image, scaleChange = 1;
+        if(scale_type != null) {
+            let newScale;
+            if( scale_type === zoom_type.IN)
+                newScale = scale * 1.2;
+            if( scale_type === zoom_type.OUT)
+                newScale = scale * 0.8;
+            scaleChange = newScale - scale;
+            scale = newScale;
+            visorState.offsetX = -(zoomPointX * scale);
+            visorState.offsetY = -(zoomPointY * scale);
+            visor_ctx.translate(visorState.offsetX, visorState.offsetY);
+            visor_ctx.scale(scale, scale);
+            visor_ctx.translate(-visorState.offsetX, -visorState.offsetY);
+            scale_type = null;
+        }
+        image = drawable_canvas_ctx.getImageData(visorState.offsetX, visorState.offsetY, visor.width * scaleChange, visor.height * scaleChange);
+        visor_ctx.putImageData(image, 0, 0);
     }
 
     // Render the visor at 30 fps
