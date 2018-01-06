@@ -4,36 +4,22 @@ import base64
 
 HTML = "file:////home/alin/CLIW-APIx/Web/backend_tests/index.html"
 
-
-driver = webdriver.Chrome()
-driver.get("file:////home/alin/CLIW-APIx/Web/backend_tests/index.html")
-
-
-canvas = driver.find_element_by_css_selector("#canvas")
-
-# get the canvas as a PNG base64 string
-canvas_base64 = driver.execute_script("return arguments[0].toDataURL('image/png').substring(21);", canvas)
-
-# decode
-canvas_png = base64.b64decode(canvas_base64)
-
-# save to a file
-with open(r"canvas.png", 'wb') as f:
-    f.write(canvas_png)
-driver.close()
-
-
 class Session:
     def __init__(self, sessionID, width, height):
         # One driver per session
         self.driver = webdriver.Chrome()
         self.driver.get(HTML)
-        self.width = width
-        self.height = height
+
+        self.set_canvas_dimensions(width, height)
+
         self.id = sessionID
 
-    def save_canvas_state(self, filename):
-        canvas = self.driver.find_element_by_css_selector("#canvas")
+    def store_state_for_canvases(self, canvas_id_list):
+        for canvas_id in  canvas_id_list:
+            self.save_canvas_state(canvas_id)
+
+    def save_canvas_state(self, canvas_id):
+        canvas = self.driver.find_element_by_id(canvas_id)
 
         # get the canvas as a PNG base64 string
         canvas_base64 = self.driver.execute_script("return arguments[0].toDataURL('image/png').substring(21);", canvas)
@@ -46,13 +32,12 @@ class Session:
         if not (os.path.exists(str(id)) and os.path.isdir(str(id))):
             os.mkdir(str(id))
 
-        with open(os.path.join(str(id), filename), 'wb') as f:
+        with open(os.path.join(str(id), canvas_id), 'wb') as f:
             f.write(canvas_png)
 
     def apply_update(self, json):
-        update = self.parse_update_json()
         # Update based on what we recieved from the json
-        driver.execute_script("drawBetweenPoints(100,100,200,200);")
+        self.driver.execute_script("drawUpdate(arguments[0]);", json)
 
-    def parse_update_json(self):
-        pass
+    def set_canvas_dimensions(self, width, height):
+        self.driver.execute_script("setCanvasDimensions(arguments[0], arguments[1]);", width, height)
