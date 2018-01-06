@@ -31,6 +31,17 @@ class Broker(object):
             for message in self.topics[session]:
                 client.sendMessage(message, False)
 
+    def removeClient(self, client):
+        # Get the session of the client
+        session = self.publishers.get(client)
+        del self.publishers[client]
+
+        # Get the clients subscribed to this topic
+        clients = self.subscribers[session]
+
+        # Remove the client from this topic
+        clients.remove(client)
+
 
 broker = Broker()
 
@@ -54,4 +65,5 @@ class BrokeringProtocol(WebSocketServerProtocol):
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {}".format(reason))
+        broker.removeClient(self)
         # clients.remove(self)
