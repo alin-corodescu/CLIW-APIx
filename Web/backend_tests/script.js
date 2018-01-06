@@ -78,10 +78,10 @@ var main = function () {
         // console.log("mode is " + mode)
         };
 
-	var mouseData = {};
+	var mouseData = {xTo: 0, xFrom: 0, yTo: 0 , yFrom: 0};
 
     // Change this object through the web interface
-    var visorState = {zoom : 1, offsetX: 0, offsetY: 0};
+    var visorState = {zoom : 1, zoomStep: 0.1, offsetX: 0, offsetY: 0};
 
     // Here we specify the color, the thickness etc.
     var currentStyle = {color : "black", thickness : 2};
@@ -91,21 +91,17 @@ var main = function () {
     function transformCoordinates(visorState, coordinates) {
         var x = coordinates[0];
         var y = coordinates[1];
-        // FIXME not sure if the formula is correct
         x = x / visorState.zoom;
         y = y / visorState.zoom;
         return [x + visorState.offsetX, y + visorState.offsetY];
     }
 
     function draw(context, points, style) {
-        // console.log("drawing points" + JSON.stringify(points));
         context.beginPath();
         context.moveTo(points.xFrom, points.yFrom);
         context.lineTo(points.xTo, points.yTo);
-
         context.strokeStyle = style.color;
         context.lineWidth = style.thickness;
-
         context.stroke();
         context.closePath();
     }
@@ -131,8 +127,8 @@ var main = function () {
             var scrollY = mouseData.yTo - mouseData.yFrom;
 
             // FIXME maybe we should adjust this
-            visorState.offsetX += scrollX;
-            visorState.offsetY += scrollY;
+            visorState.offsetX -= scrollX;
+            visorState.offsetY -= scrollY;
 
             // TODO handle scrolling
         }
@@ -142,7 +138,6 @@ var main = function () {
 	};
 
 	visor.onmousedown = function(event) {
-		// Handle mouse down
 		mouse_active = true;
 		[mouseData.xFrom, mouseData.yFrom] = computeActualMousePosition(event);
 	};
@@ -158,12 +153,11 @@ var main = function () {
 	};
 
 	visor.onmouseout = function(event) {
-		// Disable the mouse event
 		mouse_active = false;
 	};
 
     visor.onmousewheel = function(event) {
-        if (mode !== 1) {
+        if (mode !== modes.PAINT) {
             event.preventDefault();
             if (event.deltaY < 0) {
                 [zoomPointX, zoomPointY] = computeActualMousePosition(event);
@@ -176,47 +170,45 @@ var main = function () {
         }
     };
 
+    var dummy_canvas = document.createElement('canvas');
+    dummy_canvas.style.border = "2px solid black";
+    dummy_canvas.width = visor.width;
+    dummy_canvas.height = visor.height;
+    var dummy_canvas_ctx = dummy_canvas.getContext('2d');
 
     function renderVisor() {
-        // FIXME this function needs rewriting to take into account zoom when calling getImageData, as well as merge
-        // FIXME background with the drawable canvas before getting the image data
-        let image, scaleChange = 1;
+        let image, image2 = new Image(visor.width, visor.height);
+        // In case the user scrolled, we zoom in the area where his mouse points
         if(scale_type != null) {
-            let newScale;
+            let old_zoom = visorState.zoom;
             if( scale_type === zoom_type.IN)
-                newScale = scale * 1.2;
+                visorState.zoom += visorState.zoomStep;
             if( scale_type === zoom_type.OUT)
-                newScale = scale * 0.8;
-            scaleChange = newScale - scale;
-            scale = newScale;
-            visorState.offsetX = -(zoomPointX * scale);
-            visorState.offsetY = -(zoomPointY * scale);
-            visor_ctx.translate(visorState.offsetX, visorState.offsetY);
-            visor_ctx.scale(scale, scale);
-            visor_ctx.translate(-visorState.offsetX, -visorState.offsetY);
+                visorState.zoom -= visorState.zoomStep;
+            visorState.offsetX -= zoomPointX/visorState.zoom - zoomPointX/old_zoom;
+            visorState.offsetY -= zoomPointY/visorState.zoom - zoomPointY/old_zoom;
             scale_type = null;
         }
-        image = drawable_canvas_ctx.getImageData(visorState.offsetX, visorState.offsetY, visor.width * scaleChange, visor.height * scaleChange);
-        visor_ctx.putImageData(image, 0, 0);
+
+        // Saving the image from the drawable canvas : getImageData -> dummy_canvas -> toDataURL -> drawImage
+        image = drawable_canvas_ctx.getImageData(visorState.offsetX, visorState.offsetY, visor.width / visorState.zoom, visor.height/visorState.zoom );
+        dummy_canvas_ctx.putImageData(image, 0, 0);
+
+        image2.onload=function(){
+            dummy_canvas_ctx.clearRect(0, 0, dummy_canvas.width, dummy_canvas.height);
+            visor_ctx.save();
+            visor_ctx.clearRect(0,0,visor.width,visor.height);
+            visor_ctx.scale(visorState.zoom,visorState.zoom);
+            visor_ctx.drawImage(image2,0,0);
+            visor_ctx.restore();
+        };
+        image2.src = dummy_canvas.toDataURL();
+
     }
 
     // Render the visor at 30 fps
     setInterval(function() {renderVisor()}, 1000/30);
 
-
-
-	// // Ignore this function as is it used just for testing
-	// visor.onclick = function(event) {
-	//     console.log(document.body.scrollLeft);
-     //    console.log(document.documentElement.scrollLeft);
-     //    console.log(document.body.scrollTop.toString());
-     //    console.log(document.documentElement.scrollTop.toString());
-	// 	alert("canvas clicked at " + (event.clientX +
-     //        document.body.scrollLeft +
-     //        document.documentElement.scrollLeft) +
-     //        " " + (event.clientY +
-     //        document.body.scrollTop + document.documentElement.scrollTop));
-	// };
 
     function computeActualMousePosition(event) {
         // TODO Maybe we could make this static?
