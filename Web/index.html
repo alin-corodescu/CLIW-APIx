@@ -7,11 +7,10 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<script src=".\js\toggle.js"></script>
 	<script src=".\js\canvas.js"></script>
-	<script src="canvas-desktop.js"></script>
 	<meta charset="UTF-8">
 	<title>APix</title>
 </head>
-	<body onload="init()" class="body">
+	<body onload="main()" class="body">
 	 <div id="sidenav" class="sidenav">
      <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
      <a href="#" class="sidenavLink"><i class="material-icons icon">&#xE2C4;</i> Export</a>
@@ -29,10 +28,17 @@
 		</header>
 		<div class="container">
 	      	<div class="canvas-container">
-	      		<div class="canvas-parent">
-					<canvas class="apix-canvas" id="can"> 
-					</canvas>
-				</div>
+
+                <canvas class="apix-canvas" id="can">
+                </canvas>
+                <canvas class="fixed_canvas" id="background_canvas">
+                </canvas>
+                <!--<canvas class="fixed_canvas" id="drawable_canvas">-->
+                <!--</canvas>-->
+                <!--<canvas id="visor">-->
+                    <!--Hello world!-->
+                <!--</canvas>-->
+
 				<aside class="canvas-options">
 					<div class="action-bar vertical">
 						<i onclick="upload_background()" class="material-icons icon icon-background">&#xE251;</i>

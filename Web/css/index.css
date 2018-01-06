@@ -59,14 +59,10 @@
 	display: flex;
 	align-items: center;
 }
-.canvas-parent{
+.apix-canvas{
 	height: 450px;
 	width: 900px;
 	border: solid 1px;
-}
-.apix-canvas{
-	height: 100%;
-	width: 100%;
 	background-color: #FFFEFE;
 }
 
@@ -170,3 +166,20 @@ footer{
 	cursor: pointer;
 }
 
+
+#visor {
+    width: 600px;
+    height: 600px;
+    border: 1px solid black;
+}
+
+#background_canvas {
+    background: azure;
+}
+
+.fixed_canvas {
+    width: 600px;
+    height: 600px;
+    border: 1px solid black;
+    display: none;
+}
