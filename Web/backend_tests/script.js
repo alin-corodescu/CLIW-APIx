@@ -167,37 +167,62 @@ var main = function () {
             event.preventDefault();
             if (event.deltaY < 0) {
                 [zoomPointX, zoomPointY] = computeActualMousePosition(event);
+                visorState.zoom += 1;
                 scale_type = zoom_type.IN;
             }
             if (event.deltaY > 0) {
                 [zoomPointX, zoomPointY] = computeActualMousePosition(event);
+                visorState.zoom -= 1;
                 scale_type = zoom_type.OUT;
             }
         }
     };
 
-
+    var canvas = document.createElement('canvas');
+    // canvas.style.display = 'none';
+    document.body.appendChild(canvas);
+    canvas.style.border = "2px solid black";
+    canvas.width = visor.width;
+    canvas.height = visor.height;
+    var canvas_context = canvas.getContext('2d');
     function renderVisor() {
         // FIXME this function needs rewriting to take into account zoom when calling getImageData, as well as merge
         // FIXME background with the drawable canvas before getting the image data
-        let image, scaleChange = 1;
-        if(scale_type != null) {
-            let newScale;
-            if( scale_type === zoom_type.IN)
-                newScale = scale * 1.2;
-            if( scale_type === zoom_type.OUT)
-                newScale = scale * 0.8;
-            scaleChange = newScale - scale;
-            scale = newScale;
-            visorState.offsetX = -(zoomPointX * scale);
-            visorState.offsetY = -(zoomPointY * scale);
-            visor_ctx.translate(visorState.offsetX, visorState.offsetY);
-            visor_ctx.scale(scale, scale);
-            visor_ctx.translate(-visorState.offsetX, -visorState.offsetY);
-            scale_type = null;
-        }
-        image = drawable_canvas_ctx.getImageData(visorState.offsetX, visorState.offsetY, visor.width * scaleChange, visor.height * scaleChange);
-        visor_ctx.putImageData(image, 0, 0);
+        let image, scaleChange = 1, zoom = visorState.zoom;
+        // if(scale_type != null) {
+        //     let newScale;
+        //     // TODO use math to calculate scaleChange
+        //     // if( scale_type === zoom_type.IN)
+        //     //     newScale = scale * 1.2;
+        //     // if( scale_type === zoom_type.OUT)
+        //     //     newScale = scale * 0.8;
+        //     // scaleChange = newScale - scale;
+        //     // scale = newScale;
+        //     // visorState.offsetX = -(zoomPointX * scale);
+        //     // visorState.offsetY = -(zoomPointY * scale);
+        //     // visor_ctx.translate(visorState.offsetX, visorState.offsetY);
+        //     // visor_ctx.scale(scale, scale);
+        //     // visor_ctx.translate(-visorState.offsetX, -visorState.offsetY);
+        //     // scale_type = null;
+        //     zoom = 2;
+        //     // scale_type = null;
+        // }
+
+        image = drawable_canvas_ctx.getImageData(visorState.offsetX, visorState.offsetY, visor.width / zoom, visor.height/zoom );
+
+        canvas_context.putImageData(image, 0, 0);
+
+        let image2 = new Image(visor.width, visor.height);
+
+        image2.onload=function(){
+            visor_ctx.save();
+            visor_ctx.clearRect(0,0,visor.width,visor.height);
+            visor_ctx.scale(zoom,zoom);
+            visor_ctx.drawImage(image2,0,0);
+            visor_ctx.restore();
+        };
+        image2.src = canvas.toDataURL();
+
     }
 
     // Render the visor at 30 fps
