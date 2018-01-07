@@ -14,26 +14,15 @@ class Session:
 
         self.id = sessionID
 
-    def store_state_for_canvases(self, canvas_id_list):
-        for canvas_id in  canvas_id_list:
-            self.save_canvas_state(canvas_id)
+    # Returns a dictionary with a mapping of canvas_id to the data url of the current state of the canvas
+    def get_state_for_canvases(self, canvas_id_list):
+        return {canvas_id : self.get_canvas_state(canvas_id) for canvas_id in canvas_id_list}
 
-    def save_canvas_state(self, canvas_id):
+    def get_canvas_state(self, canvas_id):
         canvas = self.driver.find_element_by_id(canvas_id)
+        # get the canvas as a Data URL
+        return self.driver.execute_script("return arguments[0].toDataURL('image/png');", canvas)
 
-        # get the canvas as a PNG base64 string
-        canvas_base64 = self.driver.execute_script("return arguments[0].toDataURL('image/png').substring(21);", canvas)
-
-        # decode
-        canvas_png = base64.b64decode(canvas_base64)
-
-        # save to a file
-        import os
-        if not (os.path.exists(str(id)) and os.path.isdir(str(id))):
-            os.mkdir(str(id))
-
-        with open(os.path.join(str(id), canvas_id), 'wb') as f:
-            f.write(canvas_png)
 
     def apply_update(self, json):
         # Update based on what we recieved from the json
