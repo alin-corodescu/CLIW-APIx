@@ -1,6 +1,6 @@
 from selenium import webdriver
 
-HTML = "file:////home/alin/CLIW-APIx/Web/backend_tests/index.html"
+HTML = "file:////home/alin/projects/CLIW-APIx/Web/backend_tests/backend_html.html"
 
 class Session:
     def __init__(self, sessionID, width, height):
@@ -23,7 +23,7 @@ class Session:
 
     def apply_update(self, json):
         # Update based on what we recieved from the json
-        self.driver.execute_script("drawUpdate(arguments[0]);", json)
+        self.driver.execute_script("drawUpdate(arguments[0]);", json.decode('utf8'))
 
     def set_canvas_dimensions(self, width, height):
         self.driver.execute_script("setCanvasDimensions(arguments[0], arguments[1]);", width, height)
