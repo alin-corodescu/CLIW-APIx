@@ -1,6 +1,7 @@
 from selenium import webdriver
 
-HTML = "file:////home/alin/projects/CLIW-APIx/Web/backend_tests/backend_html.html"
+HTML = "http://cliw-apix-backend.s3-website.eu-central-1.amazonaws.com"
+
 
 class Session:
     def __init__(self, sessionID, width, height):
