@@ -2,19 +2,9 @@
 .icon {
 	color :white;
 	font-size: 1em;
+	margin: 5px 0 5px 0;
 }
 .icon:hover{
 	color: rgba(33,150,243,1);
 }
 
-/*@media (max-width:699px){
-	.icon{
-	font-size:24px !important;
-	}
-}
-
-@media (min-width:700px){
-	.icon{
-	font-size:30px !important;
-	}
-}*/

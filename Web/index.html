@@ -2,57 +2,59 @@
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
-	<link rel="stylesheet" type="text/css" href=".\css\index.css">
-	<link rel="stylesheet" type="text/css" href=".\css\icons.css">
+    <!--Stylesheets css-->
+	<link rel="stylesheet" type="text/css" href="./css/index.css">
+	<link rel="stylesheet" type="text/css" href="./css/icons.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-	<script src=".\js\toggle.js"></script>
-	<script src=".\js\canvas.js"></script>
+
+    <!--JavaScript scripts-->
+	<script src="./js/toggle.js"></script>
+    <script src="./js/action_bar.js"></script>
+	<script src="./js/canvas.js"></script>
 	<meta charset="UTF-8">
 	<title>APix</title>
 </head>
 	<body onload="main()" class="body">
-	 <div id="sidenav" class="sidenav">
-     <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
-     <a href="#" class="sidenavLink"><i class="material-icons icon">&#xE2C4;</i> Export</a>
-	 <a href="#" class="sidenavLink"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
-	 <a href="#" class="sidenavLink"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
-	 <a><i class="material-icons">cast_connected</i> Generate QR code</a>
-     </div>	
-	    <header class="header">
-		 	<div class="header-home">
-			 	<div>
-			 		<button id="navButton" onclick="openNavigation()">&#9776;</button>
-			 		APix: Doodling around with friends!
-			 	</div>
-			</div>
-		</header>
-		<div class="container">
-	      	<div class="canvas-container">
 
-                <canvas class="apix-canvas" id="can">
-                </canvas>
-                <canvas class="fixed_canvas" id="background_canvas">
-                </canvas>
-                <!--<canvas class="fixed_canvas" id="drawable_canvas">-->
-                <!--</canvas>-->
-                <!--<canvas id="visor">-->
-                    <!--Hello world!-->
-                <!--</canvas>-->
+        <!--Navigation-->
+         <div id="sidenav" class="sidenav">
+             <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
+             <a href="#" class="sidenavLink"><i class="material-icons icon">&#xE2C4;</i> Export</a>
+             <a href="#" class="sidenavLink"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
+             <a href="#" class="sidenavLink"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
+             <a><i class="material-icons">cast_connected</i> Generate QR code</a>
+         </div>
 
-				<aside class="canvas-options">
-					<div class="action-bar vertical">
-						<i onclick="upload_background()" class="material-icons icon icon-background">&#xE251;</i>
-						<br>
-						<i class="material-icons icon icon-android">&#xE859;</i><br>
-						<i class="material-icons icon">&#xE5D4;</i><br>
-						<input id="colorPicker" name="Color picker" type="color" class="color-picker" onchange="updateColorPickerButton(); color();"/>
-						<button onclick="clickColorPicker()" id="colorButton" class="circle-button"></button>
-			           <!--  <input onclick="zooming()" type="button" id="plus" value="+">
-			            <input onclick="back_to_draw()" type="button" id="minus" value="-"> -->
-					</div>
-				</aside>
-			</div>
-		</div>
+        <!--Header-->
+        <header class="header">
+            <div class="header-home">
+                <div>
+                    <button id="navButton" onclick="openNavigation()">&#9776;</button>
+                    APix: Doodling around with friends!
+                </div>
+            </div>
+        </header>
+
+        <!--Canvas container-->
+        <div class="container canvas-container">
+            <!--Canvases-->
+            <canvas class="fixed_canvas" id="background_canvas"></canvas>
+            <canvas class="fixed_canvas" id="drawable_canvas"></canvas>
+            <canvas id="visor"></canvas>
+
+            <!--Canvas options-->
+            <aside class="canvas-options">
+                <i class="material-icons icon">image</i>
+                <i class="material-icons icon">android</i>
+                <i class="material-icons icon">more_vert</i>
+                <input id="colorPicker" name="Color picker" type="color" class="color-picker"/>
+                <i onclick="clickColorPicker()" id="colorButton" class="material-icons icon">palette</i>
+                <i class="material-icons icon" id="lineWeight">line_weight</i>
+                <i class="material-icons icon" id="switch">zoom_in</i>
+            </aside>
+        </div>
+
+        <!--Transition-->
 		<div class="container">
 				<nav class="transition">
 					<a href="#">&laquo;</a>
