@@ -42,7 +42,8 @@ class Broker(object):
         initial_update = session.get_state_for_canvases(['drawable_canvas', 'background_canvas'])
         import json
         json_update = json.dumps(initial_update)
-        client.sendMessage(json_update, False)
+
+        client.sendMessage(bytes(json_update.encode('utf8')), False)
 
     def removeClient(self, client):
         # Get the session of the client
@@ -63,12 +64,13 @@ broker = Broker()
 class BrokeringProtocol(WebSocketServerProtocol):
 
     def onConnect(self, request):
-        print("Client connecting: {}".format(request.peer))
         broker.register(self, request.params['sessionID'][0], request.params['width'][0], request.params['height'][0])
+        print("Client connecting: {}".format(request.peer))
 
     def onOpen(self):
-        print("WebSocket connection open.")
         broker.initiate(self)
+        print("WebSocket connection open.")
+
 
     def onMessage(self, payload, isBinary):
         if isBinary:

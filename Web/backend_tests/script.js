@@ -1,5 +1,5 @@
 // The url to connect to the backend for synchronization
-const BACKEND_URL = 'ws://localhost:5000/';
+const BACKEND_URL = 'ws://localhost:5001/';
 
 var modes = {
 	PAINT : 1,
@@ -32,10 +32,37 @@ function computePosition(element) {
 // This is the main function, will be called when the browser loads the page
 var main = function () {
 
-	// This function connects to the backend via WebSockets for synchronization
+    function handleUpdate(data) {
+        let update = JSON.parse(data);
+        if (update.hasOwnProperty('drawable_canvas')) {
+        //    means we have an initial update
+            let drawable_image = new Image();
+            drawable_image.onload = function (ev) {
+                drawable_canvas_ctx.drawImage(drawable_image,0,0);
+            };
+            drawable_image.src = update.drawable_canvas;
+
+            let background_image = new Image();
+            background_image.onload = function (ev) {
+                background_canvas_ctx.drawImage(background_image,0,0);
+            };
+            background_image.src = update.background_canvas;
+        }
+        else {
+        //    means we have to update
+            var style = {color : update.color, thickness: update.thickness};
+            draw(drawable_canvas_ctx, update, style);
+        }
+    }
+
+    // This function connects to the backend via WebSockets for synchronization
 	var establishConnection = function (url, session_id) {
-		var connection = new WebSocket(BACKEND_URL + '?sessionID=' + session_id);
+		var connection = new WebSocket(BACKEND_URL + '?sessionID=' + session_id + '&width=600&height=600');
 		connection.onopen = function (ev) { console.log("Connection open") };
+		connection.onmessage = function (ev) {
+            handleUpdate(ev.data);
+        };
+		connection.onclose = function (ev) { alert("connection lost"); };
 
 		return connection;
 	};
@@ -45,7 +72,7 @@ var main = function () {
 	};
 
 	var session_id = getSessionId();
-	// var conn = establishConnection(BACKEND_URL, session_id);
+	var conn = establishConnection(BACKEND_URL, session_id);
 
 	// Get the elements from the DOM
 	var visor = document.getElementById('visor');
@@ -121,6 +148,11 @@ var main = function () {
             draw(drawable_canvas_ctx, transformedData, currentStyle);
 
             //    TODO send data over the socket (style + transformedData)
+            let update = transformedData;
+            update['thickness'] = currentStyle.thickness;
+            update['color'] = currentStyle.color;
+
+            conn.send(JSON.stringify(update));
         }
         else {
             var scrollX = mouseData.xTo - mouseData.xFrom;
