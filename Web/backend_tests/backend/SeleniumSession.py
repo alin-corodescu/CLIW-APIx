@@ -1,6 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-import base64
 
 HTML = "file:////home/alin/CLIW-APIx/Web/backend_tests/index.html"
 
@@ -22,7 +20,6 @@ class Session:
         canvas = self.driver.find_element_by_id(canvas_id)
         # get the canvas as a Data URL
         return self.driver.execute_script("return arguments[0].toDataURL('image/png');", canvas)
-
 
     def apply_update(self, json):
         # Update based on what we recieved from the json
