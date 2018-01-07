@@ -1,6 +1,6 @@
 from autobahn.asyncio.websocket import WebSocketServerProtocol
 # or: from autobahn.asyncio.websocket import WebSocketServerProtocol
-from selenium_test import Session
+from SeleniumSession import Session
 
 class Broker(object):
     def __init__(self):
