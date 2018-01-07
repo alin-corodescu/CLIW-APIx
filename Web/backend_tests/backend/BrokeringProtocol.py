@@ -2,12 +2,11 @@ from autobahn.asyncio.websocket import WebSocketServerProtocol
 # or: from autobahn.asyncio.websocket import WebSocketServerProtocol
 from selenium_test import Session
 
-MESSAGE_Q_LEN_LIMIT = 1000
 class Broker(object):
     def __init__(self):
         self.publishers = {}
         self.subscribers = {}
-        self.topics = {}
+
         self.sessions = {}
 
     def register(self, client, session, width, height):
@@ -23,23 +22,27 @@ class Broker(object):
 
     def publishMessage(self, client, payload):
         topic = self.publishers.get(client)
-        if self.topics.get(topic) == None:
-            self.topics[topic] = []
-        self.topics[topic].append(payload)
-        self.handleMessageQueue(topic)
-        self.broadcastUpdates(topic)
 
-    def broadcastUpdates(self, topic):
+        # First update the current session
+        sess = self.sessions.get(topic)
+        sess.apply_update(payload)
+
+        # Then broadcast the update to all the subscribers
+        self.broadcastUpdate(topic, payload)
+
+    def broadcastUpdate(self, topic, update):
         subscribers = self.subscribers[topic]
         for subscriber in subscribers:
-            subscriber.sendMessage(self.topics[topic][-1], False)
+            subscriber.sendMessage(update, False)
 
     def initiate(self, client):
-        # TODO send the canvas state as an update
-        session = self.publishers[client]
-        if self.topics.get(session) != None:
-            for message in self.topics[session]:
-                client.sendMessage(message, False)
+        # send the canvas state as an update
+        topic = self.publishers[client]
+        session = self.sessions.get(topic)
+        initial_update = session.get_state_for_canvases(['drawable_canvas', 'background_canvas'])
+        import json
+        json_update = json.dumps(initial_update)
+        client.sendMessage(json_update, False)
 
     def removeClient(self, client):
         # Get the session of the client
@@ -52,13 +55,6 @@ class Broker(object):
         # Remove the client from this topic
         clients.remove(client)
 
-    def handleMessageQueue(self, topic):
-        if len(self.topics[topic]) > MESSAGE_Q_LEN_LIMIT:
-            sess = self.sessions.get(topic)
-            # Store the states for the canvases
-            sess.store_state_for_canvases(['drawable_canvas', 'background_canvas'])
-            # clear the messages for the topic
-            self.topics[topic].clear()
 
 
 
