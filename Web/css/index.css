@@ -163,8 +163,7 @@
     width: 20px;
     height: 20px;
 }
-.color-picker {
-    position:absolute;
+.hidden_function {
     display: none;
 }
 

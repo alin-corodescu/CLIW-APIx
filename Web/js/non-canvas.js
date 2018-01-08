@@ -1,15 +1,4 @@
-function toggle() {
-    var x = document.getElementById("toggle");
-    if (x.style.visibility === undefined) {
-        x.style.visibility = "hidden";
-}
-	if( x.style.visibility == "hidden"){
-		x.style.visibility = "visible";
-}
-    else {
-        x.style.visibility = "hidden";
-    }
-}
+// Functions relating side navigation
 function changeOpacityOfContainers(y) {
 	var x = document.getElementsByClassName("container");
 	var i;
@@ -38,7 +27,13 @@ function openNavigation() {
 	changeOpacityOfContainers(0.2);
 	displayLinks(true);
 }
+
+//functions for aside options
 function clickColorPicker() {
-	document.getElementById("colorPicker").click();
-	console.log("WHATASPP");
+	document.getElementById("color-picker").click();
 }
+function clickUploadImage() {
+    document.getElementById("upload_image").click();
+
+}
+
