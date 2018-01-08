@@ -64,7 +64,7 @@ broker = Broker()
 class BrokeringProtocol(WebSocketServerProtocol):
 
     def onConnect(self, request):
-        broker.register(self, request.params['sessionID'][0], request.params['width'][0], request.params['height'][0])
+        broker.register(self, request.params['sessionId'][0], request.params['width'][0], request.params['height'][0])
         print("Client connecting: {}".format(request.peer))
 
     def onOpen(self):
