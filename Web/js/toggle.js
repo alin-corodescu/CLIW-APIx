@@ -28,8 +28,6 @@ function displayLinks(flag) {
 }
 function closeNavigation() {
 	document.getElementById("sidenav").style.width = "0";
-	// document.body.style.opacity = "1";	
-	// document.getElementById("sidenav").style.opacity = "0";
 	changeOpacityOfContainers(1);
 	displayLinks(false);
 }
@@ -42,9 +40,5 @@ function openNavigation() {
 }
 function clickColorPicker() {
 	document.getElementById("colorPicker").click();
-}
-function updateColorPickerButton() {
-	console.log("Changed color!");
-	var color = document.getElementById("colorPicker").value;
-	document.getElementById("colorButton").style.backgroundColor = color;
+	console.log("WHATASPP");
 }

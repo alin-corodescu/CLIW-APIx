@@ -26,6 +26,7 @@ function computePosition(element) {
     }
     else
     {
+
         return [ element.x, element.y ];
     }
 }
