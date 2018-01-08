@@ -52,15 +52,14 @@ var main = function () {
         document.getElementById("loader").style.display = "none";
         document.getElementById("after-load").style.display = "block";
     };
-    setTimeout(showPage, 3000);
 	 // This function connects to the backend via WebSockets for synchronization
 	var establishConnection = function (url, session_id) {
 		var connection = new WebSocket(BACKEND_URL + '?sessionID=' + session_id + '&width=600&height=600');
-		connection.onopen = function (ev) { console.log("Connection open") };
+		connection.onopen = function (ev) { showPage() };
 		connection.onmessage = function (ev) {
             handleUpdate(ev.data);
         };
-		connection.onclose = function (ev) { alert("connection lost"); };
+		connection.onclose = function (ev) { console.log("connection lost"); };
 
 		return connection;
 	};
@@ -77,8 +76,8 @@ var main = function () {
 	var background_canvas = document.getElementById('background_canvas');
 	var drawable_canvas = document.getElementById('drawable_canvas');
 	var switch_button = document.getElementById('switch');
-    let color_picker = document.getElementById("colorPicker");
-    let lineWeight = document.getElementById("lineWeight");
+    let color_picker = document.getElementById("color_picker");
+    let upload_image = document.getElementById("upload_image");
 
 	// This settings here have to be done because canvas CSS width and height do not get propagated
     // to the actual context, it's two different values
@@ -222,12 +221,53 @@ var main = function () {
         current_style.color = color_picker.value;
     };
 
+    upload_image.onchange = function(event) {
+        let image_file = event.target.files[0];
+        let image_type = /image.*/;
+
+        if (image_file.type.match(image_type)) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                //does not work
+                // let image_object = new Image();
+                // image_object.src = reader.result;
+                // console.log(image_object);
+                // drawable_canvas_ctx.drawImage(image_object,0,0);
+
+                //needs some work
+                console.log(atob(reader.result));
+                drawable_canvas_ctx.putImageData(atob(reader.result),0,0);
+
+            };
+            reader.readAsDataURL(image_file);
+        }
+    };
+
+    // fileInput.addEventListener('change', function(e) {
+		// 	var file = fileInput.files[0];
+		// 	var imageType = /image.*/;
+    //
+		// 	if (file.type.match(imageType)) {
+		// 		var reader = new FileReader();
+    //
+		// 		reader.onload = function(e) {
+		// 			fileDisplayArea.innerHTML = "";
+    //
+		// 			var img = new Image();
+		// 			img.src = reader.result;
+		//
+		// 		}
+    //
+		// 		reader.readAsDataURL(file);
+		// 	} else {
+		// 		fileDisplayArea.innerHTML = "File not supported!"
+		// 	}
+		// });
     //Creating a transfer canvas to palce the zoomed image in it then redraw it on the visor canvas
     let transfer_canvas = document.createElement('canvas');
     transfer_canvas.width = visor.width;
     transfer_canvas.height = visor.height;
     let transfer_canvas_ctx = transfer_canvas.getContext('2d');
-
 
     function renderVisor() {
         let image, image2 = new Image(visor.width, visor.height);

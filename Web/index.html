@@ -8,9 +8,9 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <!--JavaScript scripts-->
-	<script src="./js/toggle.js"></script>
-    <script src="./js/action_bar.js"></script>
+	<script src="js/non-canvas.js"></script>
 	<script src="./js/canvas.js"></script>
+    <script src="./js/action_bar.js"></script>
 	<meta charset="UTF-8">
 	<title>APix</title>
 </head>
@@ -48,12 +48,15 @@
 
                 <!--Canvas options-->
                 <aside class="canvas-options">
-                    <i class="material-icons icon">image</i>
+                    <!--Input for HTML 5-->
+                    <input id="color_picker" type="color" class="hidden_function"/>
+                    <input id="upload_image" type="file" class="hidden_function" />
+
+                    <i class="material-icons icon" onclick="clickUploadImage()">image</i>
                     <i class="material-icons icon">android</i>
                     <i class="material-icons icon">more_vert</i>
-                    <input id="colorPicker" name="Color picker" type="color" class="color-picker"/>
-                    <i onclick="clickColorPicker()" id="colorButton" class="material-icons icon">palette</i>
-                    <i class="material-icons icon" id="lineWeight">line_weight</i>
+                    <i class="material-icons icon" onclick="clickColorPicker()" id="colorButton"> palette</i>
+                    <i class="material-icons icon">line_weight</i>
                     <i class="material-icons icon" id="switch">zoom_in</i>
                 </aside>
             </div>
