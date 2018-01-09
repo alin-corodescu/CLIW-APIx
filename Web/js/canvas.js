@@ -54,7 +54,7 @@ var main = function () {
     };
 	 // This function connects to the backend via WebSockets for synchronization
 	var establishConnection = function (url, session_id) {
-		var connection = new WebSocket(BACKEND_URL + '?sessionID=' + session_id + '&width=600&height=600');
+		var connection = new WebSocket(BACKEND_URL + '?sessionId=' + session_id + '&width=600&height=600');
 		connection.onopen = function (ev) { showPage() };
 		connection.onmessage = function (ev) {
             handleUpdate(ev.data);
@@ -228,49 +228,39 @@ var main = function () {
         if (image_file.type.match(image_type)) {
             let reader = new FileReader();
             reader.onload = function (e) {
-                //does not work
-                // let image_object = new Image();
-                // image_object.src = reader.result;
-                // console.log(image_object);
-                // drawable_canvas_ctx.drawImage(image_object,0,0);
-
-                //needs some work
-                console.log(atob(reader.result));
-                drawable_canvas_ctx.putImageData(atob(reader.result),0,0);
-
+                let image_object = new Image();
+                image_object.onload = function() {
+                    // FIXME need to use background canvas but it creates a "glitchy" effect
+                    drawable_canvas_ctx.drawImage(image_object, 0, 0);
+               };
+               image_object.src = e.target.result;
             };
             reader.readAsDataURL(image_file);
         }
     };
 
-    // fileInput.addEventListener('change', function(e) {
-		// 	var file = fileInput.files[0];
-		// 	var imageType = /image.*/;
-    //
-		// 	if (file.type.match(imageType)) {
-		// 		var reader = new FileReader();
-    //
-		// 		reader.onload = function(e) {
-		// 			fileDisplayArea.innerHTML = "";
-    //
-		// 			var img = new Image();
-		// 			img.src = reader.result;
-		//
-		// 		}
-    //
-		// 		reader.readAsDataURL(file);
-		// 	} else {
-		// 		fileDisplayArea.innerHTML = "File not supported!"
-		// 	}
-		// });
-    //Creating a transfer canvas to palce the zoomed image in it then redraw it on the visor canvas
+    //Creating a transfer canvas to place the zoomed image in it then redraw it on the visor canvas
     let transfer_canvas = document.createElement('canvas');
     transfer_canvas.width = visor.width;
     transfer_canvas.height = visor.height;
     let transfer_canvas_ctx = transfer_canvas.getContext('2d');
 
+    function updateVisorContent(context){
+        let image = context.getImageData(visor_state.offsetX, visor_state.offsetY, visor.width / visor_state.zoom, visor.height/visor_state.zoom );
+        let image2 = new Image(visor.width, visor.height);
+
+        transfer_canvas_ctx.putImageData(image, 0, 0);
+        image2.onload=function(){
+            transfer_canvas_ctx.clearRect(0, 0, transfer_canvas.width, transfer_canvas.height);
+            visor_ctx.save();
+            visor_ctx.clearRect(0,0,visor.width,visor.height);
+            visor_ctx.scale(visor_state.zoom,visor_state.zoom);
+            visor_ctx.drawImage(image2,0,0);
+            visor_ctx.restore();
+        };
+        image2.src = transfer_canvas.toDataURL();
+    }
     function renderVisor() {
-        let image, image2 = new Image(visor.width, visor.height);
         // In case the user scrolled, we zoom in the area where his mouse points
         if(scale_type != null) {
             let old_zoom = visor_state.zoom;
@@ -282,21 +272,7 @@ var main = function () {
             visor_state.offsetY -= zoomPointY/visor_state.zoom - zoomPointY/old_zoom;
             scale_type = null;
         }
-
-        // Saving the image from the drawable canvas : getImageData -> dummy_canvas -> toDataURL -> drawImage
-        image = drawable_canvas_ctx.getImageData(visor_state.offsetX, visor_state.offsetY, visor.width / visor_state.zoom, visor.height/visor_state.zoom );
-        transfer_canvas_ctx.putImageData(image, 0, 0);
-
-        image2.onload=function(){
-            transfer_canvas_ctx.clearRect(0, 0, transfer_canvas.width, transfer_canvas.height);
-            visor_ctx.save();
-            visor_ctx.clearRect(0,0,visor.width,visor.height);
-            visor_ctx.scale(visor_state.zoom,visor_state.zoom);
-            visor_ctx.drawImage(image2,0,0);
-            visor_ctx.restore();
-        };
-        image2.src = transfer_canvas.toDataURL();
-
+        updateVisorContent(drawable_canvas_ctx);
     }
 
     // Render the visor at 30 fps
