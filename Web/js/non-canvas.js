@@ -30,10 +30,10 @@ function openNavigation() {
 
 //functions for aside options
 function clickColorPicker() {
-	document.getElementById("color-picker").click();
+	document.getElementById("color_picker").click();
+	document.getElementById("color_picker").value ="red";
 }
 function clickUploadImage() {
     document.getElementById("upload_image").click();
-
 }
 
