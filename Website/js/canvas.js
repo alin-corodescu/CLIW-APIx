@@ -48,55 +48,82 @@ function setInitialSettings(mouse_active, mouseData, mode, visorState, currentSt
 
 // This is the main function, will be called when the browser loads the page
 var main = function () {
-    let showPage = function() {
-        document.getElementById("loader").style.display = "none";
-        document.getElementById("after-load").style.display = "block";
-    };
-	 // This function connects to the backend via WebSockets for synchronization
-	var establishConnection = function (url, session_id) {
-		var connection = new WebSocket(BACKEND_URL + '?sessionId=' + session_id + '&width=600&height=600');
-		connection.onopen = function (ev) { showPage() };
-		connection.onmessage = function (ev) {
-            handleUpdate(ev.data);
-        };
-		connection.onclose = function (ev) { console.log("connection lost"); };
+    // Declare it here, initialize once we have the session id from the server
+    var conn;
+    var sessionId;
+    // This will trigger the connection to the Broker websocket as well
+    // This is required to make the browser wait before connection to the websocket until it has the session id
+    getSessionId();
 
-		return connection;
-	};
-	// This function will make an AJAX call to the server to get the session id
-	var getSessionId = function() {
-		return 1;
-	};
-
-	var session_id = getSessionId();
-	var conn = establishConnection(BACKEND_URL, session_id);
-
-	// Get the elements from the DOM
-	var visor = document.getElementById('visor');
-	var background_canvas = document.getElementById('background_canvas');
-	var drawable_canvas = document.getElementById('drawable_canvas');
-	var switch_button = document.getElementById('switch');
+    // Get the elements from the DOM
+    var visor = document.getElementById('visor');
+    var background_canvas = document.getElementById('background_canvas');
+    var drawable_canvas = document.getElementById('drawable_canvas');
+    var switch_button = document.getElementById('switch');
     let color_picker = document.getElementById("color_picker");
     let upload_image = document.getElementById("upload_image");
 
-	// This settings here have to be done because canvas CSS width and height do not get propagated
+
+    // This settings here have to be done because canvas CSS width and height do not get propagated
     // to the actual context, it's two different values
     // console.log(window.getComputedStyle(visor).width);
-	visor.width = parseInt(window.getComputedStyle(visor).width);
-	visor.height = parseInt(window.getComputedStyle(visor).height);
+    visor.width = parseInt(window.getComputedStyle(visor).width);
+    visor.height = parseInt(window.getComputedStyle(visor).height);
     background_canvas.width = parseInt(window.getComputedStyle(background_canvas).width);
     background_canvas.height = parseInt(window.getComputedStyle(background_canvas).height);
     drawable_canvas.width = parseInt(window.getComputedStyle(drawable_canvas).width);
     drawable_canvas.height = parseInt(window.getComputedStyle(drawable_canvas).height);
 
-	var drawable_canvas_ctx = drawable_canvas.getContext('2d');
-	var backgroud_canvas_ctx = background_canvas.getContext('2d');
-	var visor_ctx = visor.getContext('2d');
+    var drawable_canvas_ctx = drawable_canvas.getContext('2d');
+    var backgroud_canvas_ctx = background_canvas.getContext('2d');
+    var visor_ctx = visor.getContext('2d');
 
-	var mouse_active, mouse_data, mode, visor_state, current_style;
+    var mouse_active, mouse_data, mode, visor_state, current_style;
     let scale_type = null, zoomPointX = null, zoomPointY = null;
 
     [mouse_active, mouse_data, mode, visor_state, current_style] = setInitialSettings();
+
+    let showPage = function() {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("after-load").style.display = "block";
+    };
+	 // This function connects to the backend via WebSockets for synchronization
+	function establishConnection(url, session_id) {
+	    let width = drawable_canvas.width;
+	    let height = drawable_canvas.height;
+		var connection = new WebSocket(BACKEND_URL + '?sessionId=' + session_id + '&width=' + width +'&height=' + height);
+		connection.onopen = function (ev) { showPage() };
+		connection.onmessage = function (ev) {
+            handleUpdate(ev.data);
+        };
+		connection.onclose = function (ev) {
+		    alert("connection lost but I will show the page anyway for offline mode");
+		    showPage();
+		    console.log("connection lost");
+		};
+
+		return connection;
+	}
+	// This function will make an AJAX call to the server to get the session id
+	function getSessionId() {
+        let sessionRequest = new XMLHttpRequest();
+        sessionRequest.onreadystatechange = function (ev) {
+            if (this.readyState === 4) {
+                if (this.status === 200) {
+                    console.log("got session id: " + this.responseText);
+                    sessionId = this.responseText;
+                }
+                else {
+                    // Running locally or got an error
+                    sessionId = 1;
+                }
+                conn = establishConnection(BACKEND_URL, sessionId);
+
+            }
+        };
+        sessionRequest.open("GET", "/session", true);
+        sessionRequest.send();
+	}
 
     function handleUpdate(data) {
         let update = JSON.parse(data);
@@ -114,11 +141,11 @@ var main = function () {
             };
             background_image.src = update.background_canvas;
         }
-    else {
-    //    means we have to update
-        var style = {color : update.color, thickness: update.thickness};
-        draw(drawable_canvas_ctx, update, style);
-        }
+        else {
+        //    means we have to update
+            var style = {color : update.color, thickness: update.thickness};
+            draw(drawable_canvas_ctx, update, style);
+            }
     }
 
     // Transforms mouse coordinates into actual canvas coordinates using the current
