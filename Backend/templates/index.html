@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <!--Stylesheets css-->
+	<link rel="stylesheet" type="text/css" href="./css/index.css">
+	<link rel="stylesheet" type="text/css" href="./css/icons.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!--JavaScript scripts-->
+	<script src="js/non-canvas.js"></script>
+	<script src="./js/canvas.js"></script>
+    <script src="./js/action_bar.js"></script>
+	<meta charset="UTF-8">
+	<title>APix</title>
+</head>
+	<body onload="main()" class="body">
+
+        <!--Loader while we fetch the data from the server-->
+        <div class="loader" id="loader"></div>
+
+        <div class="after-load" id="after-load">
+        <!--Navigation-->
+            <div id="sidenav" class="sidenav">
+                <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
+                <a href="#" class="sidenavLink"><i class="material-icons icon">&#xE2C4;</i> Export</a>
+                <a href="#" class="sidenavLink"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
+                <a href="#" class="sidenavLink"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
+                <a><i class="material-icons">cast_connected</i> Generate QR code</a>
+            </div>
+
+            <!--Header-->
+            <header class="header">
+                <div class="header-home">
+                    <div>
+                        <button id="navButton" onclick="openNavigation()">&#9776;</button>
+                        APix: Doodling around with friends!
+                    </div>
+                </div>
+            </header>
+
+            <!--Canvas container-->
+            <div class="container canvas-container">
+                <!--Canvases-->
+                <canvas class="fixed_canvas" id="background_canvas"></canvas>
+                <canvas class="fixed_canvas" id="drawable_canvas"></canvas>
+                <canvas id="visor"></canvas>
+
+                <!--Canvas options-->
+                <aside class="canvas-options">
+                    <!--Input for HTML 5-->
+                    <input id="color_picker" type="color" class="hidden_function"/>
+                    <input id="upload_image" type="file" class="hidden_function" />
+
+                    <i class="material-icons icon" onclick="clickUploadImage()">image</i>
+                    <i class="material-icons icon">android</i>
+                    <i class="material-icons icon">more_vert</i>
+                    <i class="material-icons icon" onclick="clickColorPicker()" id="colorButton"> palette</i>
+                    <i class="material-icons icon">line_weight</i>
+                    <i class="material-icons icon" id="switch">zoom_in</i>
+                </aside>
+            </div>
+
+            <!--Transition-->
+            <div class="container">
+                <nav class="transition">
+                    <a href="#">&laquo;</a>
+                    <a href="#">1</a>
+                    <a href="#">2</a>
+                    <a class="active" href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a href="#">6</a>
+                    <a href="#">&raquo;</a>
+                </nav>
+            </div>
+        </div>
+	</body>
+</html>

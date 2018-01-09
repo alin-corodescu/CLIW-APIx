@@ -1,0 +1,8 @@
+.icon {
+	color :white;
+	font-size: 1em;
+	margin: 5px 0 5px 0;
+}
+.icon:hover{
+	color: rgba(33,150,243,1);
+}
