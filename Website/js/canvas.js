@@ -112,23 +112,24 @@ var main = function () {
 	}
 
 	function setCanvasDimensions(width, height) {
-	    visor.style.width = width + 'px';
+        visor.style.width = width + 'px';
         visor.style.height = height + 'px';
         background_canvas.style.width = width+ 'px';
         background_canvas.style.height = height+ 'px';
         drawable_canvas.style.width = width+ 'px';
         drawable_canvas.style.height = height+ 'px';
 
-        visor.width = parseInt(window.getComputedStyle(visor).width);
-        visor.height = parseInt(window.getComputedStyle(visor).height);
-        background_canvas.width = parseInt(window.getComputedStyle(background_canvas).width);
-        background_canvas.height = parseInt(window.getComputedStyle(background_canvas).height);
-        drawable_canvas.width = parseInt(window.getComputedStyle(drawable_canvas).width);
-        drawable_canvas.height = parseInt(window.getComputedStyle(drawable_canvas).height);
+        visor.width = width;
+        visor.height = height;
+        background_canvas.width = width;
+        background_canvas.height = height;
+        drawable_canvas.width = width;
+        drawable_canvas.height = height;
 
         drawable_canvas_ctx = drawable_canvas.getContext('2d');
         backgroud_canvas_ctx = background_canvas.getContext('2d');
         visor_ctx = visor.getContext('2d');
+
 
 }
 	// This function will make an AJAX call to the server to get the session id
@@ -301,8 +302,7 @@ var main = function () {
                     image_object.onload = function () {
                         // FIXME need to use background canvas but it creates a "glitchy" effect
                         setCanvasDimensions(image_object.width, image_object.height);
-                        console.log(visor.width);
-                        drawable_canvas_ctx.drawImage(image_object, 0, 0);
+                        drawable_canvas_ctx.drawImage(image_object, 0, 0, image_object.width, image_object.height);
                     };
                     image_object.src = e.target.result;
                 };

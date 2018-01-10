@@ -54,4 +54,38 @@ function thinnerLineWeight(){
     line_thick.value = current_line_thick.toString();
     line_thick.dispatchEvent(event);
 }
+function exportCanvasPNG () {
+    document.getElementById('visor').toBlob(function(blob) {
+        let textToSaveAsURL = window.URL.createObjectURL(blob);
+        let fileNameToSaveAs = 'doodle.png';
+        let downloadLink = document.createElement("a");
+        downloadLink.download = fileNameToSaveAs;
+        downloadLink.innerHTML = "Download File";
+        downloadLink.href = textToSaveAsURL;
+        downloadLink.onclick = destroyClickedElement;
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+    },'image/png');
+}
 
+// still needs some work because it saved a complete dark image
+function exportCanvasJPEG () {
+    document.getElementById('visor').toBlob(function(blob) {
+        let textToSaveAsURL = window.URL.createObjectURL(blob);
+        let fileNameToSaveAs = 'doodle.jpeg';
+        let downloadLink = document.createElement("a");
+        downloadLink.download = fileNameToSaveAs;
+        downloadLink.innerHTML = "Download File";
+        downloadLink.href = textToSaveAsURL;
+        downloadLink.onclick = destroyClickedElement;
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+    },'image/jpeg', 0.95);
+}
+
+function destroyClickedElement(event)
+{
+    document.body.removeChild(event.target);
+}

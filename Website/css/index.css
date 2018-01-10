@@ -128,16 +128,14 @@
 
 
 /*Canvases*/
-.fixed_canvas {
+.canvas{
     height: 450px;
     width: 900px;
     border: 1px solid black;
-    display: none;
+    background: white;
 }
-#visor {
-    height: 450px;
-    width: 900px;
-    border: 1px solid black;
+.hidden_canvas {
+    display: none;
     background: white;
 }
 
