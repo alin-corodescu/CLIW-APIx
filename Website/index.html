@@ -49,14 +49,16 @@
                 <!--Canvas options-->
                 <aside class="canvas-options">
                     <!--Input for HTML 5-->
-                    <input id="color_picker" type="color" class="hidden_function"/>
+                    <input id="color_picker" type="color" value="#337564" class="hidden_function"/>
                     <input id="upload_image" type="file" class="hidden_function" />
+                    <input id="line_weight" type="number" class="hidden_function"/>
 
                     <i class="material-icons icon" onclick="clickUploadImage()">image</i>
                     <i class="material-icons icon">android</i>
                     <i class="material-icons icon">more_vert</i>
                     <i class="material-icons icon" onclick="clickColorPicker()" id="colorButton"> palette</i>
-                    <i class="material-icons icon">line_weight</i>
+                    <i class="material-icons icon" onclick="thickerLineWeight()">line_weight </i>
+                    <i class="material-icons icon icon-flipped" onclick="thinnerLineWeight()">line_weight </i>
                     <i class="material-icons icon" id="switch">zoom_in</i>
                 </aside>
             </div>

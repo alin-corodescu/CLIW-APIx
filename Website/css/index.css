@@ -14,9 +14,8 @@
 /*Loader layout css*/
 .loader {
     border-radius: 50%;
-    border: 16px solid blue;
-    border-right-color: green;
-    border-bottom-color: red;
+    border: 16px solid lightblue;
+    border-right-color: pink;
     border-left-color: pink;
     width: 120px;
     height: 120px;
@@ -157,19 +156,6 @@
     opacity: 1;
 }
 
-.circle-button {
-    border-radius: 50%;
-    border : 2px solid white;
-    width: 20px;
-    height: 20px;
-}
-.hidden_function {
-    display: none;
-}
-
-.icon{
-    cursor: pointer;
-}
 
 /*Transition layout css*/
 .transition a {

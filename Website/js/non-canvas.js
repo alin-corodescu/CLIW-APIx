@@ -1,3 +1,4 @@
+var current_line_thick = 2, line_thick_step = 0.2, MAX_THICK = 10, MIN_THICK = 0.2;
 // Functions relating side navigation
 function changeOpacityOfContainers(y) {
 	var x = document.getElementsByClassName("container");
@@ -31,9 +32,26 @@ function openNavigation() {
 //functions for aside options
 function clickColorPicker() {
 	document.getElementById("color_picker").click();
-	document.getElementById("color_picker").value ="red";
 }
 function clickUploadImage() {
     document.getElementById("upload_image").click();
+}
+function thickerLineWeight(){
+    let line_thick = document.getElementById("line_weight");
+    let event = new Event('change');
+    current_line_thick = current_line_thick + line_thick_step;
+    if(current_line_thick > MAX_THICK)
+        current_line_thick = MAX_THICK;
+    line_thick.value = current_line_thick.toString();
+    line_thick.dispatchEvent(event);
+}
+function thinnerLineWeight(){
+    let line_thick = document.getElementById("line_weight");
+    let event = new Event('change');
+    current_line_thick = current_line_thick - line_thick_step;
+     if(current_line_thick < MIN_THICK)
+        current_line_thick = MIN_THICK;
+    line_thick.value = current_line_thick.toString();
+    line_thick.dispatchEvent(event);
 }
 

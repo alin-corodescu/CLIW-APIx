@@ -13,6 +13,7 @@ var zoom_type = {
     OUT: 2
 };
 
+
 // Returns the position of an element in the page
 function computePosition(element) {
     if(typeof( element.offsetParent ) !== "undefined")
@@ -30,7 +31,7 @@ function computePosition(element) {
     }
 }
 
-function setInitialSettings(mouse_active, mouseData, mode, visorState, currentStyle){
+function setInitialSettings(mouse_active, mouseData, mode, visorState,MAX_ZOOM, MIN_ZOOM, currentStyle){
     mouse_active = false;
     // Mode in which to use the mouse e.g scroll or paint
     mode = modes.PAINT;
@@ -40,10 +41,14 @@ function setInitialSettings(mouse_active, mouseData, mode, visorState, currentSt
     // Change this object through the web interface
     visorState = {zoom : 1, zoomStep: 0.1, offsetX: 0, offsetY: 0};
 
+    // Set zoom limits
+    MAX_ZOOM = visorState.zoom + 5 * visorState.zoomStep;
+    MIN_ZOOM = -visorState.zoom + 3 * visorState.zoomStep;
+
     // Here we specify the color, the thickness etc.
     currentStyle = {color : "black", thickness : 2};
 
-    return [mouse_active, mouseData, mode, visorState, currentStyle];
+    return [mouse_active, mouseData, mode, visorState, MAX_ZOOM, MIN_ZOOM, currentStyle];
 }
 
 // This is the main function, will be called when the browser loads the page
@@ -62,11 +67,11 @@ var main = function () {
     var switch_button = document.getElementById('switch');
     let color_picker = document.getElementById("color_picker");
     let upload_image = document.getElementById("upload_image");
+    let line_weight = document.getElementById("line_weight");
 
 
     // This settings here have to be done because canvas CSS width and height do not get propagated
     // to the actual context, it's two different values
-    // console.log(window.getComputedStyle(visor).width);
     visor.width = parseInt(window.getComputedStyle(visor).width);
     visor.height = parseInt(window.getComputedStyle(visor).height);
     background_canvas.width = parseInt(window.getComputedStyle(background_canvas).width);
@@ -79,9 +84,10 @@ var main = function () {
     var visor_ctx = visor.getContext('2d');
 
     var mouse_active, mouse_data, mode, visor_state, current_style;
-    let scale_type = null, zoomPointX = null, zoomPointY = null;
+    let scale_type = null, zoomPointX = null, zoomPointY = null, MAX_ZOOM = null, MIN_ZOOM = null;
 
-    [mouse_active, mouse_data, mode, visor_state, current_style] = setInitialSettings();
+    [mouse_active, mouse_data, mode, visor_state, MAX_ZOOM, MIN_ZOOM, current_style] =
+        setInitialSettings(mouse_active,mouse_data,mode, visor_state, MAX_ZOOM, MIN_ZOOM, current_style);
 
     let showPage = function() {
         document.getElementById("loader").style.display = "none";
@@ -104,6 +110,27 @@ var main = function () {
 
 		return connection;
 	}
+
+	function setCanvasDimensions(width, height) {
+	    visor.style.width = width + 'px';
+        visor.style.height = height + 'px';
+        background_canvas.style.width = width+ 'px';
+        background_canvas.style.height = height+ 'px';
+        drawable_canvas.style.width = width+ 'px';
+        drawable_canvas.style.height = height+ 'px';
+
+        visor.width = parseInt(window.getComputedStyle(visor).width);
+        visor.height = parseInt(window.getComputedStyle(visor).height);
+        background_canvas.width = parseInt(window.getComputedStyle(background_canvas).width);
+        background_canvas.height = parseInt(window.getComputedStyle(background_canvas).height);
+        drawable_canvas.width = parseInt(window.getComputedStyle(drawable_canvas).width);
+        drawable_canvas.height = parseInt(window.getComputedStyle(drawable_canvas).height);
+
+        drawable_canvas_ctx = drawable_canvas.getContext('2d');
+        backgroud_canvas_ctx = background_canvas.getContext('2d');
+        visor_ctx = visor.getContext('2d');
+
+}
 	// This function will make an AJAX call to the server to get the session id
 	function getSessionId() {
         let sessionRequest = new XMLHttpRequest();
@@ -248,29 +275,43 @@ var main = function () {
         current_style.color = color_picker.value;
     };
 
-    upload_image.onchange = function(event) {
-        let image_file = event.target.files[0];
-        let image_type = /image.*/;
-
-        if (image_file.type.match(image_type)) {
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                let image_object = new Image();
-                image_object.onload = function() {
-                    // FIXME need to use background canvas but it creates a "glitchy" effect
-                    drawable_canvas_ctx.drawImage(image_object, 0, 0);
-               };
-               image_object.src = e.target.result;
-            };
-            reader.readAsDataURL(image_file);
-        }
-    };
+    line_weight.onchange = function(){
+        current_style.thickness = line_weight.value;
+    }
 
     //Creating a transfer canvas to place the zoomed image in it then redraw it on the visor canvas
     let transfer_canvas = document.createElement('canvas');
     transfer_canvas.width = visor.width;
     transfer_canvas.height = visor.height;
     let transfer_canvas_ctx = transfer_canvas.getContext('2d');
+
+    upload_image.onchange = function(event) {
+        transfer_canvas_ctx.clearRect(0, 0, transfer_canvas.width, transfer_canvas.height);
+        if (transfer_canvas.toDataURL() !== drawable_canvas.toDataURL()) {
+            alert("You can only upload an image background before drawing!");
+        }
+        else {
+            let image_file = event.target.files[0];
+            let image_type = /image.*/;
+
+            if (image_file.type.match(image_type)) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let image_object = new Image();
+                    image_object.onload = function () {
+                        // FIXME need to use background canvas but it creates a "glitchy" effect
+                        setCanvasDimensions(image_object.width, image_object.height);
+                        console.log(visor.width);
+                        drawable_canvas_ctx.drawImage(image_object, 0, 0);
+                    };
+                    image_object.src = e.target.result;
+                };
+                reader.readAsDataURL(image_file);
+            }
+        }
+        ;
+    }
+
 
     function updateVisorContent(context){
         let image = context.getImageData(visor_state.offsetX, visor_state.offsetY, visor.width / visor_state.zoom, visor.height/visor_state.zoom );
@@ -295,6 +336,10 @@ var main = function () {
                 visor_state.zoom += visor_state.zoomStep;
             if( scale_type === zoom_type.OUT)
                 visor_state.zoom -= visor_state.zoomStep;
+            if(visor_state.zoom > MAX_ZOOM)
+                visor_state.zoom = MAX_ZOOM;
+            if(visor_state.zoom < MIN_ZOOM)
+                visor_state.zoom = MIN_ZOOM;
             visor_state.offsetX -= zoomPointX/visor_state.zoom - zoomPointX/old_zoom;
             visor_state.offsetY -= zoomPointY/visor_state.zoom - zoomPointY/old_zoom;
             scale_type = null;
