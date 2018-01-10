@@ -56,9 +56,7 @@ var main = function () {
     // Declare it here, initialize once we have the session id from the server
     var conn;
     var sessionId;
-    // This will trigger the connection to the Broker websocket as well
-    // This is required to make the browser wait before connection to the websocket until it has the session id
-    getSessionId();
+
 
     // Get the elements from the DOM
     var visor = document.getElementById('visor');
@@ -86,6 +84,10 @@ var main = function () {
     var mouse_active, mouse_data, mode, visor_state, current_style;
     let scale_type = null, zoomPointX = null, zoomPointY = null, MAX_ZOOM = null, MIN_ZOOM = null;
 
+    // This will trigger the connection to the Broker websocket as well
+    // This is required to make the browser wait before connection to the websocket until it has the session id
+    getSessionId();
+
     [mouse_active, mouse_data, mode, visor_state, MAX_ZOOM, MIN_ZOOM, current_style] =
         setInitialSettings(mouse_active,mouse_data,mode, visor_state, MAX_ZOOM, MIN_ZOOM, current_style);
 
@@ -112,15 +114,11 @@ var main = function () {
 	}
 
 	function setCanvasDimensions(width, height) {
-        visor.style.width = width + 'px';
-        visor.style.height = height + 'px';
         background_canvas.style.width = width+ 'px';
         background_canvas.style.height = height+ 'px';
         drawable_canvas.style.width = width+ 'px';
         drawable_canvas.style.height = height+ 'px';
 
-        visor.width = width;
-        visor.height = height;
         background_canvas.width = width;
         background_canvas.height = height;
         drawable_canvas.width = width;
@@ -278,7 +276,7 @@ var main = function () {
 
     line_weight.onchange = function(){
         current_style.thickness = line_weight.value;
-    }
+    };
 
     //Creating a transfer canvas to place the zoomed image in it then redraw it on the visor canvas
     let transfer_canvas = document.createElement('canvas');
@@ -317,9 +315,15 @@ var main = function () {
         let image = context.getImageData(visor_state.offsetX, visor_state.offsetY, visor.width / visor_state.zoom, visor.height/visor_state.zoom );
         let image2 = new Image(visor.width, visor.height);
 
+        // We could make those very big (visor.widht / visor_state.MIN_ZOOM) from the start
+        // so we don't have to adjust on the fly (maybe this is a performance issue)
+        transfer_canvas.width = visor.width / visor_state.zoom;
+        transfer_canvas.height = visor.height / visor_state.zoom;
+
         transfer_canvas_ctx.putImageData(image, 0, 0);
         image2.onload=function(){
-            transfer_canvas_ctx.clearRect(0, 0, transfer_canvas.width, transfer_canvas.height);
+            // No longer needed since we adjust the width and height of the transfer canvas
+            //transfer_canvas_ctx.clearRect(0, 0, transfer_canvas.width, transfer_canvas.height);
             visor_ctx.save();
             visor_ctx.clearRect(0,0,visor.width,visor.height);
             visor_ctx.scale(visor_state.zoom,visor_state.zoom);
