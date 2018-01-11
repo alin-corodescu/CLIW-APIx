@@ -138,7 +138,15 @@
     display: none;
     background: white;
 }
-
+.non-drawable-area{
+    background:
+        repeating-linear-gradient(
+            -55deg,
+            #ddd,
+            #ddd 10px,
+            #fff 10px,
+            #fff 20px );
+}
 
 /*Action bar options layout css*/
 .canvas-options {

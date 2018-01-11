@@ -358,6 +358,11 @@ var main = function () {
         if (cached_background)
             transfer_canvas_ctx.putImageData(cached_background, 0, 0);
 
+        if(visor_state.zoom < 1)
+            visor.classList.add('non-drawable-area');
+        else
+             visor.classList.remove(' visor.classList');
+
         image.onload=function(){
             // No longer needed since we adjust the width and height of the transfer canvas
             //transfer_canvas_ctx.clearRect(0, 0, transfer_canvas.width, transfer_canvas.height);
