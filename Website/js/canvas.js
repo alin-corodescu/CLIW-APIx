@@ -57,7 +57,6 @@ var main = function () {
     var conn;
     var sessionId;
 
-
     // Get the elements from the DOM
     var visor = document.getElementById('visor');
     var background_canvas = document.getElementById('background_canvas');
@@ -66,7 +65,6 @@ var main = function () {
     let color_picker = document.getElementById("color_picker");
     let upload_image = document.getElementById("upload_image");
     let line_weight = document.getElementById("line_weight");
-
 
     // This settings here have to be done because canvas CSS width and height do not get propagated
     // to the actual context, it's two different values
@@ -80,6 +78,13 @@ var main = function () {
     var drawable_canvas_ctx = drawable_canvas.getContext('2d');
     var backgroud_canvas_ctx = background_canvas.getContext('2d');
     var visor_ctx = visor.getContext('2d');
+
+    // Cached images of the background and drawable canvas
+    var cached_background;
+    var cached_drawable;
+
+    var background_cache_invalid;
+    var drawable_cache_invalid;
 
     var mouse_active, mouse_data, mode, visor_state, current_style;
     let scale_type = null, zoomPointX = null, zoomPointY = null, MAX_ZOOM = null, MIN_ZOOM = null;
@@ -307,11 +312,12 @@ var main = function () {
                 reader.readAsDataURL(image_file);
             }
         }
-        ;
-    }
+
+    };
 
 
     function updateVisorContent(context){
+
         let image = context.getImageData(visor_state.offsetX, visor_state.offsetY, visor.width / visor_state.zoom, visor.height/visor_state.zoom );
         let image2 = new Image(visor.width, visor.height);
 
@@ -360,5 +366,17 @@ var main = function () {
         var [canvasPositionX, canvasPositionY] = computePosition(visor);
         return [event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft -canvasPositionX,
             event.clientY + document.body.scrollTop + document.documentElement.scrollTop - canvasPositionY];
+    }
+
+    // Function to be called whenever we need to update the cached part of the background
+    // e.g : when anything in visor_state changes and when we draw on the background canvas
+    function updateBackgroundCache() {
+
+    }
+
+    // Function to be called whenever we need to update the cahced part of the drawable canvas
+    // e.g : when anything in visort_state changes, and when we draw on the drawableCanvas
+    function updateDrawableCache() {
+
     }
 };
