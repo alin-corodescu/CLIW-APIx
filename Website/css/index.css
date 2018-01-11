@@ -138,6 +138,13 @@
     display: none;
     background: white;
 }
+
+.canvas-visor{
+    height: 75vh;
+    width: 80vw;
+    border: 1px solid black;
+    background: white;
+}
 .non-drawable-area{
     background:
         repeating-linear-gradient(

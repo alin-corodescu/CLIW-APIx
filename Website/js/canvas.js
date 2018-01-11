@@ -361,7 +361,7 @@ var main = function () {
         if(visor_state.zoom < 1)
             visor.classList.add('non-drawable-area');
         else
-             visor.classList.remove(' visor.classList');
+             visor.classList.remove('non-drawable-area');
 
         image.onload=function(){
             // No longer needed since we adjust the width and height of the transfer canvas
