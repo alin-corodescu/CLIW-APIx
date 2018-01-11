@@ -350,51 +350,23 @@ var main = function () {
     }
 
     function renderVisor(){
-        let image = new Image();
-
         // We could make those very big (visor.widht / visor_state.MIN_ZOOM) from the start
         // so we don't have to adjust on the fly (maybe this is a performance issue)
         transfer_canvas.width = visor.width / visor_state.zoom;
         transfer_canvas.height = visor.height / visor_state.zoom;
 
+        visor_ctx.save();
+        visor_ctx.clearRect(0,0,visor.width,visor.height);
+        visor_ctx.scale(visor_state.zoom,visor_state.zoom);
+        // Draw the background
+        transfer_canvas_ctx.putImageData(cached_background, 0, 0);
+        visor_ctx.drawImage(transfer_canvas, 0, 0);
 
-        let combinedLayers = transfer_canvas_ctx.createImageData(cached_drawable);
+        // Draw the drawable
+        transfer_canvas_ctx.putImageData(cached_drawable, 0, 0);
+        visor_ctx.drawImage(transfer_canvas, 0, 0);
 
-        for (var i = 0; i < combinedLayers.data.length; i+=4) {
-            // If the drawable is transparent at this particular pixel
-            if (cached_drawable.data[i + 3] === 0) {
-                combinedLayers.data[i] = cached_background.data[i];
-                combinedLayers.data[i+1] = cached_background.data[i+1];
-                combinedLayers.data[i+2] = cached_background.data[i+2];
-                combinedLayers.data[i+3] = cached_background.data[i+3];
-            }
-            // If it's not transparent, too bad
-            else {
-                combinedLayers.data[i] = cached_drawable.data[i];
-                combinedLayers.data[i+1] = cached_drawable.data[i+1];
-                combinedLayers.data[i+2] = cached_drawable.data[i+2];
-                combinedLayers.data[i+3] = cached_drawable.data[i+3];
-            }
-        }
-
-        transfer_canvas_ctx.putImageData(combinedLayers, 0, 0);
-
-        //
-        // if(visor_state.zoom < 1)
-        //     visor.classList.add('non-drawable-area');
-        // else
-        //      visor.classList.remove('non-drawable-area');
-
-        image.onload=function(){
-            // No longer needed since we adjust the width and height of the transfer canvas
-            //transfer_canvas_ctx.clearRect(0, 0, transfer_canvas.width, transfer_canvas.height);
-            visor_ctx.save();
-            visor_ctx.clearRect(0,0,visor.width,visor.height);
-            visor_ctx.scale(visor_state.zoom,visor_state.zoom);
-            visor_ctx.drawImage(image, 0, 0);
-            visor_ctx.restore();
-        };
-        image.src = transfer_canvas.toDataURL();
+        visor_ctx.restore();
     }
 
     // Updates the caches if necessary
