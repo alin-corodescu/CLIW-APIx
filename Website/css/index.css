@@ -132,7 +132,7 @@
     height: 450px;
     width: 900px;
     border: 1px solid black;
-    background: white;
+    background: rgba(0,0,0,0);
 }
 .hidden_canvas {
     display: none;

@@ -344,6 +344,11 @@ var main = function () {
     };
 
 
+    function combineLayers(background, atop) {
+
+
+    }
+
     function renderVisor(){
         let image = new Image();
 
@@ -352,16 +357,33 @@ var main = function () {
         transfer_canvas.width = visor.width / visor_state.zoom;
         transfer_canvas.height = visor.height / visor_state.zoom;
 
-        if (cached_drawable)
-            transfer_canvas_ctx.putImageData(cached_drawable, 0, 0);
 
-        if (cached_background)
-            transfer_canvas_ctx.putImageData(cached_background, 0, 0);
+        let combinedLayers = transfer_canvas_ctx.createImageData(cached_drawable);
 
-        if(visor_state.zoom < 1)
-            visor.classList.add('non-drawable-area');
-        else
-             visor.classList.remove('non-drawable-area');
+        for (var i = 0; i < combinedLayers.data.length; i+=4) {
+            // If the drawable is transparent at this particular pixel
+            if (cached_drawable.data[i + 3] === 0) {
+                combinedLayers.data[i] = cached_background.data[i];
+                combinedLayers.data[i+1] = cached_background.data[i+1];
+                combinedLayers.data[i+2] = cached_background.data[i+2];
+                combinedLayers.data[i+3] = cached_background.data[i+3];
+            }
+            // If it's not transparent, too bad
+            else {
+                combinedLayers.data[i] = cached_drawable.data[i];
+                combinedLayers.data[i+1] = cached_drawable.data[i+1];
+                combinedLayers.data[i+2] = cached_drawable.data[i+2];
+                combinedLayers.data[i+3] = cached_drawable.data[i+3];
+            }
+        }
+
+        transfer_canvas_ctx.putImageData(combinedLayers, 0, 0);
+
+        //
+        // if(visor_state.zoom < 1)
+        //     visor.classList.add('non-drawable-area');
+        // else
+        //      visor.classList.remove('non-drawable-area');
 
         image.onload=function(){
             // No longer needed since we adjust the width and height of the transfer canvas
