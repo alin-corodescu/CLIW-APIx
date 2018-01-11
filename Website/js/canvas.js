@@ -371,8 +371,14 @@ var main = function () {
 
     // Updates the caches if necessary
     setInterval(function () {
-        if (updateBackgroundCache() || updateDrawableCache())
+        if (updateBackgroundCache()) {
+            updateDrawableCache();
             renderVisor();
+        }
+        else {
+            if (updateDrawableCache())
+                renderVisor();
+        }
     }, 1000/30);
 
 
