@@ -132,13 +132,28 @@
     height: 450px;
     width: 900px;
     border: 1px solid black;
-    background: white;
+    background: rgba(0,0,0,0);
 }
 .hidden_canvas {
     display: none;
     background: white;
 }
 
+.canvas-visor{
+    height: 75vh;
+    width: 80vw;
+    border: 1px solid black;
+    background: white;
+}
+.non-drawable-area{
+    background:
+        repeating-linear-gradient(
+            -55deg,
+            #ddd,
+            #ddd 10px,
+            #fff 10px,
+            #fff 20px );
+}
 
 /*Action bar options layout css*/
 .canvas-options {
