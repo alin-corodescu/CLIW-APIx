@@ -52,7 +52,6 @@
                     <!--Input for HTML 5-->
                     <input id="color_picker" type="color" value="#337564" class="hidden_function"/>
                     <input id="upload_image" type="file" class="hidden_function" />
-                    <input id="line_weight" type="number" class="hidden_function"/>
 
                     <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
                         <i class="popup material-icons icon" onclick="clickUploadImage()">image</i>
@@ -74,14 +73,13 @@
                         <span class="popuptext">Change color!</span>
                     </div>
 
-                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
-                        <i class="material-icons icon" onclick="thickerLineWeight()">line_weight </i>
-                        <span class="popuptext">Make pencil thicker!</span>
-                    </div>
+                    <div class="popup" onclick="toggleInputRange(this)" id="popup">
+                        <i class="material-icons icon">line_weight </i>
+                        <div class="popuptext" id="inputRangeContainer">
+                            <span class="text-input-range">Change pencil thickness!</span>
+                            <input id="line_weight" type="range" min="0.2" value="2" max="10" step="0.2"/>
+                        </div>
 
-                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
-                    <i class="material-icons icon icon-flipped" onclick="thinnerLineWeight()">line_weight </i>
-                        <span class="popuptext">Make pencil thinner!</span>
                     </div>
 
                     <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">

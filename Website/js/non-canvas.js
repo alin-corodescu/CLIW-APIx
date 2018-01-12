@@ -99,3 +99,7 @@ function hidePopupText(element) {
     let popup = element.lastElementChild;
     popup.classList.remove("show");
 }
+function toggleInputRange(element){
+    let popup = element.lastElementChild;
+    popup.classList.toggle("show");
+}
