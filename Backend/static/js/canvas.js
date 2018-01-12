@@ -2,7 +2,7 @@
 //----------------------------------------------------------------------------------------------
 
 // The url to connect to the backend for synchronization
-const BACKEND_URL = 'ws://localhost:5001/';
+const BACKEND_URL = '"ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/"';
 
 var modes = {
     PAINT: 1,
@@ -156,11 +156,16 @@ var main = function () {
             background_cache_invalid = true;
         }
         else {
+            if (update.hasOwnProperty('android')) {
+                console.log("got acceleration = ", update.x);
+            }
             //    means we have to update
-            var style = {color: update.color, thickness: update.thickness};
-            draw(drawable_canvas_ctx, update, style);
+            else {
+                var style = {color: update.color, thickness: update.thickness};
+                draw(drawable_canvas_ctx, update, style);
 
-            drawable_cache_invalid = true;
+                drawable_cache_invalid = true;
+            }
         }
     }
 
