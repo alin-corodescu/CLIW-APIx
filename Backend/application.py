@@ -4,14 +4,14 @@ import uuid
 import flask
 from flask import Flask, render_template, request, session, url_for, redirect
 
-app = Flask(__name__)
-app.secret_key = "cliw"
+application = Flask(__name__)
+application.secret_key = "cliw"
 session_id_param_name = "sessionId"
 cliend_id_param_name = "clientId"
 
 next_client_id = 0
 next_session_id = 0
-@app.route('/')
+@application.route('/')
 def index():
     global next_client_id
     global next_session_id
@@ -37,7 +37,7 @@ def index():
                            canvas_js = url_for('static', filename="js/canvas.js"),
                            modal_js = url_for('static', filename="js/modal.js"))
 
-@app.route('/session')
+@application.route('/session')
 def get_session():
     r = {}
     r[session_id_param_name] = session[session_id_param_name]
@@ -46,5 +46,5 @@ def get_session():
     return response
 
 if __name__ == '__main__':
-    app.run()
+    application.run()
 
