@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--Stylesheets css-->
 	<link rel="stylesheet" type="text/css" href="./css/index.css">
 	<link rel="stylesheet" type="text/css" href="./css/icons.css">
+    <link rel="stylesheet" type="text/css" href="./css/modal.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <!--JavaScript scripts-->
 	<script src="js/non-canvas.js"></script>
 	<script src="./js/canvas.js"></script>
     <script src="./js/action_bar.js"></script>
+    <script src="./js/modal.js"></script>
 	<meta charset="UTF-8">
 	<title>APix</title>
 </head>
-	<body onload="main()" class="body">
+	<body onload="main();initModal()" class="body">
 
         <!--Loader while we fetch the data from the server-->
         <div class="loader" id="loader"></div>
@@ -24,7 +26,6 @@
             <div id="sidenav" class="sidenav">
                 <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
                 <a href="#" class="sidenavLink" onclick="exportCanvasPNG()"><i class="material-icons icon">file_download</i> PNG</a>
-                <a href="#" class="sidenavLink" onclick="exportCanvasJPEG()"><i class="material-icons icon">file_download</i> JPEG</a>
                 <a href="#" class="sidenavLink"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
                 <a href="#" class="sidenavLink"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
                 <a><i class="material-icons">cast_connected</i> Generate QR code</a>
@@ -39,6 +40,36 @@
                     </div>
                 </div>
             </header>
+
+            <!-- Modal Connection issue -->
+            <div id="modal-connection" class="modal">
+                <div class="modal-content">
+                    <span class="modal_hide" id="modal_connection_hide">&times;</span>
+                    <div class="modal-header">
+                        <i class="material-icons">error_outline</i>
+                    </div>
+                    <div class="modal-body">
+                        Server could not be contacted! You are now in offline mode!
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Background issue -->
+            <div id="modal-background" class="modal">
+                <div class="modal-content">
+                    <span class="modal_hide" id="modal_background_hide">&times;</span>
+                    <div class="modal-header">
+                        <i class="material-icons">error_outline</i>
+                    </div>
+                    <div class="modal-body">
+                        You can only upload an image background before drawing!
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
 
             <!--Canvas container-->
             <div class="container canvas-container">

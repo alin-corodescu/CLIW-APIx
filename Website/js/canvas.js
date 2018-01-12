@@ -104,7 +104,7 @@ var main = function () {
             handleUpdate(ev.data);
         };
         connection.onclose = function (ev) {
-            alert("connection lost but I will show the page anyway for offline mode");
+            document.getElementById('modal-connection').style.display = "block";
             showPage();
             console.log("connection lost");
         };
@@ -414,7 +414,7 @@ var main = function () {
     upload_image.onchange = function (event) {
         transfer_canvas_ctx.clearRect(0, 0, transfer_canvas.width, transfer_canvas.height);
         if (transfer_canvas.toDataURL() !== drawable_canvas.toDataURL()) {
-            alert("You can only upload an image background before drawing!");
+            document.getElementById('modal-background').style.display = "block";
         }
         else {
             let image_file = event.target.files[0];
