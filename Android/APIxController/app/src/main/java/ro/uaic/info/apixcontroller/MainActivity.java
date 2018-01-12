@@ -2,6 +2,8 @@ package ro.uaic.info.apixcontroller;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,10 +26,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final int id = getIntent().getExtras().getInt("id");
 
         WebView webView = (WebView) findViewById(R.id.main_web_view);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -41,7 +46,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, PICKFILE_REQUEST_CODE);
                 return true;
             }
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                if (newProgress == 100) {
+                    view.evaluateJavascript("connectToServer(" +id +");", null);
+                    Log.d("Webview", view.getSettings().getUserAgentString());
+                }
+            }
         });
+
+
         webView.loadUrl("file:///android_asset/www/index.html");
+
     }
 }

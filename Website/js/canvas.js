@@ -93,10 +93,10 @@ var main = function () {
     }
 
     // This function connects to the backend via WebSockets for synchronization
-    function establishConnection(url, session_id) {
+    function establishConnection(url, clientId, session_id) {
         let width = drawable_canvas.width;
         let height = drawable_canvas.height;
-        var connection = new WebSocket(BACKEND_URL + '?sessionId=' + session_id + '&width=' + width + '&height=' + height);
+        var connection = new WebSocket(BACKEND_URL + +'?clientId=' + clientId + '&sessionId=' + session_id + '&width=' + width + '&height=' + height);
         connection.onopen = function (ev) {
             showPage()
         };
@@ -120,13 +120,15 @@ var main = function () {
             if (this.readyState === 4) {
                 if (this.status === 200) {
                     console.log("got session id: " + this.responseText);
-                    sessionId = this.responseText;
+                    var identityData = JSON.parse(this.responseText);
+                    sessionId = identityData.sessionId;
+                    var clientId = identityData.clientId;
+                    conn = establishConnection(BACKEND_URL, clientId, sessionId);
                 }
                 else {
                     // Running locally or got an error
                     sessionId = 1;
                 }
-                conn = establishConnection(BACKEND_URL, sessionId);
 
             }
         };

@@ -28,3 +28,6 @@ class Session:
 
     def set_canvas_dimensions(self, width, height):
         self.driver.execute_script("setCanvasDimensions(arguments[0], arguments[1]);", width, height)
+
+    def stop(self):
+        self.driver.quit()

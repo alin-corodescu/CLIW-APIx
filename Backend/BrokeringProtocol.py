@@ -9,7 +9,10 @@ class Broker(object):
 
         self.sessions = {}
 
-    def register(self, client, session, width, height):
+        self.clients = {}
+
+    def register(self, client, clientId, session, width, height):
+        self.clients[clientId] = client
         self.publishers.update({client: session})
         if self.subscribers.get(session) == None:
             self.subscribers[session] = []
@@ -56,6 +59,11 @@ class Broker(object):
         # Remove the client from this topic
         clients.remove(client)
 
+        # If there are no more subscribers
+        if len(self.subscribers.get(session)) == 0:
+            self.sessions[session].stop()
+            del self.sessions[session]
+
 
 
 
@@ -63,12 +71,20 @@ broker = Broker()
 
 class BrokeringProtocol(WebSocketServerProtocol):
 
+    client = None
     def onConnect(self, request):
-        broker.register(self, request.params['sessionId'][0], request.params['width'][0], request.params['height'][0])
-        print("Client connecting: {}".format(request.peer))
+        if 'c' in request.params:
+            self.client = request.params['c'][0]
+            print("Android connecting for clientId: {}".format(self.client))
+
+        else:
+            broker.register(self, request.params['clientId'][0], request.params['sessionId'][0],
+                            request.params['width'][0], request.params['height'][0])
+            print("Client connecting: {}".format(request.peer))
 
     def onOpen(self):
-        broker.initiate(self)
+        if self.client == None:
+            broker.initiate(self)
         print("WebSocket connection open.")
 
 
@@ -77,10 +93,15 @@ class BrokeringProtocol(WebSocketServerProtocol):
             print("Binary message received: {} bytes".format(len(payload)))
         else:
             print("Text message received: {}".format(payload.decode('utf8')))
-        broker.publishMessage(self, payload)
+        if self.client == None:
+            broker.publishMessage(self, payload)
+        else:
+            # Forward the message to the correct client
+            broker.clients[self.client].sendMessage(payload, isBinary)
         # self.sendMessage(payload, isBinary)
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {}".format(reason))
-        broker.removeClient(self)
+        if self.client == None:
+            broker.removeClient(self)
         # clients.remove(self)

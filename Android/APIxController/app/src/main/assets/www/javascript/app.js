@@ -1,7 +1,4 @@
 
-function sayHello() {
-    alert("sayHello function called");
-}
 
 function clickColorPicker() {
 	document.getElementById("colorPicker").click();
@@ -32,3 +29,24 @@ function updateColorPickerButton() {
         	x[i].style.backgroundColor = color;
     }
 }
+
+var BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/"
+var conn;
+function connectToServer(id) {
+    var connectionString = BACKEND_URL + "?clientId=" + id;
+//    alert("id : " + id);
+    conn = new WebSocket(connectionString);
+    conn.onopen = function (ev) {
+        switchButton();
+        window.addEventListener('devicemotion', function(event) {
+            var update = {android : 'true', x : event.acceleration.x, y : event.acceleration.y, z = event.acceleration.y};
+            conn.sendMessage(JSON.stringify(update));
+        })
+    }
+    conn.onclose = function (ev) {
+        switchButton();
+    }
+}
+
+
+
