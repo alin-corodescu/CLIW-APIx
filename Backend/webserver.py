@@ -9,19 +9,25 @@ app.secret_key = "cliw"
 session_id_param_name = "sessionId"
 cliend_id_param_name = "clientId"
 
-
+next_client_id = 0
+next_session_id = 0
 @app.route('/')
 def index():
-    clientId = uuid.uuid1()
+    global next_client_id
+    global next_session_id
+    # clientId = uuid.uuid1()
     sessionId = request.args.get(session_id_param_name, '')
     if sessionId != '':
         session[session_id_param_name] = str(sessionId)
-        session[cliend_id_param_name] = str(clientId)
+        session[cliend_id_param_name] = str(next_client_id)
+        next_client_id += 1
         return redirect(url_for('index'))
     else:
         if session_id_param_name not in session.keys():
-            session[session_id_param_name] = str(clientId)
-            session[cliend_id_param_name] = str(clientId)
+            session[session_id_param_name] = str(next_session_id)
+            session[cliend_id_param_name] = str(next_client_id)
+            next_session_id += 1
+            next_client_id += 1
 
     return render_template('index.html',
                            index_css = url_for('static', filename="css/index.css"),
