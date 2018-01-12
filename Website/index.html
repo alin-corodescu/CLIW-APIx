@@ -54,13 +54,41 @@
                     <input id="upload_image" type="file" class="hidden_function" />
                     <input id="line_weight" type="number" class="hidden_function"/>
 
-                    <i class="material-icons icon" onclick="clickUploadImage()">image</i>
-                    <i class="material-icons icon">android</i>
-                    <i class="material-icons icon">more_vert</i>
+                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
+                        <i class="popup material-icons icon" onclick="clickUploadImage()">image</i>
+                        <span class="popuptext">Upload an image background!</span>
+                    </div>
+
+                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
+                        <i class="material-icons icon">android</i>
+                        <span class="popuptext">Connect an android device!</span>
+                    </div>
+
+                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
+                        <i class="material-icons icon">more_vert</i>
+                        <span class="popuptext">More options!</span>
+                    </div>
+
+                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
                     <i class="material-icons icon" onclick="clickColorPicker()" id="colorButton"> palette</i>
-                    <i class="material-icons icon" onclick="thickerLineWeight()">line_weight </i>
+                        <span class="popuptext">Change color!</span>
+                    </div>
+
+                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
+                        <i class="material-icons icon" onclick="thickerLineWeight()">line_weight </i>
+                        <span class="popuptext">Make pencil thicker!</span>
+                    </div>
+
+                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
                     <i class="material-icons icon icon-flipped" onclick="thinnerLineWeight()">line_weight </i>
+                        <span class="popuptext">Make pencil thinner!</span>
+                    </div>
+
+                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
                     <i class="material-icons icon" id="switch">zoom_in</i>
+                        <span class="popuptext">Enable zoom and scroll!</span>
+                    </div>
+
                 </aside>
             </div>
 

@@ -89,3 +89,13 @@ function destroyClickedElement(event)
 {
     document.body.removeChild(event.target);
 }
+
+
+function showPopupText(element) {
+    let popup = element.lastElementChild;
+    popup.classList.add("show");
+}
+function hidePopupText(element) {
+    let popup = element.lastElementChild;
+    popup.classList.remove("show");
+}
