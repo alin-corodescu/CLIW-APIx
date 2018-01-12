@@ -24,7 +24,7 @@ var main = function () {
     var sessionId;
 
     // Get the elements from the DOM
-    var visor = document.getElementById('visor');
+    var visor = document.getElementById('visor_canvas');
     var background_canvas = document.getElementById('background_canvas');
     var drawable_canvas = document.getElementById('drawable_canvas');
     var switch_button = document.getElementById('switch');
@@ -105,8 +105,9 @@ var main = function () {
         };
         connection.onclose = function (ev) {
             document.getElementById('modal-connection').style.display = "block";
+            setTimeout(function(){
+                document.getElementById('modal-connection').style.display = "none"; }, 5000);
             showPage();
-            console.log("connection lost");
         };
 
         return connection;

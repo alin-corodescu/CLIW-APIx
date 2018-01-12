@@ -27,7 +27,7 @@
                 <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
                 <a href="#" class="sidenavLink" onclick="exportCanvasPNG()"><i class="material-icons icon">file_download</i> PNG</a>
                 <a href="#" class="sidenavLink"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
-                <a href="#" class="sidenavLink"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
+                <a href="#" class="sidenavLink"  onclick="clearCanvases()"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
                 <a><i class="material-icons">cast_connected</i> Generate QR code</a>
             </div>
 
@@ -76,7 +76,7 @@
                 <!--Canvases-->
                 <canvas class="canvas hidden_canvas" width="900" height="450" id="background_canvas"></canvas>
                 <canvas class="canvas hidden_canvas" width="900" height="450" id="drawable_canvas"></canvas>
-                <canvas class="canvas non-drawable-area" id="visor"></canvas>
+                <canvas class="canvas non-drawable-area" id="visor_canvas"></canvas>
 
                 <!--Canvas options-->
                 <aside class="canvas-options">

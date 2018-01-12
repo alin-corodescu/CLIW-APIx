@@ -55,7 +55,7 @@ function thinnerLineWeight(){
     line_thick.dispatchEvent(event);
 }
 function exportCanvasPNG () {
-    document.getElementById('visor').toBlob(function(blob) {
+    document.getElementById('drawable_canvas').toBlob(function(blob) {
         let textToSaveAsURL = window.URL.createObjectURL(blob);
         let fileNameToSaveAs = 'doodle.png';
         let downloadLink = document.createElement("a");
@@ -69,27 +69,10 @@ function exportCanvasPNG () {
     },'image/png');
 }
 
-// still needs some work because it saved a complete dark image
-function exportCanvasJPEG () {
-    document.getElementById('visor').toBlob(function(blob) {
-        let textToSaveAsURL = window.URL.createObjectURL(blob);
-        let fileNameToSaveAs = 'doodle.jpeg';
-        let downloadLink = document.createElement("a");
-        downloadLink.download = fileNameToSaveAs;
-        downloadLink.innerHTML = "Download File";
-        downloadLink.href = textToSaveAsURL;
-        downloadLink.onclick = destroyClickedElement;
-        downloadLink.style.display = "none";
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-    },'image/jpeg', 0.95);
-}
-
 function destroyClickedElement(event)
 {
     document.body.removeChild(event.target);
 }
-
 
 function showPopupText(element) {
     let popup = element.lastElementChild;
@@ -102,4 +85,15 @@ function hidePopupText(element) {
 function toggleInputRange(element){
     let popup = element.lastElementChild;
     popup.classList.toggle("show");
+}
+
+function clearCanvas(id){
+    let canvas = document.getElementById(id);
+    let canvas_ctx = canvas.getContext('2d');
+    canvas_ctx.clearRect(0,0,canvas.width, canvas.height);
+}
+function clearCanvases(){
+    clearCanvas('drawable_canvas');
+    clearCanvas('background_canvas');
+    clearCanvas('visor_canvas');
 }
