@@ -2,6 +2,8 @@
 //----------------------------------------------------------------------------------------------
 
 // The url to connect to the backend for synchronization
+// const BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/";
+
 const BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/";
 
 var modes = {
@@ -31,6 +33,7 @@ var main = function () {
     let color_picker = document.getElementById("color_picker");
     let upload_image = document.getElementById("upload_image");
     let line_weight = document.getElementById("line_weight");
+    let shareable_link = document.getElementById('shareable_link');
 
     // This settings here have to be done because canvas CSS width and height do not get propagated
     // to the actual context, it's two different values
@@ -104,9 +107,9 @@ var main = function () {
             handleUpdate(ev.data);
         };
         connection.onclose = function (ev) {
-            document.getElementById('modal-connection').style.display = "block";
+            document.getElementById('modal_connection').style.display = "block";
             setTimeout(function(){
-                document.getElementById('modal-connection').style.display = "none"; }, 5000);
+                document.getElementById('modal_connection').style.display = "none"; }, 5000);
             showPage();
         };
 
@@ -127,7 +130,8 @@ var main = function () {
                 }
                 else {
                     // Running locally or got an error
-                    sessionId = 1;
+                    sessionId = -1;
+                    conn = establishConnection(BACKEND_URL, -1, sessionId);
                 }
 
             }
@@ -390,6 +394,17 @@ var main = function () {
         current_style.thickness = line_weight.value;
     };
 
+    shareable_link.onclick = function(){
+        if(sessionId !== -1) {
+            document.getElementById('generated_shareable_link').innerText = BACKEND_URL + '&sessionId=' + sessionId;
+            document.getElementById('modal_shareable_link').style.display = "block";
+        }
+        else {
+            document.getElementById('modal_connection').style.display = "block";
+        }
+
+    };
+
 
     //BEGIN: Creating a transfer canvases in order not to mess up the data
     //----------------------------------------------------------------------------------------------
@@ -422,7 +437,7 @@ var main = function () {
     upload_image.onchange = function (event) {
         transfer_canvas_ctx.clearRect(0, 0, transfer_canvas.width, transfer_canvas.height);
         if (transfer_canvas.toDataURL() !== drawable_canvas.toDataURL()) {
-            document.getElementById('modal-background').style.display = "block";
+            document.getElementById('modal_background').style.display = "block";
         }
         else {
             let image_file = event.target.files[0];

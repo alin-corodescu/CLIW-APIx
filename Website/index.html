@@ -25,7 +25,7 @@
             <div id="sidenav" class="sidenav">
                 <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
                 <a href="#" class="sidenavLink" onclick="exportCanvasPNG()"><i class="material-icons icon">file_download</i> PNG</a>
-                <a href="#" class="sidenavLink"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
+                <a href="#" class="sidenavLink" id="shareable_link"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
                 <a href="#" class="sidenavLink"  onclick="clearCanvases()"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
                 <a><i class="material-icons">cast_connected</i> Generate QR code</a>
             </div>
@@ -41,7 +41,7 @@
             </header>
 
             <!-- Modal Connection issue -->
-            <div id="modal-connection" class="modal">
+            <div id="modal_connection" class="modal">
                 <div class="modal-content">
                     <span class="modal_hide" id="modal_connection_hide">&times;</span>
                     <div class="modal-header">
@@ -56,7 +56,7 @@
             </div>
 
             <!-- Modal Background issue -->
-            <div id="modal-background" class="modal">
+            <div id="modal_background" class="modal">
                 <div class="modal-content">
                     <span class="modal_hide" id="modal_background_hide">&times;</span>
                     <div class="modal-header">
@@ -66,6 +66,22 @@
                         You can only upload an image background before drawing!
                     </div>
                     <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Shareable Link -->
+            <div id="modal_shareable_link" class="modal">
+                <div class="modal-content">
+                    <span class="modal_hide" id="modal_shareable_link_hide">&times;</span>
+                    <div class="modal-header">
+                        <i class="material-icons">done</i>
+                    </div>
+                    <div class="modal-body">
+                        Share this link with a friend so you can draw together!
+                    </div>
+                    <div class="modal-footer">
+                        <p id="generated_shareable_link"></p>
                     </div>
                 </div>
             </div>

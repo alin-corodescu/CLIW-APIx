@@ -1,8 +1,10 @@
 function initModal(){
 
     // Get the modal/modals
-    let modal_background = document.getElementById('modal-background');
-    let modal_connection = document.getElementById('modal-connection');
+    let modal_background = document.getElementById('modal_background');
+    let modal_connection = document.getElementById('modal_connection');
+    let modal_shareable_link = document.getElementById('modal_shareable_link');
+
     // Get the button that opens the modal/modals
     // add custom event if u want to fire on specific action
     // let modal_show = document.getElementById("modal_show");
@@ -10,6 +12,7 @@ function initModal(){
     // Get the element that closes the modal/modals
     let modal_background_hide = document.getElementById("modal_background_hide");
     let modal_connection_hide = document.getElementById("modal_connection_hide");
+    let modal_shareable_link_hide = document.getElementById("modal_shareable_link_hide");
 
     // When the user clicks the button, open the modal/modals
     // modal_show.onclick = function() {
@@ -22,6 +25,9 @@ function initModal(){
     };
     modal_connection_hide.onclick = function() {
         modal_connection.style.display = "none";
+    };
+    modal_shareable_link_hide.onclick = function() {
+        modal_shareable_link.style.display = "none";
     };
 
     // When the user clicks anywhere outside of the modal//modals, close it
