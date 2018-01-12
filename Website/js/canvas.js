@@ -96,7 +96,7 @@ var main = function () {
     function establishConnection(url, clientId, session_id) {
         let width = drawable_canvas.width;
         let height = drawable_canvas.height;
-        var connection = new WebSocket(BACKEND_URL + +'?clientId=' + clientId + '&sessionId=' + session_id + '&width=' + width + '&height=' + height);
+        var connection = new WebSocket(BACKEND_URL + '?clientId=' + clientId + '&sessionId=' + session_id + '&width=' + width + '&height=' + height);
         connection.onopen = function (ev) {
             showPage()
         };
