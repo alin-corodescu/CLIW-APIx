@@ -5,8 +5,10 @@ HTML = "http://cliw-apix-backend.s3-website.eu-central-1.amazonaws.com"
 
 class Session:
     def __init__(self, sessionID, width, height):
-        # One driver per session
-        self.driver = webdriver.Chrome()
+
+        options = webdriver.FirefoxOptions()
+        options.add_argument(argument="-headless")
+        self.driver = webdriver.Firefox(executable_path="./geckodriver", options=options)
         self.driver.get(HTML)
 
         self.set_canvas_dimensions(width, height)
