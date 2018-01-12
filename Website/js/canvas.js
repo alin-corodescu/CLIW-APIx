@@ -2,7 +2,7 @@
 //----------------------------------------------------------------------------------------------
 
 // The url to connect to the backend for synchronization
-const BACKEND_URL = '"ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/"';
+const BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/";
 
 var modes = {
     PAINT: 1,

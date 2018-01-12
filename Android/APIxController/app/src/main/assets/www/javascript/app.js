@@ -33,7 +33,7 @@ var BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:50
 var conn;
 function connectToServer(id) {
     if (!conn) {
-        var connectionString = BACKEND_URL + "?clientId=" + id;
+        var connectionString = BACKEND_URL + "?c=" + id;
     //    alert("id : " + id);
         conn = new WebSocket(connectionString);
         conn.onopen = function (ev) {
