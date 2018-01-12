@@ -14,17 +14,18 @@
 /*Loader layout css*/
 .loader {
     border-radius: 50%;
-    border: 16px solid blue;
-    border-right-color: green;
-    border-bottom-color: red;
+    border: 16px solid lightblue;
+    border-right-color: pink;
     border-left-color: pink;
     width: 120px;
     height: 120px;
     -webkit-animation: spin 2s linear infinite;
     animation: spin 2s linear infinite;
-     position:fixed;
-    top: 40%;
-    left: 40%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
 }
 
 @-webkit-keyframes spin {
@@ -129,19 +130,32 @@
 
 
 /*Canvases*/
-.fixed_canvas {
+.canvas{
     height: 450px;
     width: 900px;
     border: 1px solid black;
-    display: none;
+    background: rgba(0,0,0,0);
 }
-#visor {
-    height: 450px;
-    width: 900px;
-    border: 1px solid black;
+.hidden_canvas {
+    display: none;
     background: white;
 }
 
+.canvas-visor{
+    height: 75vh;
+    width: 80vw;
+    border: 1px solid black;
+    background: white;
+}
+.non-drawable-area{
+    background:
+        repeating-linear-gradient(
+            -55deg,
+            #ddd,
+            #ddd 10px,
+            #fff 10px,
+            #fff 20px );
+}
 
 /*Action bar options layout css*/
 .canvas-options {
@@ -157,19 +171,6 @@
     opacity: 1;
 }
 
-.circle-button {
-    border-radius: 50%;
-    border : 2px solid white;
-    width: 20px;
-    height: 20px;
-}
-.hidden_function {
-    display: none;
-}
-
-.icon{
-    cursor: pointer;
-}
 
 /*Transition layout css*/
 .transition a {

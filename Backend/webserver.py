@@ -15,16 +15,21 @@ def index():
     clientId = uuid.uuid1()
     sessionId = request.args.get(session_id_param_name, '')
     if sessionId != '':
-        session[session_id_param_name] = sessionId
-        session[cliend_id_param_name] = clientId
+        session[session_id_param_name] = str(sessionId)
+        session[cliend_id_param_name] = str(clientId)
         return redirect(url_for('index'))
     else:
         if session_id_param_name not in session.keys():
-            session[session_id_param_name] = clientId
-            session[cliend_id_param_name] = clientId
+            session[session_id_param_name] = str(clientId)
+            session[cliend_id_param_name] = str(clientId)
 
-    return render_template('test.html',script = url_for('static', filename='js/script.js'),
-                                        style = url_for('static', filename='css/style.css'))
+    return render_template('index.html',
+                           index_css = url_for('static', filename="css/index.css"),
+                           icons_css = url_for('static', filename="css/icons.css"),
+                           modal_css = url_for('static', filename="css/modal.css"),
+                           non_canvas_js = url_for('static', filename="js/non-canvas.js"),
+                           canvas_js = url_for('static', filename="js/canvas.js"),
+                           modal_js = url_for('static', filename="js/modal.js"))
 
 @app.route('/session')
 def get_session():
