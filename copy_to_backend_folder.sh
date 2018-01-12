@@ -4,6 +4,7 @@
 # folder into the backend, so the webserver serve them
 set +x
 
+echo "This script will not copy your html file to the webserver location, only the js and css"
 
 rm Backend/static/js/*
 rm Backend/static/css/*
@@ -13,7 +14,7 @@ cp -r Website/js Backend/static/
 cp -r Website/css Backend/static/
 cp -r Website/resources Backend/static/
 
-cp Website/*.html Backend/templates/
+#cp Website/*.html Backend/templates/
 
 
 

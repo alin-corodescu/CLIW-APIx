@@ -156,11 +156,16 @@ var main = function () {
             background_cache_invalid = true;
         }
         else {
+            if (update.hasOwnProperty('android')) {
+                console.log("got acceleration = ", update.x);
+            }
             //    means we have to update
-            var style = {color: update.color, thickness: update.thickness};
-            draw(drawable_canvas_ctx, update, style);
+            else {
+                var style = {color: update.color, thickness: update.thickness};
+                draw(drawable_canvas_ctx, update, style);
 
-            drawable_cache_invalid = true;
+                drawable_cache_invalid = true;
+            }
         }
     }
 
