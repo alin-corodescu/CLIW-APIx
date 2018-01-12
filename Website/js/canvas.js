@@ -217,7 +217,7 @@ var main = function () {
         if (mouse_active)
             handleNewMouseCoords(event);
     }
-    function drawTurnedOff(event){
+    function drawFinished(){
         mouse_active = false;
     }
 
@@ -231,7 +231,6 @@ var main = function () {
             [transformedData.xFrom, transformedData.yFrom] = transformCoordinates(visor_state,
                 [mouse_data.xFrom, mouse_data.yFrom]);
             [transformedData.xTo, transformedData.yTo] = transformCoordinates(visor_state, [mouse_data.xTo, mouse_data.yTo]);
-
             // Now we have transformed data at hand
             // Very important : draw on the drawable canvas, not the visor
             draw(drawable_canvas_ctx, transformedData, current_style);
@@ -262,33 +261,42 @@ var main = function () {
         mouse_data.xFrom = mouse_data.xTo;
         mouse_data.yFrom = mouse_data.yTo;
     };
+
+    // Desktop version
     visor.addEventListener('mousedown',drawBegun);
     visor.addEventListener('mousemove',drawProgress);
-    visor.addEventListener('mouseup',drawProgress);
-    visor.addEventListener('mouseout',drawTurnedOff);
+    visor.addEventListener('mouseup',drawFinished);
+    visor.addEventListener('mouseout',drawFinished);
 
-    // needs to be test !!
-    visor.addEventListener('ontouchstart',drawBegun);
-    visor.addEventListener('touchmove',drawProgress);
-    visor.addEventListener('touchend',drawProgress);
 
-    // Prevent scrolling when touching the canvas
-    document.body.addEventListener("touchstart", function (e) {
-        if (e.target === visor) {
-            e.preventDefault();
-        }
-    }, false);
-    document.body.addEventListener("touchend", function (e) {
-        if (e.target === visor) {
-            e.preventDefault();
-        }
-    }, false);
-    document.body.addEventListener("touchmove", function (e) {
-        if (e.target === visor) {
-            e.preventDefault();
-        }
+    // Mobile version
+
+    // prevent default behavior when on canvas
+    visor.addEventListener('touchstart', function(e) {e.preventDefault()}, false);
+    visor.addEventListener('touchmove', function(e) {e.preventDefault()}, false);
+    visor.addEventListener('touchend', function(e) {e.preventDefault()}, false);
+
+    // custom interpretation of each touch events
+    visor.addEventListener("touchstart", function (event) {
+        let mouseEvent = new MouseEvent("mousedown", {
+            clientX: event.touches[0].clientX,
+            clientY: event.touches[0].clientY
+        });
+        visor.dispatchEvent(mouseEvent);
     }, false);
 
+    visor.addEventListener("touchmove", function (event) {
+        let mouseEvent = new MouseEvent("mousemove", {
+            clientX: event.touches[0].clientX,
+            clientY: event.touches[0].clientY
+        });
+        visor.dispatchEvent(mouseEvent);
+    }, false);
+
+    visor.addEventListener("touchend", function () {
+        let mouseEvent = new MouseEvent("mouseup", {});
+        visor.dispatchEvent(mouseEvent);
+    }, false);
 
 
 
