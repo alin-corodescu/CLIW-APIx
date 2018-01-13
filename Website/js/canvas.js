@@ -1,24 +1,11 @@
-// BEGIN: Variables required throughout the file
-//----------------------------------------------------------------------------------------------
-
-// The url to connect to the backend for synchronization
-// const BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/";
-
 const BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/";
 
 var modes = {
     PAINT: 1,
     SCROLL: 2
 };
-
-var zoom_type = {
-    IN: 1,
-    OUT: 2
-};
-
 // This is the main function, will be called when the browser loads the page
 var main = function () {
-
     //BEGIN: Initializing all the data required in order to proceed further along
     //----------------------------------------------------------------------------------------------
     var conn;
@@ -148,13 +135,21 @@ var main = function () {
         };
         sessionRequest.open("GET", "/session", true);
         sessionRequest.send();
-
     }
 
+    var androidX = 100;
+    var androidY = 100;
     function handleUpdate(data) {
         let update = JSON.parse(data);
+
+        function computeNewAndroidCoordinates(points, xAcceleration, zAcceleration) {
+            var ACCEL_FACTOR = 5;
+            points.xTo = points.xFrom + xAcceleration * ACCEL_FACTOR;
+            points.yTo = points.yFrom + -zAcceleration * ACCEL_FACTOR;
+        }
+
         if (update.hasOwnProperty('drawable_canvas')) {
-            //    means we have an initial update
+            // means we have an initial update
             let drawable_image = new Image();
             drawable_image.onload = function (ev) {
                 drawable_canvas_ctx.drawImage(drawable_image, 0, 0);
@@ -172,13 +167,16 @@ var main = function () {
         }
         else {
             if (update.hasOwnProperty('android')) {
-                console.log("got acceleration = ", update.x);
+                console.log("got acceleration = ", JSON.stringify(update));
+                var points = {xFrom: androidX, yFrom: androidY};
+                computeNewAndroidCoordinates(points, update.x, update.z);
+                console.log("drawing between points: ", JSON.stringify(points));
+                draw(drawable_canvas_ctx, points, current_style);
+                drawable_cache_invalid = true;
             }
-            //    means we have to update
             else {
                 var style = {color: update.color, thickness: update.thickness};
                 draw(drawable_canvas_ctx, update, style);
-
                 drawable_cache_invalid = true;
             }
         }
@@ -258,7 +256,6 @@ var main = function () {
             // Very important : draw on the drawable canvas, not the visor
             draw(drawable_canvas_ctx, transformedData, current_style);
 
-            //    TODO send data over the socket (style + transformedData)
             let update = transformedData;
             update['thickness'] = current_style.thickness;
             update['color'] = current_style.color;
@@ -272,7 +269,6 @@ var main = function () {
             var scrollX = mouse_data.xTo - mouse_data.xFrom;
             var scrollY = mouse_data.yTo - mouse_data.yFrom;
 
-            // FIXME maybe we should adjust this
             visor_state.offsetX -= scrollX;
             visor_state.offsetY -= scrollY;
 
@@ -536,8 +532,5 @@ var main = function () {
             return true;
         }
         return false;
-    }
-
-    function combineLayers(background, atop) {
     }
 };

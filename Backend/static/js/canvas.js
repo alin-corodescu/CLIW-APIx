@@ -1,25 +1,13 @@
-// BEGIN: Variables required throughout the file
-//----------------------------------------------------------------------------------------------
-
-// The url to connect to the backend for synchronization
-const BACKEND_URL = '"ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/"';
+const BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/";
 
 var modes = {
     PAINT: 1,
     SCROLL: 2
 };
-
-var zoom_type = {
-    IN: 1,
-    OUT: 2
-};
-
 // This is the main function, will be called when the browser loads the page
 var main = function () {
-
     //BEGIN: Initializing all the data required in order to proceed further along
     //----------------------------------------------------------------------------------------------
-
     var conn;
     var sessionId;
 
@@ -31,6 +19,7 @@ var main = function () {
     let color_picker = document.getElementById("color_picker");
     let upload_image = document.getElementById("upload_image");
     let line_weight = document.getElementById("line_weight");
+    let shareable_link = document.getElementById('shareable_link');
 
     // This settings here have to be done because canvas CSS width and height do not get propagated
     // to the actual context, it's two different values
@@ -91,31 +80,43 @@ var main = function () {
         document.getElementById("loader").style.display = "none";
         document.getElementById("after-load").style.display = "block";
     }
+    function displayNetworkError(){
+        document.getElementById('modal_connection').style.display = "block";
+        setTimeout(function(){
+            document.getElementById('modal_connection').style.display = "none"; }, 3000);
+    }
 
     // This function connects to the backend via WebSockets for synchronization
     function establishConnection(url, clientId, session_id) {
         let width = drawable_canvas.width;
         let height = drawable_canvas.height;
         var connection = new WebSocket(BACKEND_URL + '?clientId=' + clientId + '&sessionId=' + session_id + '&width=' + width + '&height=' + height);
-        connection.onopen = function (ev) {
+        connection.onopen = function () {
             showPage()
         };
         connection.onmessage = function (ev) {
             handleUpdate(ev.data);
         };
-        connection.onclose = function (ev) {
-            document.getElementById('modal-connection').style.display = "block";
-            setTimeout(function(){
-                document.getElementById('modal-connection').style.display = "none"; }, 5000);
+        connection.onclose = function () {
+            displayNetworkError();
             showPage();
         };
-
+        //used to display error message in case the server has not yet respond
+        //We wait 3 seconds before deciding that the server did not respond
+        setTimeout(function(){
+            if(connection.readyState === 0) {
+                connection.close();
+                displayNetworkError();
+                showPage();
+            }
+            }, 1000);
         return connection;
     }
 
     // This function will make an AJAX call to the server to get the session id
     function getSessionId() {
         let sessionRequest = new XMLHttpRequest();
+        sessionId = -1;
         sessionRequest.onreadystatechange = function (ev) {
             if (this.readyState === 4) {
                 if (this.status === 200) {
@@ -127,7 +128,7 @@ var main = function () {
                 }
                 else {
                     // Running locally or got an error
-                    sessionId = 1;
+                    conn = establishConnection(BACKEND_URL, -1, sessionId);
                 }
 
             }
@@ -136,10 +137,19 @@ var main = function () {
         sessionRequest.send();
     }
 
+    var androidX = 100;
+    var androidY = 100;
     function handleUpdate(data) {
         let update = JSON.parse(data);
+
+        function computeNewAndroidCoordinates(points, xAcceleration, zAcceleration) {
+            var ACCEL_FACTOR = 5;
+            points.xTo = points.xFrom + xAcceleration * ACCEL_FACTOR;
+            points.yTo = points.yFrom + -zAcceleration * ACCEL_FACTOR;
+        }
+
         if (update.hasOwnProperty('drawable_canvas')) {
-            //    means we have an initial update
+            // means we have an initial update
             let drawable_image = new Image();
             drawable_image.onload = function (ev) {
                 drawable_canvas_ctx.drawImage(drawable_image, 0, 0);
@@ -157,13 +167,16 @@ var main = function () {
         }
         else {
             if (update.hasOwnProperty('android')) {
-                console.log("got acceleration = ", update.x);
+                console.log("got acceleration = ", JSON.stringify(update));
+                var points = {xFrom: androidX, yFrom: androidY};
+                computeNewAndroidCoordinates(points, update.x, update.z);
+                console.log("drawing between points: ", JSON.stringify(points));
+                draw(drawable_canvas_ctx, points, current_style);
+                drawable_cache_invalid = true;
             }
-            //    means we have to update
             else {
                 var style = {color: update.color, thickness: update.thickness};
                 draw(drawable_canvas_ctx, update, style);
-
                 drawable_cache_invalid = true;
             }
         }
@@ -243,7 +256,6 @@ var main = function () {
             // Very important : draw on the drawable canvas, not the visor
             draw(drawable_canvas_ctx, transformedData, current_style);
 
-            //    TODO send data over the socket (style + transformedData)
             let update = transformedData;
             update['thickness'] = current_style.thickness;
             update['color'] = current_style.color;
@@ -257,7 +269,6 @@ var main = function () {
             var scrollX = mouse_data.xTo - mouse_data.xFrom;
             var scrollY = mouse_data.yTo - mouse_data.yFrom;
 
-            // FIXME maybe we should adjust this
             visor_state.offsetX -= scrollX;
             visor_state.offsetY -= scrollY;
 
@@ -284,7 +295,7 @@ var main = function () {
     visor.addEventListener('touchmove', function(e) {e.preventDefault()}, false);
     visor.addEventListener('touchend', function(e) {e.preventDefault()}, false);
 
-    // custom interpretation of each touch events
+    //  interpretation of each touch events for DRAWING
     visor.addEventListener("touchstart", function (event) {
         let mouseEvent = new MouseEvent("mousedown", {
             clientX: event.touches[0].clientX,
@@ -348,22 +359,29 @@ var main = function () {
     }
 
     visor.addEventListener('mousewheel', handleZoom);
-    visor.onpointerdown = function (ev) {
-        evCache.push(ev);
-    };
-    visor.onpointermove = function (ev) {
-        for (let i = 0; i < evCache.length; i++) {
-            if (ev.pointerId === evCache[i].pointerId) {
-                evCache[i] = ev;
-                break;
-            }
+
+    visor.addEventListener("touchstart", function (event) {
+        if (event.touches.length === 2) {
+            evCache.push(event);
         }
-        handleZoom(ev);
-    };
-    visor.onpointerup = function (ev) {
-        remove_event(ev);
+    }, false);
+
+    visor.addEventListener("touchmove", function (event) {
+        if (event.touches.length === 2) {
+            for (let i = 0; i < evCache.length; i++) {
+                if (event.pointerId === evCache[i].pointerId) {
+                    evCache[i] = event;
+                    break;
+                }
+            }
+            handleZoom(event);
+        }
+    }, false);
+
+    visor.addEventListener("touchend", function (event) {
+        remove_event(event);
         if (evCache.length < 2) prevDiff = -1;
-    };
+    }, false);
 
     function remove_event(ev) {
         // Remove this event from the target's cache
@@ -388,6 +406,17 @@ var main = function () {
 
     line_weight.onchange = function () {
         current_style.thickness = line_weight.value;
+    };
+
+    shareable_link.onclick = function(){
+        if(sessionId !== -1) {
+            document.getElementById('generated_shareable_link').innerText = BACKEND_URL + '&sessionId=' + sessionId;
+            document.getElementById('modal_shareable_link').style.display = "block";
+        }
+        else {
+            document.getElementById('modal_connection').style.display = "block";
+        }
+
     };
 
 
@@ -422,7 +451,7 @@ var main = function () {
     upload_image.onchange = function (event) {
         transfer_canvas_ctx.clearRect(0, 0, transfer_canvas.width, transfer_canvas.height);
         if (transfer_canvas.toDataURL() !== drawable_canvas.toDataURL()) {
-            document.getElementById('modal-background').style.display = "block";
+            document.getElementById('modal_background').style.display = "block";
         }
         else {
             let image_file = event.target.files[0];
@@ -503,8 +532,5 @@ var main = function () {
             return true;
         }
         return false;
-    }
-
-    function combineLayers(background, atop) {
     }
 };
