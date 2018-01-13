@@ -143,7 +143,7 @@ var main = function () {
         let update = JSON.parse(data);
 
         function computeNewAndroidCoordinates(points, xAcceleration, zAcceleration) {
-            var ACCEL_FACTOR = 5;
+            var ACCEL_FACTOR = 0.5;
             points.xTo = points.xFrom + xAcceleration * ACCEL_FACTOR;
             points.yTo = points.yFrom + -zAcceleration * ACCEL_FACTOR;
         }
