@@ -109,7 +109,7 @@ var main = function () {
                 displayNetworkError();
                 showPage();
             }
-            }, 1000);
+            }, 20000);
         return connection;
     }
 
