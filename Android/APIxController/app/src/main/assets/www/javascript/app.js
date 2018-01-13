@@ -1,4 +1,3 @@
-
 function clickColorPicker() {
 	document.getElementById("colorPicker").click();
 }
@@ -39,10 +38,20 @@ function connectToServer(id) {
         conn.onopen = function (ev) {
             switchButton();
             window.addEventListener('devicemotion', function(event) {
-                var update = {android : 'true', x : event.acceleration.x, y : event.acceleration.y, z : event.acceleration.y};
-                conn.sendMessage(JSON.stringify(update));
+                // Don't be a sensitive b*tch
+                if (event.acceleration.x < -1 || event.acceleration.x > 1 ||
+                    event.acceleration.y < -1 || event.acceleration.y > 1 ||
+                    event.acceleration.z < -1 || event.acceleration.z > 1) {
+                    var update = {
+                        android: 'true',
+                        x: event.acceleration.x,
+                        y: event.acceleration.y,
+                        z: event.acceleration.z
+                    };
+                    conn.send(JSON.stringify(update));
+                }
             })
-        }
+        };
         conn.onclose = function (ev) {
             switchButton();
         }
