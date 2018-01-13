@@ -172,6 +172,8 @@ var main = function () {
                 computeNewAndroidCoordinates(points, update.x, update.z);
                 console.log("drawing between points: ", JSON.stringify(points));
                 draw(drawable_canvas_ctx, points, current_style);
+                androidX = points.xTo;
+                androidY = points.yTo;
                 drawable_cache_invalid = true;
             }
             else {
