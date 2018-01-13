@@ -21,7 +21,6 @@ var main = function () {
 
     //BEGIN: Initializing all the data required in order to proceed further along
     //----------------------------------------------------------------------------------------------
-
     var conn;
     var sessionId;
 
@@ -94,31 +93,43 @@ var main = function () {
         document.getElementById("loader").style.display = "none";
         document.getElementById("after-load").style.display = "block";
     }
+    function displayNetworkError(){
+        document.getElementById('modal_connection').style.display = "block";
+        setTimeout(function(){
+            document.getElementById('modal_connection').style.display = "none"; }, 3000);
+    }
 
     // This function connects to the backend via WebSockets for synchronization
     function establishConnection(url, clientId, session_id) {
         let width = drawable_canvas.width;
         let height = drawable_canvas.height;
         var connection = new WebSocket(BACKEND_URL + '?clientId=' + clientId + '&sessionId=' + session_id + '&width=' + width + '&height=' + height);
-        connection.onopen = function (ev) {
+        connection.onopen = function () {
             showPage()
         };
         connection.onmessage = function (ev) {
             handleUpdate(ev.data);
         };
-        connection.onclose = function (ev) {
-            document.getElementById('modal_connection').style.display = "block";
-            setTimeout(function(){
-                document.getElementById('modal_connection').style.display = "none"; }, 5000);
+        connection.onclose = function () {
+            displayNetworkError();
             showPage();
         };
-
+        //used to display error message in case the server has not yet respond
+        //We wait 3 seconds before deciding that the server did not respond
+        setTimeout(function(){
+            if(connection.readyState === 0) {
+                connection.close();
+                displayNetworkError();
+                showPage();
+            }
+            }, 1000);
         return connection;
     }
 
     // This function will make an AJAX call to the server to get the session id
     function getSessionId() {
         let sessionRequest = new XMLHttpRequest();
+        sessionId = -1;
         sessionRequest.onreadystatechange = function (ev) {
             if (this.readyState === 4) {
                 if (this.status === 200) {
@@ -130,7 +141,6 @@ var main = function () {
                 }
                 else {
                     // Running locally or got an error
-                    sessionId = -1;
                     conn = establishConnection(BACKEND_URL, -1, sessionId);
                 }
 
@@ -138,6 +148,7 @@ var main = function () {
         };
         sessionRequest.open("GET", "/session", true);
         sessionRequest.send();
+
     }
 
     function handleUpdate(data) {
@@ -288,7 +299,7 @@ var main = function () {
     visor.addEventListener('touchmove', function(e) {e.preventDefault()}, false);
     visor.addEventListener('touchend', function(e) {e.preventDefault()}, false);
 
-    // custom interpretation of each touch events
+    //  interpretation of each touch events for DRAWING
     visor.addEventListener("touchstart", function (event) {
         let mouseEvent = new MouseEvent("mousedown", {
             clientX: event.touches[0].clientX,
@@ -352,22 +363,29 @@ var main = function () {
     }
 
     visor.addEventListener('mousewheel', handleZoom);
-    visor.onpointerdown = function (ev) {
-        evCache.push(ev);
-    };
-    visor.onpointermove = function (ev) {
-        for (let i = 0; i < evCache.length; i++) {
-            if (ev.pointerId === evCache[i].pointerId) {
-                evCache[i] = ev;
-                break;
-            }
+
+    visor.addEventListener("touchstart", function (event) {
+        if (event.touches.length === 2) {
+            evCache.push(event);
         }
-        handleZoom(ev);
-    };
-    visor.onpointerup = function (ev) {
-        remove_event(ev);
+    }, false);
+
+    visor.addEventListener("touchmove", function (event) {
+        if (event.touches.length === 2) {
+            for (let i = 0; i < evCache.length; i++) {
+                if (event.pointerId === evCache[i].pointerId) {
+                    evCache[i] = event;
+                    break;
+                }
+            }
+            handleZoom(event);
+        }
+    }, false);
+
+    visor.addEventListener("touchend", function (event) {
+        remove_event(event);
         if (evCache.length < 2) prevDiff = -1;
-    };
+    }, false);
 
     function remove_event(ev) {
         // Remove this event from the target's cache
