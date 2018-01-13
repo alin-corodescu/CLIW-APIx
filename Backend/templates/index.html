@@ -15,124 +15,140 @@
 	<meta charset="UTF-8">
 	<title>APix</title>
 </head>
-	<body onload="main();initModal()" class="body">
+<body onload="main();initModal()" class="body">
 
-        <!--Loader while we fetch the data from the server-->
-        <div class="loader" id="loader"></div>
+<!--Loader while we fetch the data from the server-->
+<div class="loader" id="loader"></div>
 
-        <div class="after-load" id="after-load">
-        <!--Navigation-->
-            <div id="sidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
-                <a href="#" class="sidenavLink" onclick="exportCanvasPNG()"><i class="material-icons icon">file_download</i> PNG</a>
-                <a href="#" class="sidenavLink"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
-                <a href="#" class="sidenavLink"  onclick="clearCanvases()"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
-                <a><i class="material-icons">cast_connected</i> Generate QR code</a>
-            </div>
+<div class="after-load" id="after-load">
+    <!--Navigation-->
+    <div id="sidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
+        <a href="#" class="sidenavLink" onclick="exportCanvasPNG()"><i class="material-icons icon">file_download</i> PNG</a>
+        <a href="#" class="sidenavLink" id="shareable_link"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
+        <a href="#" class="sidenavLink"  onclick="clearCanvases()"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
+        <a><i class="material-icons">cast_connected</i> Generate QR code</a>
+    </div>
 
-            <!--Header-->
-            <header class="header">
-                <div class="header-home">
-                    <div>
-                        <button id="navButton" onclick="openNavigation()">&#9776;</button>
-                        APix: Doodling around with friends!
-                    </div>
-                </div>
-            </header>
-
-            <!-- Modal Connection issue -->
-            <div id="modal-connection" class="modal">
-                <div class="modal-content">
-                    <span class="modal_hide" id="modal_connection_hide">&times;</span>
-                    <div class="modal-header">
-                        <i class="material-icons">error_outline</i>
-                    </div>
-                    <div class="modal-body">
-                        Server could not be contacted! You are now in offline mode!
-                    </div>
-                    <div class="modal-footer">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Background issue -->
-            <div id="modal-background" class="modal">
-                <div class="modal-content">
-                    <span class="modal_hide" id="modal_background_hide">&times;</span>
-                    <div class="modal-header">
-                        <i class="material-icons">error_outline</i>
-                    </div>
-                    <div class="modal-body">
-                        You can only upload an image background before drawing!
-                    </div>
-                    <div class="modal-footer">
-                    </div>
-                </div>
-            </div>
-
-            <!--Canvas container-->
-            <div class="container canvas-container">
-                <!--Canvases-->
-                <canvas class="canvas hidden_canvas" width="900" height="450" id="background_canvas"></canvas>
-                <canvas class="canvas hidden_canvas" width="900" height="450" id="drawable_canvas"></canvas>
-                <canvas class="canvas non-drawable-area" id="visor_canvas"></canvas>
-
-                <!--Canvas options-->
-                <aside class="canvas-options">
-                    <!--Input for HTML 5-->
-                    <input id="color_picker" type="color" value="#337564" class="hidden_function"/>
-                    <input id="upload_image" type="file" class="hidden_function" />
-
-                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
-                        <i class="popup material-icons icon" onclick="clickUploadImage()">image</i>
-                        <span class="popuptext">Upload an image background!</span>
-                    </div>
-
-                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
-                        <i class="material-icons icon">android</i>
-                        <span class="popuptext">Connect an android device!</span>
-                    </div>
-
-                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
-                        <i class="material-icons icon">more_vert</i>
-                        <span class="popuptext">More options!</span>
-                    </div>
-
-                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
-                    <i class="material-icons icon" onclick="clickColorPicker()" id="colorButton"> palette</i>
-                        <span class="popuptext">Change color!</span>
-                    </div>
-
-                    <div class="popup" onclick="toggleInputRange(this)" id="popup">
-                        <i class="material-icons icon">line_weight </i>
-                        <div class="popuptext" id="inputRangeContainer">
-                            <span class="text-input-range">Change pencil thickness!</span>
-                            <input id="line_weight" type="range" min="0.2" value="2" max="10" step="0.2"/>
-                        </div>
-
-                    </div>
-
-                    <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
-                    <i class="material-icons icon" id="switch">zoom_in</i>
-                        <span class="popuptext">Enable zoom and scroll!</span>
-                    </div>
-
-                </aside>
-            </div>
-
-            <!--Transition-->
-            <div class="container">
-                <nav class="transition">
-                    <a href="#">&laquo;</a>
-                    <a href="#">1</a>
-                    <a href="#">2</a>
-                    <a class="active" href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                    <a href="#">6</a>
-                    <a href="#">&raquo;</a>
-                </nav>
+    <!--Header-->
+    <header class="header">
+        <div class="header-home">
+            <div>
+                <button id="navButton" onclick="openNavigation()">&#9776;</button>
+                APix: Doodling around with friends!
             </div>
         </div>
-	</body>
+    </header>
+
+    <!-- Modal Connection issue -->
+    <div id="modal_connection" class="modal">
+        <div class="modal-content">
+            <span class="modal_hide" id="modal_connection_hide">&times;</span>
+            <div class="modal-header">
+                <i class="material-icons">error_outline</i>
+            </div>
+            <div class="modal-body">
+                Server could not be contacted! You are now in offline mode!
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Background issue -->
+    <div id="modal_background" class="modal">
+        <div class="modal-content">
+            <span class="modal_hide" id="modal_background_hide">&times;</span>
+            <div class="modal-header">
+                <i class="material-icons">error_outline</i>
+            </div>
+            <div class="modal-body">
+                You can only upload an image background before drawing!
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Shareable Link -->
+    <div id="modal_shareable_link" class="modal">
+        <div class="modal-content">
+            <span class="modal_hide" id="modal_shareable_link_hide">&times;</span>
+            <div class="modal-header">
+                <i class="material-icons">done</i>
+            </div>
+            <div class="modal-body">
+                Share this link with a friend so you can draw together!
+            </div>
+            <div class="modal-footer">
+                <p id="generated_shareable_link"></p>
+            </div>
+        </div>
+    </div>
+
+    <!--Canvas container-->
+    <div class="container canvas-container">
+        <!--Canvases-->
+        <canvas class="canvas hidden_canvas" width="900" height="450" id="background_canvas"></canvas>
+        <canvas class="canvas hidden_canvas" width="900" height="450" id="drawable_canvas"></canvas>
+        <canvas class="canvas non-drawable-area" id="visor_canvas"></canvas>
+
+        <!--Canvas options-->
+        <aside class="canvas-options">
+            <!--Input for HTML 5-->
+            <input id="color_picker" type="color" value="#337564" class="hidden_function"/>
+            <input id="upload_image" type="file" class="hidden_function" />
+
+            <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
+                <i class="popup material-icons icon" onclick="clickUploadImage()">image</i>
+                <span class="popuptext">Upload an image background!</span>
+            </div>
+
+            <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
+                <i class="material-icons icon">android</i>
+                <span class="popuptext">Connect an android device!</span>
+            </div>
+
+            <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
+                <i class="material-icons icon">more_vert</i>
+                <span class="popuptext">More options!</span>
+            </div>
+
+            <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
+                <i class="material-icons icon" onclick="clickColorPicker()" id="colorButton"> palette</i>
+                <span class="popuptext">Change color!</span>
+            </div>
+
+            <div class="popup" onclick="toggleInputRange(this)" id="popup">
+                <i class="material-icons icon">line_weight </i>
+                <div class="popuptext" id="inputRangeContainer">
+                    <span class="text-input-range">Change pencil thickness!</span>
+                    <input id="line_weight" type="range" min="0.2" value="2" max="10" step="0.2"/>
+                </div>
+
+            </div>
+
+            <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
+                <i class="material-icons icon" id="switch">zoom_in</i>
+                <span class="popuptext">Enable zoom and scroll!</span>
+            </div>
+
+        </aside>
+    </div>
+
+    <!--Transition-->
+    <div class="container">
+        <nav class="transition">
+            <a href="#">&laquo;</a>
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a class="active" href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+            <a href="#">6</a>
+            <a href="#">&raquo;</a>
+        </nav>
+    </div>
+</div>
+</body>
 </html>
