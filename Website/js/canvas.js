@@ -1,4 +1,5 @@
 const BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/";
+const SITE_URL ="http://apix.eu-central-1.elasticbeanstalk.com/";
 
 var modes = {
     PAINT: 1,
@@ -182,6 +183,14 @@ var main = function () {
                 drawable_cache_invalid = true;
             }
         }
+    }
+
+    function sendBackgroundToServer(){
+         let background_data =
+        {   "target" : "background",
+            "dataUrl" : background_canvas.toDataURL()
+        };
+        conn.send(background_data);
     }
 
 
@@ -412,7 +421,7 @@ var main = function () {
 
     shareable_link.onclick = function(){
         if(sessionId !== -1) {
-            document.getElementById('generated_shareable_link').innerText = BACKEND_URL + '&sessionId=' + sessionId;
+            document.getElementById('generated_shareable_link').innerText = SITE_URL + '?sessionId=' + sessionId;
             document.getElementById('modal_shareable_link').style.display = "block";
         }
         else {
@@ -467,6 +476,7 @@ var main = function () {
                         // FIXME need to use background canvas but it creates a "glitchy" effect
                         setCanvasDimensions(image_object.width, image_object.height);
                         backgroud_canvas_ctx.drawImage(image_object, 0, 0, image_object.width, image_object.height);
+                        sendBackgroundToServer();
                         // Invalidate background cache
                         background_cache_invalid = true;
                     };
