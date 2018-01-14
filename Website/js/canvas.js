@@ -110,7 +110,7 @@ var main = function () {
                 displayNetworkError();
                 showPage();
             }
-            }, 20000);
+        }, 20000);
         return connection;
     }
 
@@ -140,13 +140,13 @@ var main = function () {
 
     var androidX = 100;
     var androidY = 100;
+    var meterToPixel = 1000;
     function handleUpdate(data) {
         let update = JSON.parse(data);
 
-        function computeNewAndroidCoordinates(points, xAcceleration, zAcceleration) {
-            var ACCEL_FACTOR = 0.5;
-            points.xTo = points.xFrom + xAcceleration * ACCEL_FACTOR;
-            points.yTo = points.yFrom + -zAcceleration * ACCEL_FACTOR;
+        function computeNewAndroidCoordinates(points, dx, dy) {
+            points.xTo = points.xFrom + dx * meterToPixel;
+            points.yTo = points.yFrom + dy * meterToPixel;
         }
 
         if (update.hasOwnProperty('drawable_canvas')) {
@@ -168,13 +168,29 @@ var main = function () {
         }
         else {
             if (update.hasOwnProperty('android')) {
-                console.log("got acceleration = ", JSON.stringify(update));
+                if (update.hasOwnProperty('style')) {
+                    // Update the style
+                    current_style.color = update.color;
+                    current_style.thickness = update.thickness;
+                    return;
+                }
+                console.log("moving in meters:", JSON.stringify(update));
                 var points = {xFrom: androidX, yFrom: androidY};
-                computeNewAndroidCoordinates(points, update.x, update.z);
-                console.log("drawing between points: ", JSON.stringify(points));
-                draw(drawable_canvas_ctx, points, current_style);
+                computeNewAndroidCoordinates(points, update.dx, update.dy);
+                // Clamp the coordinates to the visor
+                if (points.xTo > visor.width)
+                    points.xTo = visor.width;
+                if (points.yTo > visor.height)
+                    points.yTo = visor.height;
+
                 androidX = points.xTo;
                 androidY = points.yTo;
+
+                // Transform the coordinates
+                [points.xFrom, points.yFrom] = transformCoordinates(visor_state, [points.xFrom, points.yFrom]);
+                [points.xTo, points.yTo] = transformCoordinates(visor_state, [points.xTo, points.yTo]);
+                console.log("drawing between points: ", JSON.stringify(points));
+                draw(drawable_canvas_ctx, points, current_style);
                 drawable_cache_invalid = true;
             }
             else {
