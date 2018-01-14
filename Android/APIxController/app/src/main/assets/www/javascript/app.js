@@ -21,6 +21,15 @@ function switchButton() {
         button.style.backgroundColor = "green";
     }
 }
+
+function updateThickness(value) {
+    var color = document.getElementById("colorPicker").value;
+    var update = {color: color, thickness: value};
+    update.android = 'true';
+    update.style = 'true';
+
+    conn.send(JSON.stringify(update));
+}
 function updateColorPickerButton() {
 	var color = document.getElementById("colorPicker").value;
 	var x = document.getElementsByClassName("recolorable");
@@ -30,6 +39,13 @@ function updateColorPickerButton() {
         if (x[i].id === "colorButton")
         	x[i].style.backgroundColor = color;
     }
+
+    var thickness = document.getElementById("thicknessSlider").value;
+    var update = {color: color, thickness: thickness};
+    update.android = 'true';
+    update.style = 'true';
+
+    conn.send(JSON.stringify(update));
 }
 
 var BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/";

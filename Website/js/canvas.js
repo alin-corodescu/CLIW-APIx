@@ -139,13 +139,37 @@ var main = function () {
 
     var androidX = 100;
     var androidY = 100;
+
+    var lastUpdateTime = new Date().getTime();
+    var xVelocity = 0;
+    var yVelocity = 0;
+    var timeThreshold = 500;
+
     function handleUpdate(data) {
         let update = JSON.parse(data);
 
         function computeNewAndroidCoordinates(points, xAcceleration, zAcceleration) {
-            var ACCEL_FACTOR = 0.5;
-            points.xTo = points.xFrom + xAcceleration * ACCEL_FACTOR;
-            points.yTo = points.yFrom + -zAcceleration * ACCEL_FACTOR;
+            // var ACCEL_FACTOR = 0.5;
+            var now = new Date().getTime();
+            var timePassed = now - lastUpdateTime;
+
+            // Assume the user stopped sending updates
+            if (timePassed > timeThreshold) {
+                xVelocity = 0;
+                yVelocity = 0;
+                timePassed = 0;
+            }
+
+            // Update velocity on both axis
+            xVelocity += xAcceleration * (timePassed / 1000);
+            yVelocity += (-zAcceleration) * (timePassed / 1000);
+
+            // Tell the android where to move
+            points.xTo = points.xFrom + xVelocity * timePassed;
+            points.yTo = points.yFrom + yVelocity * timePassed;
+
+            // Mark the last update time
+            lastUpdateTime = now;
         }
 
         if (update.hasOwnProperty('drawable_canvas')) {
@@ -167,13 +191,28 @@ var main = function () {
         }
         else {
             if (update.hasOwnProperty('android')) {
-                console.log("got acceleration = ", JSON.stringify(update));
+                if (update.hasOwnProperty('style')) {
+                    // Update the style
+                    current_style.color = update.color;
+                    current_style.thickness = update.thickness;
+                    return;
+                }
                 var points = {xFrom: androidX, yFrom: androidY};
                 computeNewAndroidCoordinates(points, update.x, update.z);
-                console.log("drawing between points: ", JSON.stringify(points));
-                draw(drawable_canvas_ctx, points, current_style);
+                // Clamp the coordinates to the visor
+                if (points.xTo > visor.width)
+                    points.xTo = visor.width;
+                if (points.yTo > visor.height)
+                    points.yTo = visor.height;
+
                 androidX = points.xTo;
                 androidY = points.yTo;
+
+                // Transform the coordinates
+                [points.xFrom, points.yFrom] = transformCoordinates(visor_state, [points.xFrom, points.yFrom]);
+                [points.xTo, points.yTo] = transformCoordinates(visor_state, [points.xTo, points.yTo]);
+                console.log("drawing between points: ", JSON.stringify(points));
+                draw(drawable_canvas_ctx, points, current_style);
                 drawable_cache_invalid = true;
             }
             else {
