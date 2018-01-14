@@ -40,6 +40,24 @@
                 </div>
             </header>
 
+            <!-- Modal Intial Setting issue -->
+            <div id="modal_initial_settings" class="modal">
+                <div class="modal-content">
+                    <span class="modal_hide" id="modal_initial_settings_hide">&times;</span>
+                    <div class="modal-header">
+                        <i class="material-icons">error_outline</i>
+                    </div>
+                    <div class="modal-body" id="modal_initial_settings_body">
+                        <p>Pick the width and the height of your canvas!</p><br>
+                        <input id="custom_width" type="number" name="width" value="900">    px<br><br><br>
+                        <input id="custom_height" type="number" name="height" value="450">  px<br><br><br>
+                        <button id="submit_dimensions">Submit</button>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+
             <!-- Modal Connection issue -->
             <div id="modal_connection" class="modal">
                 <div class="modal-content">
@@ -98,6 +116,7 @@
                     <!--Input for HTML 5-->
                     <input id="color_picker" type="color" value="#337564" class="hidden_function"/>
                     <input id="upload_image" type="file" class="hidden_function" />
+
 
                     <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
                         <i class="popup material-icons icon" onclick="clickUploadImage()">image</i>

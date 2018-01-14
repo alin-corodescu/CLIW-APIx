@@ -21,9 +21,11 @@ var main = function () {
     let upload_image = document.getElementById("upload_image");
     let line_weight = document.getElementById("line_weight");
     let shareable_link = document.getElementById('shareable_link');
+    let modal_initial_settings = document.getElementById('modal_initial_settings');
 
     // This settings here have to be done because canvas CSS width and height do not get propagated
     // to the actual context, it's two different values
+
     visor.width = parseInt(window.getComputedStyle(visor).width);
     visor.height = parseInt(window.getComputedStyle(visor).height);
     background_canvas.width = parseInt(window.getComputedStyle(background_canvas).width);
@@ -79,7 +81,16 @@ var main = function () {
 
     function showPage() {
         document.getElementById("loader").style.display = "none";
+        modal_initial_settings.style.display ="block";
         document.getElementById("after-load").style.display = "block";
+        let submit_button = document.getElementById('submit_dimensions');
+        submit_button.onclick = function() {
+            let width = document.getElementById('custom_width').value;
+            let height = document.getElementById('custom_height').value;
+            setCanvasDimensions(width,height);
+            modal_initial_settings.style.display ="none";
+        }
+
     }
     function displayNetworkError(){
         document.getElementById('modal_connection').style.display = "block";
@@ -246,8 +257,8 @@ var main = function () {
 
     // BEGIN: Handling mouse events
     //----------------------------------------------------------------------------------------------
-
     function draw(context, points, style) {
+
         context.beginPath();
         context.moveTo(points.xFrom, points.yFrom);
         context.lineTo(points.xTo, points.yTo);
@@ -258,6 +269,7 @@ var main = function () {
     }
 
     function drawBegun(event){
+        console.log(visor);
         mouse_active = true;
         [mouse_data.xFrom, mouse_data.yFrom] = computeActualMousePosition(event);
     }
@@ -307,6 +319,11 @@ var main = function () {
         mouse_data.xFrom = mouse_data.xTo;
         mouse_data.yFrom = mouse_data.yTo;
     };
+
+    function drawOffLimitArea(){
+        visor_ctx.fillStyle ="#97c8fd";
+        visor_ctx.fillRect(visor_state.offsetX, visor_state.offsetY, drawable_canvas.width, drawable_canvas.height);
+    }
 
     // Desktop version
     visor.addEventListener('mousedown',drawBegun);
@@ -472,12 +489,13 @@ var main = function () {
 
         drawable_canvas_ctx = drawable_canvas.getContext('2d');
         backgroud_canvas_ctx = background_canvas.getContext('2d');
-        visor_ctx = visor.getContext('2d');
     }
 
     upload_image.onchange = function (event) {
-        transfer_canvas_ctx.clearRect(0, 0, transfer_canvas.width, transfer_canvas.height);
-        if (transfer_canvas.toDataURL() !== drawable_canvas.toDataURL()) {
+        let dummy_canvas = document.createElement('canvas');
+        dummy_canvas.width = drawable_canvas.width;
+        dummy_canvas.height = drawable_canvas.height;
+        if (dummy_canvas.toDataURL() !== drawable_canvas.toDataURL()) {
             document.getElementById('modal_background').style.display = "block";
         }
         else {
@@ -489,8 +507,6 @@ var main = function () {
                 reader.onload = function (e) {
                     let image_object = new Image();
                     image_object.onload = function () {
-                        // FIXME need to use background canvas but it creates a "glitchy" effect
-                        setCanvasDimensions(image_object.width, image_object.height);
                         backgroud_canvas_ctx.drawImage(image_object, 0, 0, image_object.width, image_object.height);
                         sendBackgroundToServer();
                         // Invalidate background cache
@@ -502,7 +518,6 @@ var main = function () {
             }
         }
     };
-
     function renderVisor() {
         // We could make those very big (visor.widht / visor_state.MIN_ZOOM) from the start
         // so we don't have to adjust on the fly (maybe this is a performance issue)
@@ -512,6 +527,9 @@ var main = function () {
         visor_ctx.save();
         visor_ctx.clearRect(0, 0, visor.width, visor.height);
         visor_ctx.scale(visor_state.zoom, visor_state.zoom);
+
+        // Draw the off limit area
+        // drawOffLimitArea();
         // Draw the background
         transfer_canvas_ctx.putImageData(cached_background, 0, 0);
         visor_ctx.drawImage(transfer_canvas, 0, 0);
