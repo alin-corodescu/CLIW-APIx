@@ -206,7 +206,7 @@ var main = function () {
         {   "target" : "background",
             "dataUrl" : background_canvas.toDataURL()
         };
-        conn.send(background_data);
+        conn.send(JSON.stringify(background_data));
     }
 
 
