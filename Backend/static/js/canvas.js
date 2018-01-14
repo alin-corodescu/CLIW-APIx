@@ -109,7 +109,7 @@ var main = function () {
                 displayNetworkError();
                 showPage();
             }
-            }, 20000);
+        }, 20000);
         return connection;
     }
 
@@ -139,37 +139,13 @@ var main = function () {
 
     var androidX = 100;
     var androidY = 100;
-
-    var lastUpdateTime = new Date().getTime();
-    var xVelocity = 0;
-    var yVelocity = 0;
-    var timeThreshold = 500;
-
+    var meterToPixel = 1000;
     function handleUpdate(data) {
         let update = JSON.parse(data);
 
-        function computeNewAndroidCoordinates(points, xAcceleration, zAcceleration) {
-            // var ACCEL_FACTOR = 0.5;
-            var now = new Date().getTime();
-            var timePassed = now - lastUpdateTime;
-
-            // Assume the user stopped sending updates
-            if (timePassed > timeThreshold) {
-                xVelocity = 0;
-                yVelocity = 0;
-                timePassed = 0;
-            }
-
-            // Update velocity on both axis
-            xVelocity += xAcceleration * (timePassed / 1000);
-            yVelocity += (-zAcceleration) * (timePassed / 1000);
-
-            // Tell the android where to move
-            points.xTo = points.xFrom + xVelocity * timePassed;
-            points.yTo = points.yFrom + yVelocity * timePassed;
-
-            // Mark the last update time
-            lastUpdateTime = now;
+        function computeNewAndroidCoordinates(points, dx, dy) {
+            points.xTo = points.xFrom + dx * meterToPixel;
+            points.yTo = points.yFrom + dy * meterToPixel;
         }
 
         if (update.hasOwnProperty('drawable_canvas')) {
@@ -197,8 +173,9 @@ var main = function () {
                     current_style.thickness = update.thickness;
                     return;
                 }
+                console.log("moving in meters:", JSON.stringify(update));
                 var points = {xFrom: androidX, yFrom: androidY};
-                computeNewAndroidCoordinates(points, update.x, update.z);
+                computeNewAndroidCoordinates(points, update.dx, update.dy);
                 // Clamp the coordinates to the visor
                 if (points.xTo > visor.width)
                     points.xTo = visor.width;

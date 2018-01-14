@@ -49,8 +49,15 @@ function updateColorPickerButton() {
 }
 
 var BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/";
-var THRESHOLD = 2;
+// value below which the velocity is considered to be 0
+var VELOCITY_NOISE_THRESHOLD = 0.1;
+var DISTANCE_NOISE_THRESHOLD = 0.01;
+var t0;
+var vx0 = 0, vy0 = 0;
+var ax0 = 0, ay0 = 0;
+var dx = 0, dy = 0;
 var conn;
+var lastUpdateTime = 0;
 function connectToServer(id) {
     if (!conn) {
         var connectionString = BACKEND_URL + "?c=" + id;
@@ -59,19 +66,54 @@ function connectToServer(id) {
         conn.onopen = function (ev) {
             switchButton();
             window.addEventListener('devicemotion', function(event) {
-                // Don't be a sensitive b*tch
                 if (toggle) {
-                    if (event.acceleration.x < -THRESHOLD || event.acceleration.x > THRESHOLD ||
-                        event.acceleration.y < -THRESHOLD || event.acceleration.y > THRESHOLD ||
-                        event.acceleration.z < -THRESHOLD || event.acceleration.z > THRESHOLD) {
-                        var update = {
-                            android: 'true',
-                            x: event.acceleration.x,
-                            y: event.acceleration.y,
-                            z: event.acceleration.z
-                        };
-                        conn.send(JSON.stringify(update));
+                    if (t0) t0 = new Date().getTime();
+                    var now = new Date().getTime();
+
+                    var deltaT = (now - t0) / 1000;
+
+                    // Acceleration on x we consider
+                    var axPrime = (event.acceleration.x - ax0) / 2;
+
+                    var vx1 = vx0 + axPrime * deltaT;
+
+                    var vxPrime = (vx1 + vx0) / 2;
+                    // Modify the distance on the x axis
+                    if (vxPrime > VELOCITY_NOISE_THRESHOLD)
+                        dx += vxPrime * deltaT;
+
+                    // Acceleration on x we consider
+                    var ayPrime = (event.acceleration.z - ay0) / 2;
+
+                    var vy1 = vy0 + ayPrime * deltaT;
+
+                    var vyPrime = (vy1 + vy0) / 2;
+                    // Modify the distance on the x axis
+                    if (vyPrime > VELOCITY_NOISE_THRESHOLD)
+                        dy += vyPrime * deltaT;
+
+                    t0 = now;
+                    ax0 = event.acceleration.x;
+                    ay0 = event.acceleration.z;
+
+                    // Send updates once every 0.1s
+                    if (now - lastUpdateTime > 100) {
+                        //    Send update on the server
+                        if (dx > DISTANCE_NOISE_THRESHOLD || dy > DISTANCE_NOISE_THRESHOLD) {
+                            lastUpdateTime = now;
+                            var update = {
+                                android: 'true',
+                                dx: dx,
+                                dy: dy
+                            };
+                            dy = dx = 0;
+                            conn.send(JSON.stringify(update));
+                        }
                     }
+                }
+                else {
+                    t0 = undefined;
+                    ax0 = ay0 = vx0 = vy0 = dy = dx = 0;
                 }
             })
         };
