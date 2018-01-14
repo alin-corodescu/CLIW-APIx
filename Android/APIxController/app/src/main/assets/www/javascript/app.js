@@ -51,8 +51,8 @@ function updateColorPickerButton() {
 var BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/";
 // value below which the velocity is considered to be 0
 var VELOCITY_NOISE_THRESHOLD = 0;
-var DISTANCE_NOISE_THRESHOLD = 0.05;
-var ACCELERATION_NOISE_THRESHOLD = 0.5;
+var DISTANCE_NOISE_THRESHOLD = 0.01;
+var ACCELERATION_NOISE_THRESHOLD = 1;
 var t0;
 var vx0 = 0, vy0 = 0;
 var ax0 = 0, ay0 = 0;
@@ -80,7 +80,14 @@ function connectToServer(id) {
 //                    alert("delta T " + deltaT);
 
                     // Acceleration on x we consider
-                    var axPrime = (event.acceleration.x + ax0) / 2;
+                    var xAccel = 0;
+                    if (event.acceleration.x > ACCELERATION_NOISE_THRESHOLD || event.acceleration.x < -ACCELERATION_NOISE_THRESHOLD) {
+                        xAccel = event.acceleration.x;
+                    }
+                    else {
+                        vx0 *= 0.9;
+                    }
+                    var axPrime = (xAccel + ax0) / 2;
 //                    alert("acceleration" + event.acceleration.x);
 //                    alert("prev accel" + ax0);
 //                    alert("accel on x:" + axPrime);
@@ -93,8 +100,16 @@ function connectToServer(id) {
                         dx += vxPrime * deltaT;
 //                    alert(dx);
 
+
+                    var yAccel = 0;
+                    if (event.acceleration.z > ACCELERATION_NOISE_THRESHOLD || event.acceleration.z < -ACCELERATION_NOISE_THRESHOLD) {
+                        yAccel = event.acceleration.z;
+                    }
+                    else {
+                        vy0 *= 0.9;
+                    }
                     // Acceleration on y we consider
-                    var ayPrime = (event.acceleration.z + ay0) / 2;
+                    var ayPrime = (yAccel + ay0) / 2;
 
                     var vy1 = vy0 + ayPrime * deltaT;
 
@@ -104,8 +119,8 @@ function connectToServer(id) {
                         dy += vyPrime * deltaT;
 
                     t0 = now;
-                    ax0 = event.acceleration.x;
-                    ay0 = event.acceleration.z;
+                    ax0 = xAccel;
+                    ay0 = yAccel;
                     vx0 = vx1;
                     vy0 = vy1;
 
