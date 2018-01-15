@@ -22,6 +22,7 @@ var main = function () {
     let line_weight = document.getElementById("line_weight");
     let shareable_link = document.getElementById('shareable_link');
     let modal_initial_settings = document.getElementById('modal_initial_settings');
+    let image_background_object = new Image();
 
     // This settings here have to be done because canvas CSS width and height do not get propagated
     // to the actual context, it's two different values
@@ -34,7 +35,7 @@ var main = function () {
     drawable_canvas.height = parseInt(window.getComputedStyle(drawable_canvas).height);
 
     var drawable_canvas_ctx = drawable_canvas.getContext('2d');
-    var backgroud_canvas_ctx = background_canvas.getContext('2d');
+    var background_canvas_ctx = background_canvas.getContext('2d');
     var visor_ctx = visor.getContext('2d');
 
     // Cached images of the background and drawable canvas
@@ -79,18 +80,22 @@ var main = function () {
     //BEGIN: Communication with backend
     //----------------------------------------------------------------------------------------------
 
-    function showPage() {
+
+    function initAndConnect(clientId){
         document.getElementById("loader").style.display = "none";
         modal_initial_settings.style.display ="block";
-        document.getElementById("after-load").style.display = "block";
         let submit_button = document.getElementById('submit_dimensions');
         submit_button.onclick = function() {
             let width = document.getElementById('custom_width').value;
             let height = document.getElementById('custom_height').value;
             setCanvasDimensions(width,height);
+            drawImageOnBackground();
             modal_initial_settings.style.display ="none";
+            conn = establishConnection(BACKEND_URL, clientId, sessionId);
         }
-
+    }
+    function showPage() {
+        document.getElementById("after-load").style.display = "block";
     }
     function displayNetworkError(){
         document.getElementById('modal_connection').style.display = "block";
@@ -104,6 +109,7 @@ var main = function () {
         let height = drawable_canvas.height;
         var connection = new WebSocket(BACKEND_URL + '?clientId=' + clientId + '&sessionId=' + session_id + '&width=' + width + '&height=' + height);
         connection.onopen = function () {
+            sendBackgroundToServer();
             showPage()
         };
         connection.onmessage = function (ev) {
@@ -128,6 +134,7 @@ var main = function () {
     // This function will make an AJAX call to the server to get the session id
     function getSessionId() {
         let sessionRequest = new XMLHttpRequest();
+        let clientId = -1;
         sessionId = -1;
         sessionRequest.onreadystatechange = function (ev) {
             if (this.readyState === 4) {
@@ -135,12 +142,15 @@ var main = function () {
                     console.log("got session id: " + this.responseText);
                     var identityData = JSON.parse(this.responseText);
                     sessionId = identityData.sessionId;
-                    var clientId = identityData.clientId;
-                    conn = establishConnection(BACKEND_URL, clientId, sessionId);
+                    clientId = identityData.clientId;
+                    initAndConnect(clientId);
+                    // conn = establishConnection(BACKEND_URL, clientId, sessionId)
+
                 }
                 else {
                     // Running locally or got an error
-                    conn = establishConnection(BACKEND_URL, -1, sessionId);
+                    initAndConnect(clientId, sessionId);
+                    // conn = establishConnection(BACKEND_URL, clientId, sessionId);
                 }
 
             }
@@ -171,7 +181,7 @@ var main = function () {
 
             let background_image = new Image();
             background_image.onload = function (ev) {
-                backgroud_canvas_ctx.drawImage(background_image, 0, 0);
+                background_canvas_ctx.drawImage(background_image, 0, 0);
                 background_cache_invalid = true;
             };
             background_image.src = update.background_canvas;
@@ -268,7 +278,6 @@ var main = function () {
     }
 
     function drawBegun(event){
-        console.log(visor);
         mouse_active = true;
         [mouse_data.xFrom, mouse_data.yFrom] = computeActualMousePosition(event);
     }
@@ -475,6 +484,10 @@ var main = function () {
     //BEGIN: Update canvases
     //----------------------------------------------------------------------------------------------
 
+    window.addEventListener('resize', function() {
+        visor.width = parseInt(window.getComputedStyle(visor).width);
+        visor.height = parseInt(window.getComputedStyle(visor).height);
+    }, true);
     function setCanvasDimensions(width, height) {
         background_canvas.style.width = width + 'px';
         background_canvas.style.height = height + 'px';
@@ -487,34 +500,28 @@ var main = function () {
         drawable_canvas.height = height;
 
         drawable_canvas_ctx = drawable_canvas.getContext('2d');
-        backgroud_canvas_ctx = background_canvas.getContext('2d');
+        background_canvas_ctx = background_canvas.getContext('2d');
     }
 
+    function drawImageOnBackground(){
+        background_canvas_ctx.drawImage(image_background_object, 0, 0, image_background_object.width, image_background_object.height
+            ,0,0,background_canvas.width, background_canvas.height);
+        background_cache_invalid = true;
+    }
     upload_image.onchange = function (event) {
-        let dummy_canvas = document.createElement('canvas');
-        dummy_canvas.width = drawable_canvas.width;
-        dummy_canvas.height = drawable_canvas.height;
-        if (dummy_canvas.toDataURL() !== drawable_canvas.toDataURL()) {
-            document.getElementById('modal_background').style.display = "block";
-        }
-        else {
-            let image_file = event.target.files[0];
-            let image_type = /image.*/;
+        let image_file = event.target.files[0];
+        let image_type = /image.*/;
 
-            if (image_file.type.match(image_type)) {
-                let reader = new FileReader();
-                reader.onload = function (e) {
-                    let image_object = new Image();
-                    image_object.onload = function () {
-                        backgroud_canvas_ctx.drawImage(image_object, 0, 0, image_object.width, image_object.height);
-                        sendBackgroundToServer();
-                        // Invalidate background cache
-                        background_cache_invalid = true;
-                    };
-                    image_object.src = e.target.result;
+        if (image_file.type.match(image_type)) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let image_object = new Image();
+                image_object.onload = function () {
+                    image_background_object = image_object;
                 };
-                reader.readAsDataURL(image_file);
-            }
+                image_object.src = e.target.result;
+            };
+            reader.readAsDataURL(image_file);
         }
     };
     function renderVisor() {
@@ -556,7 +563,7 @@ var main = function () {
     // e.g : when anything in visor_state changes and when we draw on the background canvas
     function updateBackgroundCache() {
         if (background_cache_invalid) {
-            cached_background = backgroud_canvas_ctx.getImageData(visor_state.offsetX, visor_state.offsetY,
+            cached_background = background_canvas_ctx.getImageData(visor_state.offsetX, visor_state.offsetY,
                 visor.width / visor_state.zoom, visor.height / visor_state.zoom);
             // This flag will be reset to true when the visor_state changes or we draw on the background canvas
             background_cache_invalid = false;
