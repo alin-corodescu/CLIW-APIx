@@ -42,6 +42,11 @@
     display:none;
 }
 
+.upload_image_background:hover{
+    cursor: pointer;
+    font-family: sans-serif;
+}
+
 /*Sidenavigation layout css*/
 .sidenav {
     height: 100%;
@@ -142,10 +147,9 @@
 }
 
 .canvas-visor{
-    height: 75vh;
+    height: 70vh;
     width: 80vw;
     border: 1px solid black;
-    background: white;
 }
 .non-drawable-area{
     background:
@@ -156,7 +160,6 @@
             #fff 10px,
             #fff 20px );
 }
-
 /*Action bar options layout css*/
 .canvas-options {
     display: flex;

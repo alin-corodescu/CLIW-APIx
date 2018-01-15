@@ -20,6 +20,28 @@
 <!--Loader while we fetch the data from the server-->
 <div class="loader" id="loader"></div>
 
+<!-- Modal Intial Setting issue -->
+<div id="modal_initial_settings" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <i class="material-icons">error_outline</i>
+        </div>
+        <div class="modal-body" id="modal_initial_settings_body">
+            <p>Pick a width, a height and a background image for your canvas!</p><br>
+            <input id="custom_width" type="number" name="width" value="900">    px<br><br>
+            <input id="custom_height" type="number" name="height" value="450">  px
+            <div onclick="clickUploadImage()" class="upload_image_background">
+                <span>Upload an image background!</span>
+                <i class="material-icons">image</i>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <br>
+            <button id="submit_dimensions">Begin!</button>
+        </div>
+    </div>
+</div>
+
 <div class="after-load" id="after-load">
     <!--Navigation-->
     <div id="sidenav" class="sidenav">
@@ -91,18 +113,13 @@
         <!--Canvases-->
         <canvas class="canvas hidden_canvas" width="900" height="450" id="background_canvas"></canvas>
         <canvas class="canvas hidden_canvas" width="900" height="450" id="drawable_canvas"></canvas>
-        <canvas class="canvas non-drawable-area" id="visor_canvas"></canvas>
+        <canvas class="canvas-visor non-drawable-area" id="visor_canvas"></canvas>
 
         <!--Canvas options-->
         <aside class="canvas-options">
             <!--Input for HTML 5-->
             <input id="color_picker" type="color" value="#337564" class="hidden_function"/>
             <input id="upload_image" type="file" class="hidden_function" />
-
-            <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
-                <i class="popup material-icons icon" onclick="clickUploadImage()">image</i>
-                <span class="popuptext">Upload an image background!</span>
-            </div>
 
             <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
                 <i class="material-icons icon">android</i>
@@ -134,20 +151,6 @@
             </div>
 
         </aside>
-    </div>
-
-    <!--Transition-->
-    <div class="container">
-        <nav class="transition">
-            <a href="#">&laquo;</a>
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a class="active" href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
-            <a href="#">6</a>
-            <a href="#">&raquo;</a>
-        </nav>
     </div>
 </div>
 </body>
