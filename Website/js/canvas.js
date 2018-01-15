@@ -494,7 +494,8 @@ var main = function () {
     window.addEventListener('resize', function() {
         visor.width = parseInt(window.getComputedStyle(visor).width);
         visor.height = parseInt(window.getComputedStyle(visor).height);
-        renderVisor();
+        background_cache_invalid = true;
+        drawable_cache_invalid = true;
     }, true);
     function setupCanvases(width, height) {
         background_canvas.style.width = width + 'px';
@@ -515,7 +516,7 @@ var main = function () {
         background_canvas_ctx.fillRect(0,0, background_canvas.width, background_canvas.height);
 
         // Center the image
-        // This is minus because of the invertion of offsets since we are talking
+        // This is minus because of the invertion of offsets since we are talking relative to the drawable canvas
         visor_state.offsetX = -(visor.width - width) / 2;
         visor_state.offsetY = -(visor.height - height) / 2;
 
