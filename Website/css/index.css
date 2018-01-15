@@ -150,7 +150,6 @@
     height: 70vh;
     width: 80vw;
     border: 1px solid black;
-    background: white;
 }
 .non-drawable-area{
     background:
@@ -161,7 +160,6 @@
             #fff 10px,
             #fff 20px );
 }
-
 /*Action bar options layout css*/
 .canvas-options {
     display: flex;

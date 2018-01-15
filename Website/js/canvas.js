@@ -23,6 +23,7 @@ var main = function () {
     let shareable_link = document.getElementById('shareable_link');
     let modal_initial_settings = document.getElementById('modal_initial_settings');
     let image_background_object = new Image();
+    var usesImage = false;
 
     // This settings here have to be done because canvas CSS width and height do not get propagated
     // to the actual context, it's two different values
@@ -88,8 +89,10 @@ var main = function () {
         submit_button.onclick = function() {
             let width = document.getElementById('custom_width').value;
             let height = document.getElementById('custom_height').value;
-            setCanvasDimensions(width,height);
-            drawImageOnBackground();
+            setupCanvases(width,height);
+            console.log(usesImage);
+            if (usesImage)
+                drawImageOnBackground();
             modal_initial_settings.style.display ="none";
             conn = establishConnection(BACKEND_URL, clientId, sessionId);
         }
@@ -336,10 +339,6 @@ var main = function () {
         mouse_data.yFrom = mouse_data.yTo;
     };
 
-    function drawOffLimitArea(){
-        visor_ctx.fillStyle ="#97c8fd";
-        visor_ctx.fillRect(visor_state.offsetX, visor_state.offsetY, drawable_canvas.width, drawable_canvas.height);
-    }
 
     // Desktop version
     visor.addEventListener('mousedown',drawBegun);
@@ -497,7 +496,7 @@ var main = function () {
         visor.height = parseInt(window.getComputedStyle(visor).height);
         renderVisor();
     }, true);
-    function setCanvasDimensions(width, height) {
+    function setupCanvases(width, height) {
         background_canvas.style.width = width + 'px';
         background_canvas.style.height = height + 'px';
         drawable_canvas.style.width = width + 'px';
@@ -510,9 +509,21 @@ var main = function () {
 
         drawable_canvas_ctx = drawable_canvas.getContext('2d');
         background_canvas_ctx = background_canvas.getContext('2d');
+
+        // TODO make this configurable
+        background_canvas_ctx.fillStyle = 'white';
+        background_canvas_ctx.fillRect(0,0, background_canvas.width, background_canvas.height);
+
+        // Center the image
+        // This is minus because of the invertion of offsets since we are talking
+        visor_state.offsetX = -(visor.width - width) / 2;
+        visor_state.offsetY = -(visor.height - height) / 2;
+
+        background_cache_invalid = true;
     }
 
     function drawImageOnBackground(){
+        background_canvas_ctx.clearRect(0,0, background_canvas.width, background_canvas.height);
         background_canvas_ctx.drawImage(image_background_object, 0, 0, image_background_object.width, image_background_object.height
             ,0,0,background_canvas.width, background_canvas.height);
         background_cache_invalid = true;
@@ -529,6 +540,7 @@ var main = function () {
                     image_background_object = image_object;
                     document.getElementById('custom_width').value = image_background_object.width;
                     document.getElementById('custom_height').value = image_background_object.height;
+                    usesImage = true;
                 };
                 image_object.src = e.target.result;
 
