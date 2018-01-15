@@ -159,10 +159,11 @@ var main = function () {
         sessionRequest.send();
     }
 
-    var androidX = 100;
-    var androidY = 100;
-    var meterToPixel = 1000;
+
     function handleUpdate(data) {
+        var androidX = 100;
+        var androidY = 100;
+        var meterToPixel = 1000;
         let update = JSON.parse(data);
 
         function computeNewAndroidCoordinates(points, dx, dy) {
@@ -211,6 +212,13 @@ var main = function () {
                 [points.xTo, points.yTo] = transformCoordinates(visor_state, [points.xTo, points.yTo]);
                 console.log("drawing between points: ", JSON.stringify(points));
                 draw(drawable_canvas_ctx, points, current_style);
+
+                let update = points;
+                update['thickness'] = current_style.thickness;
+                update['color'] = current_style.color;
+
+                conn.send(JSON.stringify(update));
+
                 drawable_cache_invalid = true;
             }
             else {
