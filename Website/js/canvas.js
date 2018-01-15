@@ -64,8 +64,8 @@ var main = function () {
         visorState = {zoom: 1, zoomStep: 0.1, offsetX: 0, offsetY: 0};
 
         // Set zoom limits
-        MAX_ZOOM = visorState.zoom + 5 * visorState.zoomStep;
-        MIN_ZOOM = visorState.zoom - 3 * visorState.zoomStep;
+        MAX_ZOOM = visorState.zoom + 7 * visorState.zoomStep;
+        MIN_ZOOM = visorState.zoom - 7 * visorState.zoomStep;
 
         // Here we specify the color, the thickness etc.
         currentStyle = {color: "black", thickness: 2};
