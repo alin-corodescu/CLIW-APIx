@@ -495,6 +495,7 @@ var main = function () {
     window.addEventListener('resize', function() {
         visor.width = parseInt(window.getComputedStyle(visor).width);
         visor.height = parseInt(window.getComputedStyle(visor).height);
+        renderVisor();
     }, true);
     function setCanvasDimensions(width, height) {
         background_canvas.style.width = width + 'px';
