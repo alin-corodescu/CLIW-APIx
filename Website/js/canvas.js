@@ -165,17 +165,16 @@ var main = function () {
             let drawable_image = new Image();
             drawable_image.onload = function (ev) {
                 drawable_canvas_ctx.drawImage(drawable_image, 0, 0);
+                drawable_cache_invalid = true;
             };
             drawable_image.src = update.drawable_canvas;
 
             let background_image = new Image();
             background_image.onload = function (ev) {
                 backgroud_canvas_ctx.drawImage(background_image, 0, 0);
+                background_cache_invalid = true;
             };
             background_image.src = update.background_canvas;
-            // Invalidate both caches
-            drawable_cache_invalid = true;
-            background_cache_invalid = true;
         }
         else {
             if (update.hasOwnProperty('android')) {
