@@ -518,8 +518,12 @@ var main = function () {
                 let image_object = new Image();
                 image_object.onload = function () {
                     image_background_object = image_object;
+                    document.getElementById('custom_width').value = image_background_object.width;
+                    document.getElementById('custom_height').value = image_background_object.height;
                 };
                 image_object.src = e.target.result;
+
+
             };
             reader.readAsDataURL(image_file);
         }
