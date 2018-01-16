@@ -61,9 +61,6 @@
         </ul>
         </p>
 
-        <p>
-            Being a web application means that we used HTML5, CSS3 and Javascript for the frontend.
-        </p>
         <h4>Android - TO EDIT</h4>
         <p>
             On a android side we developed a simple application using a "hybrid" approach,
@@ -158,6 +155,23 @@
             To create APix we have used <i>HTML5</i>, <i>CSS3</i> and <i>JavaScript</i> for the frontend part but also
             some Material Design icons and suggestions for a pleasant UI. The project has been created without any external libraries
             for javascript and for that reason, HTML5 features & pure javascript to obtain different desired effects.
+        </p>
+        <p>
+            The <i>canvas</i> element from HTML5 has been used repeatedly as the main object of this project
+            was to be able to draw in a browser. We used 3 canvases: <i>background_canvas</i>, <i>drawable_canvas</i> and <i>visor_canvas</i>.
+            The main point from this layering was to separate different meaning canvases:
+            <ul>
+            <li>the background_canvas - to store a image as background, which would not be changed</li>
+            <li>the drawable_canvas - the canvas on which we actually draw and needed to be updated regularly</li>
+            <li>the visor_canvas - the view to the first 2 canvases, taking into account the scrolling and the zoom used by the user</li>
+            </ul>
+        </p>
+        <p>
+            Regarding <i></i>javascript, we invested a lot of work into it as we needed to use only <i>pure javascript</i>.
+            Because of this we implemented first basic functions: color choice, line thickness and upload of image background.
+            Later on we tackled the issue of providing a reliable zoom effect and scroll effect. The zoom effect was later updated,
+            to take into account the position of the mouse in order to zoom in a specific area where the mouse was pointing.
+
         </p>
             <h4>Server Side - TO EDIT </h4>
         <p>

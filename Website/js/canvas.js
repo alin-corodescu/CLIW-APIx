@@ -25,7 +25,7 @@ var main = function () {
     var image_background_object = new Image();
     var usesImage = false;
     var eraser = document.getElementById('eraser');
-    var delete_canvas = document.getElementById('delete_canvas');
+    var refresh_page = document.getElementById('refresh_page');
 
 
     // This settings here have to be done because canvas CSS width and height do not get propagated
@@ -498,21 +498,20 @@ var main = function () {
             document.getElementById('modal_connection').style.display = "block";
     };
 
-    delete_canvas.onclick = function(){
-        clearCanvases();
-        drawable_cache_invalid = true;
+    refresh_page.onclick = function(){
+        window.location.replace(SITE_URL);
     };
 
-    function clearCanvas(id){
-        var canvas = document.getElementById(id);
-        var canvas_ctx = canvas.getContext('2d');
-        canvas_ctx.clearRect(0,0,canvas.width, canvas.height);
-    }
-    function clearCanvases(){
-        clearCanvas('drawable_canvas');
-        // In case we decide to also delete background canvas
-        // clearCanvas('background_canvas');
-    }
+    // function clearCanvas(id){
+    //     var canvas = document.getElementById(id);
+    //     var canvas_ctx = canvas.getContext('2d');
+    //     canvas_ctx.clearRect(0,0,canvas.width, canvas.height);
+    // }
+    // function clearCanvases(){
+    //     clearCanvas('drawable_canvas');
+    //     //In case we decide to also delete background canvas
+    //     clearCanvas('background_canvas');
+    // }
 
 
 
