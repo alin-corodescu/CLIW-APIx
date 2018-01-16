@@ -74,6 +74,12 @@
         </p>
     </section>
 
+    <section>
+        <h2>Documentation Links</h2>
+            <h4><a href="http://apix.eu-central-1.elasticbeanstalk.com/">APix application</a></h4>
+            <h4><a href="https://github.com/alin-corodescu/CLIW-APIx">Github repository</a></h4>
+            <h4><a href="https://vimeo.com/251396203">Presentation video </a></h4>
+    </section>
 
     <section id="">
         <h2>Application arhitecture</h2>
@@ -127,7 +133,7 @@
         <img src="images/Fig5.PNG" alt="Side menu for different features"/>
         <p class="imagetext">Fig. 5 - Side menu for different features</p>
         </p>
-        <h3> Android companion - TO EDIT</h3>
+        <h3> Android companion </h3>
         The android companion is a simple-to-use app providing basic functionalities, enabling the device to be used as
         a pointer for APIx. On the main page, the application will render a HTML file linked to a Javascript file , which contains buttons
         for turning the pointer on and off, changing the color with which we are drawing, changing the brush thickness.
@@ -153,14 +159,18 @@
         <h2>Technologies</h2>
             <h3>Client Side</h3>
         <p>
-            To create APix we used <i>HTML5</i>, <i>CSS3</i> and <i>JavaScript</i> for the frontend part but also
-            some Material Design icons and suggestions for a pleasant UI. The project has been created without any external libraries
-            for javascript and for that reason, HTML5 features & pure javascript have been used to obtain different desired effects.
+            To create APix we used <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5"><i>HTML5</i></a>,
+            <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS3"><i>CSS</i></a> and
+            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><i>Javascript</i></a> for the frontend part but also
+            some <a href="https://material.io/icons/"><i>Material Design icons </i></a> for a pleasant UI.
+            The project has been created without any external libraries for javascript and for that reason,
+            HTML5 features & pure javascript have been used to obtain different desired effects.
         </p>
         <div>
             <h4> The HTML5 canvas element</h4>
-            The <i>canvas</i> element from HTML5 has been used repeatedly as the main focus of this project
-            was to be able to draw in a browser. We used 3 canvases: <i>background_canvas</i>, <i>drawable_canvas</i> and <i>visor_canvas</i>.
+            The  <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API"><i>canvas</i></a> element from
+            HTML5 has been used repeatedly as the main focus of this project was to be able to draw in a browser.
+            We used 3 canvases: <i>background_canvas</i>, <i>drawable_canvas</i> and <i>visor_canvas</i>.
             The main point from this layering was to separate different meaning canvases:
             <ul>
             <li>the background_canvas - to store a image as background, which would not be changed</li>
@@ -207,7 +217,7 @@
             We designed the architecture specifically to be able to detach those two components, and they are currently running
             on two different hosts. <br/>
             We implemnted our solutions in Python, motivated by the speed with which one can get a server up and running using
-            <a href="http://flask.pocoo.org/">Flask</a>for the Web server and <a href="https://github.com/crossbario/autobahn-python">Autobahn</a>
+            <a href="http://flask.pocoo.org/">Flask</a> for the Web server and <a href="https://github.com/crossbario/autobahn-python">Autobahn</a>
             for the Synchronization server. We made heavy use of HTML5 <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API">Websockets</a>
             specification as well to manage the transfer of data in a faster and reliable way -- crucial aspect since our
             web application is a real-time collaborative application.
