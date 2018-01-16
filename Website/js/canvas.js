@@ -93,7 +93,6 @@ var main = function () {
             var width = document.getElementById('custom_width').value;
             var height = document.getElementById('custom_height').value;
             setupCanvases(width,height);
-            console.log(usesImage);
             if (usesImage)
                 drawImageOnBackground();
             modal_initial_settings.style.display ="none";
@@ -282,7 +281,6 @@ var main = function () {
     // BEGIN: Handling mouse events
     //----------------------------------------------------------------------------------------------
     function draw(context, points, style) {
-        console.log(context.globalCompositeOperation, style.color, style.thickness);
         context.beginPath();
         context.moveTo(points.xFrom, points.yFrom);
         context.lineTo(points.xTo, points.yTo);
