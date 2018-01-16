@@ -24,6 +24,8 @@ var main = function () {
     let modal_initial_settings = document.getElementById('modal_initial_settings');
     let image_background_object = new Image();
     var usesImage = false;
+    let eraser = document.getElementById('eraser');
+
 
     // This settings here have to be done because canvas CSS width and height do not get propagated
     // to the actual context, it's two different values
@@ -278,7 +280,7 @@ var main = function () {
     // BEGIN: Handling mouse events
     //----------------------------------------------------------------------------------------------
     function draw(context, points, style) {
-
+        console.log(context.globalCompositeOperation, style.color, style.thickness);
         context.beginPath();
         context.moveTo(points.xFrom, points.yFrom);
         context.lineTo(points.xTo, points.yTo);
@@ -465,6 +467,21 @@ var main = function () {
 
     line_weight.onchange = function () {
         current_style.thickness = line_weight.value;
+    };
+
+    let eraserMode = false;
+    eraser.onclick = function(){
+        eraserMode = !eraserMode;
+        if(eraserMode) {
+            drawable_canvas_ctx.globalCompositeOperation = "destination-out";
+            current_style.color = "rgba(255,255,255,255)";
+            current_style.thickness = "8";
+        }
+        else {
+            drawable_canvas_ctx.globalCompositeOperation = "source-over";
+            current_style.color = color_picker.value;
+            current_style.thickness = line_weight.value;
+        }
     };
 
     shareable_link.onclick = function(){
