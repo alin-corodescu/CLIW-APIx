@@ -193,13 +193,11 @@
             the position of the mouse in order to zoom in a specific area where the mouse was pointing.
 
 
-            <h4> Javascript + networking</h4>
+            <h4> Javascript and performance</h4>
             Having a real time connection with the server meant that if we wanted to deliver a pleasant user experience
             we had to improve performance, because at a point things were snail speed slow. The main reason was because
-            we were redrawing everything at 30fps -- which even on local machine was causing the gpu to spike. So we solved
-            this issue by adding caches: whenever anything changed, we would re-render that thing. Our inspiration came
-            from working with javascript, an event-based language. Soon after that, we were pleased with the results.
-
+            we were redrawing everything at 30fps -- which even on local machine was causing the cpu and memory usage to spike.
+            So we solved this issue by adding caches: whenever anything changed then and only the would we re-render that thing.
 
         <h3>Server Side</h3>
         <p>
