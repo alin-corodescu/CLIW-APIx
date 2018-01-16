@@ -17,15 +17,15 @@ var main = function () {
     var background_canvas = document.getElementById('background_canvas');
     var drawable_canvas = document.getElementById('drawable_canvas');
     var switch_button = document.getElementById('switch');
-    let color_picker = document.getElementById("color_picker");
-    let upload_image = document.getElementById("upload_image");
-    let line_weight = document.getElementById("line_weight");
-    let shareable_link = document.getElementById('shareable_link');
-    let modal_initial_settings = document.getElementById('modal_initial_settings');
-    let image_background_object = new Image();
+    var color_picker = document.getElementById("color_picker");
+    var upload_image = document.getElementById("upload_image");
+    var line_weight = document.getElementById("line_weight");
+    var shareable_link = document.getElementById('shareable_link');
+    var modal_initial_settings = document.getElementById('modal_initial_settings');
+    var image_background_object = new Image();
     var usesImage = false;
-    let eraser = document.getElementById('eraser');
-    let delete_canvas = document.getElementById('delete_canvas');
+    var eraser = document.getElementById('eraser');
+    var delete_canvas = document.getElementById('delete_canvas');
 
 
     // This settings here have to be done because canvas CSS width and height do not get propagated
@@ -51,7 +51,7 @@ var main = function () {
     var drawable_cache_invalid = true;
 
     var mouse_active, mouse_data, mode, visor_state, current_style;
-    let zoomPointX = null, zoomPointY = null, MAX_ZOOM = null, MIN_ZOOM = null;
+    var zoomPointX = null, zoomPointY = null, MAX_ZOOM = null, MIN_ZOOM = null;
 
     // This will trigger the connection to the Broker websocket as well
     // This is required to make the browser wait before connection to the websocket until it has the session id
@@ -88,12 +88,11 @@ var main = function () {
     function initAndConnect(clientId){
         document.getElementById("loader").style.display = "none";
         modal_initial_settings.style.display ="block";
-        let submit_button = document.getElementById('submit_dimensions');
+        var submit_button = document.getElementById('submit_dimensions');
         submit_button.onclick = function() {
-            let width = document.getElementById('custom_width').value;
-            let height = document.getElementById('custom_height').value;
+            var width = document.getElementById('custom_width').value;
+            var height = document.getElementById('custom_height').value;
             setupCanvases(width,height);
-            console.log(usesImage);
             if (usesImage)
                 drawImageOnBackground();
             modal_initial_settings.style.display ="none";
@@ -111,8 +110,8 @@ var main = function () {
 
     // This function connects to the backend via WebSockets for synchronization
     function establishConnection(url, clientId, session_id) {
-        let width = drawable_canvas.width;
-        let height = drawable_canvas.height;
+        var width = drawable_canvas.width;
+        var height = drawable_canvas.height;
         var connection = new WebSocket(BACKEND_URL + '?clientId=' + clientId + '&sessionId=' + session_id + '&width=' + width + '&height=' + height);
         connection.onopen = function () {
             sendBackgroundToServer();
@@ -139,8 +138,8 @@ var main = function () {
 
     // This function will make an AJAX call to the server to get the session id
     function getSessionId() {
-        let sessionRequest = new XMLHttpRequest();
-        let clientId = -1;
+        var sessionRequest = new XMLHttpRequest();
+        var clientId = -1;
         sessionId = -1;
         sessionRequest.onreadystatechange = function (ev) {
             if (this.readyState === 4) {
@@ -170,7 +169,7 @@ var main = function () {
         var androidX = 100;
         var androidY = 100;
         var meterToPixel = 1000;
-        let update = JSON.parse(data);
+        var update = JSON.parse(data);
 
         function computeNewAndroidCoordinates(points, dx, dy) {
             points.xTo = points.xFrom + dx * meterToPixel;
@@ -179,14 +178,14 @@ var main = function () {
 
         if (update.hasOwnProperty('drawable_canvas')) {
             // means we have an initial update
-            let drawable_image = new Image();
+            var drawable_image = new Image();
             drawable_image.onload = function (ev) {
                 drawable_canvas_ctx.drawImage(drawable_image, 0, 0);
                 drawable_cache_invalid = true;
             };
             drawable_image.src = update.drawable_canvas;
 
-            let background_image = new Image();
+            var background_image = new Image();
             background_image.onload = function (ev) {
                 background_canvas_ctx.drawImage(background_image, 0, 0);
                 background_cache_invalid = true;
@@ -219,7 +218,7 @@ var main = function () {
                 console.log("drawing between points: ", JSON.stringify(points));
                 draw(drawable_canvas_ctx, points, current_style);
 
-                let update = points;
+                var update = points;
                 update['thickness'] = current_style.thickness;
                 update['color'] = current_style.color;
 
@@ -236,7 +235,7 @@ var main = function () {
     }
 
     function sendBackgroundToServer(){
-         let background_data =
+         var background_data =
         {   "target" : "background",
             "dataUrl" : background_canvas.toDataURL()
         };
@@ -281,7 +280,6 @@ var main = function () {
     // BEGIN: Handling mouse events
     //----------------------------------------------------------------------------------------------
     function draw(context, points, style) {
-        console.log(context.globalCompositeOperation, style.color, style.thickness);
         context.beginPath();
         context.moveTo(points.xFrom, points.yFrom);
         context.lineTo(points.xTo, points.yTo);
@@ -317,7 +315,7 @@ var main = function () {
             // Very important : draw on the drawable canvas, not the visor
             draw(drawable_canvas_ctx, transformedData, current_style);
 
-            let update = transformedData;
+            var update = transformedData;
             update['thickness'] = current_style.thickness;
             update['color'] = current_style.color;
 
@@ -359,7 +357,7 @@ var main = function () {
 
     //  interpretation of each touch events for DRAWING
     visor.addEventListener("touchstart", function (event) {
-        let mouseEvent = new MouseEvent("mousedown", {
+        var mouseEvent = new MouseEvent("mousedown", {
             clientX: event.touches[0].clientX,
             clientY: event.touches[0].clientY
         });
@@ -367,7 +365,7 @@ var main = function () {
     }, false);
 
     visor.addEventListener("touchmove", function (event) {
-        let mouseEvent = new MouseEvent("mousemove", {
+        var mouseEvent = new MouseEvent("mousemove", {
             clientX: event.touches[0].clientX,
             clientY: event.touches[0].clientY
         });
@@ -375,7 +373,7 @@ var main = function () {
     }, false);
 
     visor.addEventListener("touchend", function () {
-        let mouseEvent = new MouseEvent("mouseup", {});
+        var mouseEvent = new MouseEvent("mouseup", {});
         visor.dispatchEvent(mouseEvent);
     }, false);
 
@@ -384,18 +382,18 @@ var main = function () {
     // BEGIN: Handling zoom functionality
     //----------------------------------------------------------------------------------------------
 
-    let evCache = [];
-    let prevDiff = -1;
+    var evCache = [];
+    var prevDiff = -1;
 
     function handleZoom(event) {
         if (mode !== modes.PAINT) {
             event.preventDefault();
             // code for pinch event handler on mobile
-            let curDiff = 0;
+            var curDiff = 0;
             if (evCache.length === 2) curDiff = Math.abs(evCache[0].clientX - evCache[1].clientX);
             if (event.deltaY < 0 || curDiff > 0) {
                 [zoomPointX, zoomPointY] = computeActualMousePosition(event);
-                let old_zoom = visor_state.zoom;
+                var old_zoom = visor_state.zoom;
                 visor_state.zoom += visor_state.zoomStep;
                 if (visor_state.zoom > MAX_ZOOM) {
                     visor_state.zoom = MAX_ZOOM;
@@ -406,7 +404,7 @@ var main = function () {
             if (event.deltaY > 0 || curDiff < 0) {
                 [zoomPointX, zoomPointY] = computeActualMousePosition(event);
 
-                let old_zoom = visor_state.zoom;
+                var old_zoom = visor_state.zoom;
                 visor_state.zoom -= visor_state.zoomStep;
                 if (visor_state.zoom < MIN_ZOOM)
                     visor_state.zoom = MIN_ZOOM;
@@ -430,7 +428,7 @@ var main = function () {
 
     visor.addEventListener("touchmove", function (event) {
         if (event.touches.length === 2) {
-            for (let i = 0; i < evCache.length; i++) {
+            for (var i = 0; i < evCache.length; i++) {
                 if (event.pointerId === evCache[i].pointerId) {
                     evCache[i] = event;
                     break;
@@ -447,7 +445,7 @@ var main = function () {
 
     function remove_event(ev) {
         // Remove this event from the target's cache
-        for (let i = 0; i < evCache.length; i++) {
+        for (var i = 0; i < evCache.length; i++) {
             if (evCache[i].pointerId === ev.pointerId) {
                 evCache.splice(i, 1);
                 break;
@@ -471,7 +469,7 @@ var main = function () {
         current_style.thickness = line_weight.value;
     };
 
-    let eraserMode = false;
+    var eraserMode = false;
     eraser.onclick = function(){
         eraser.classList.toggle("icon-hover");
         eraserMode = !eraserMode;
@@ -500,8 +498,8 @@ var main = function () {
     };
 
     function clearCanvas(id){
-        let canvas = document.getElementById(id);
-        let canvas_ctx = canvas.getContext('2d');
+        var canvas = document.getElementById(id);
+        var canvas_ctx = canvas.getContext('2d');
         canvas_ctx.clearRect(0,0,canvas.width, canvas.height);
     }
     function clearCanvases(){
@@ -515,10 +513,10 @@ var main = function () {
     //BEGIN: Creating a transfer canvases in order not to mess up the data
     //----------------------------------------------------------------------------------------------
 
-    let transfer_canvas = document.createElement('canvas');
+    var transfer_canvas = document.createElement('canvas');
     transfer_canvas.width = visor.width;
     transfer_canvas.height = visor.height;
-    let transfer_canvas_ctx = transfer_canvas.getContext('2d');
+    var transfer_canvas_ctx = transfer_canvas.getContext('2d');
 
 
     //BEGIN: Update canvases
@@ -564,13 +562,13 @@ var main = function () {
         background_cache_invalid = true;
     }
     upload_image.onchange = function (event) {
-        let image_file = event.target.files[0];
-        let image_type = /image.*/;
+        var image_file = event.target.files[0];
+        var image_type = /image.*/;
 
         if (image_file.type.match(image_type)) {
-            let reader = new FileReader();
+            var reader = new FileReader();
             reader.onload = function (e) {
-                let image_object = new Image();
+                var image_object = new Image();
                 image_object.onload = function () {
                     image_background_object = image_object;
                     document.getElementById('custom_width').value = image_background_object.width;
