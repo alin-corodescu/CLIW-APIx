@@ -8,6 +8,9 @@
 .icon:hover{
 	color: rgba(33,150,243,1);
 }
+.icon-hover{
+    color: rgba(33,150,243,1);
+}
 
 .icon-flipped {
     -webkit-transform: rotate(180deg);

@@ -25,6 +25,7 @@ var main = function () {
     let image_background_object = new Image();
     var usesImage = false;
     let eraser = document.getElementById('eraser');
+    let delete_canvas = document.getElementById('delete_canvas');
 
 
     // This settings here have to be done because canvas CSS width and height do not get propagated
@@ -459,6 +460,7 @@ var main = function () {
     //----------------------------------------------------------------------------------------------
 
     switch_button.onclick = function (ev) {
+        switch_button.classList.toggle("icon-hover");
         mode = modes.PAINT + modes.SCROLL - mode;
     };
     color_picker.onchange = function () {
@@ -471,15 +473,14 @@ var main = function () {
 
     let eraserMode = false;
     eraser.onclick = function(){
+        eraser.classList.toggle("icon-hover");
         eraserMode = !eraserMode;
         if(eraserMode) {
             drawable_canvas_ctx.globalCompositeOperation = "destination-out";
-            current_style.color = "rgba(255,255,255,255)";
-            current_style.thickness = "8";
+            current_style.thickness = "12";
         }
         else {
             drawable_canvas_ctx.globalCompositeOperation = "source-over";
-            current_style.color = color_picker.value;
             current_style.thickness = line_weight.value;
         }
     };
@@ -489,11 +490,26 @@ var main = function () {
             document.getElementById('generated_shareable_link').innerText = SITE_URL + '?sessionId=' + sessionId;
             document.getElementById('modal_shareable_link').style.display = "block";
         }
-        else {
+        else
             document.getElementById('modal_connection').style.display = "block";
-        }
-
     };
+
+    delete_canvas.onclick = function(){
+        clearCanvases();
+        drawable_cache_invalid = true;
+    };
+
+    function clearCanvas(id){
+        let canvas = document.getElementById(id);
+        let canvas_ctx = canvas.getContext('2d');
+        canvas_ctx.clearRect(0,0,canvas.width, canvas.height);
+    }
+    function clearCanvases(){
+        clearCanvas('drawable_canvas');
+        // In case we decide to also delete background canvas
+        // clearCanvas('background_canvas');
+    }
+
 
 
     //BEGIN: Creating a transfer canvases in order not to mess up the data
@@ -513,6 +529,7 @@ var main = function () {
         visor.height = parseInt(window.getComputedStyle(visor).height);
         background_cache_invalid = true;
         drawable_cache_invalid = true;
+
     }, true);
     function setupCanvases(width, height) {
         background_canvas.style.width = width + 'px';
