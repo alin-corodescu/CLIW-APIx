@@ -3,31 +3,53 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--Stylesheets css-->
-	<link rel="stylesheet" type="text/css" href="{{index_css}}">
-	<link rel="stylesheet" type="text/css" href="{{icons_css}}">
-    <link rel="stylesheet" type="text/css" href="{{modal_css}}">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
+    <link rel="stylesheet" type="text/css" href="./css/icons.css">
+    <link rel="stylesheet" type="text/css" href="./css/modal.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <!--JavaScript scripts-->
-	<script src="{{non_canvas_js}}"></script>
-	<script src="{{canvas_js}}"></script>
-    <script src="{{modal_js}}"></script>
-	<meta charset="UTF-8">
-	<title>APix</title>
+    <script src="js/non-canvas.js"></script>
+    <script src="./js/canvas.js"></script>
+    <script src="./js/modal.js"></script>
+    <meta charset="UTF-8">
+    <title>APix</title>
 </head>
 <body onload="main();initModal()" class="body">
 
 <!--Loader while we fetch the data from the server-->
 <div class="loader" id="loader"></div>
 
+<!-- Modal Intial Setting issue -->
+<div id="modal_initial_settings" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <i class="material-icons">error_outline</i>
+        </div>
+        <div class="modal-body" id="modal_initial_settings_body">
+            <p>Pick a width, a height and a background image for your canvas!</p><br>
+            <input id="custom_width" type="number" name="width" value="900">    px<br><br>
+            <input id="custom_height" type="number" name="height" value="450">  px
+            <div onclick="clickUploadImage()" class="upload_image_background">
+                <span>Upload an image background!</span>
+                <i class="material-icons">image</i>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <br>
+            <button id="submit_dimensions">Begin!</button>
+        </div>
+    </div>
+</div>
+
 <div class="after-load" id="after-load">
     <!--Navigation-->
     <div id="sidenav" class="sidenav">
         <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
         <a href="#" class="sidenavLink" onclick="exportCanvasPNG()"><i class="material-icons icon">file_download</i> PNG</a>
-        <a href="#" class="sidenavLink" id="shareable_link"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
-        <a href="#" class="sidenavLink"  onclick="clearCanvases()"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
-        <a><i class="material-icons">cast_connected</i> Generate QR code</a>
+        <a href="#" class="sidenavLink" onclick="exportCanvasJPEG()"><i class="material-icons icon">file_download</i> JPEG</a>
+        <a href="#" class="sidenavLink" id="shareable_link"><i class="material-icons icon icon-share">group_add</i> Doodle with friends!</a>
+        <a href="#" class="sidenavLink" id="delete_canvas"><i class="material-icons icon icon-trash">delete</i> Clear</a>
     </div>
 
     <!--Header-->
@@ -91,7 +113,7 @@
         <!--Canvases-->
         <canvas class="canvas hidden_canvas" width="900" height="450" id="background_canvas"></canvas>
         <canvas class="canvas hidden_canvas" width="900" height="450" id="drawable_canvas"></canvas>
-        <canvas class="canvas non-drawable-area" id="visor_canvas"></canvas>
+        <canvas class="canvas-visor non-drawable-area" id="visor_canvas"></canvas>
 
         <!--Canvas options-->
         <aside class="canvas-options">
@@ -100,18 +122,13 @@
             <input id="upload_image" type="file" class="hidden_function" />
 
             <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
-                <i class="popup material-icons icon" onclick="clickUploadImage()">image</i>
-                <span class="popuptext">Upload an image background!</span>
-            </div>
-
-            <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
                 <i class="material-icons icon">android</i>
                 <span class="popuptext">Connect an android device!</span>
             </div>
 
             <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
-                <i class="material-icons icon">more_vert</i>
-                <span class="popuptext">More options!</span>
+                <i class="material-icons icon" id="eraser">content_cut</i>
+                <span class="popuptext">Eraser!</span>
             </div>
 
             <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
@@ -123,7 +140,7 @@
                 <i class="material-icons icon">line_weight </i>
                 <div class="popuptext" id="inputRangeContainer">
                     <span class="text-input-range">Change pencil thickness!</span>
-                    <input id="line_weight" type="range" min="0.2" value="2" max="10" step="0.2"/>
+                    <input id="line_weight" type="range" min="0.5" value="2" max="15" step="0.5"/>
                 </div>
 
             </div>
@@ -134,20 +151,6 @@
             </div>
 
         </aside>
-    </div>
-
-    <!--Transition-->
-    <div class="container">
-        <nav class="transition">
-            <a href="#">&laquo;</a>
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a class="active" href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
-            <a href="#">6</a>
-            <a href="#">&raquo;</a>
-        </nav>
     </div>
 </div>
 </body>

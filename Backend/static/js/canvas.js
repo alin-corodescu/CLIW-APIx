@@ -21,9 +21,16 @@ var main = function () {
     let upload_image = document.getElementById("upload_image");
     let line_weight = document.getElementById("line_weight");
     let shareable_link = document.getElementById('shareable_link');
+    let modal_initial_settings = document.getElementById('modal_initial_settings');
+    let image_background_object = new Image();
+    var usesImage = false;
+    let eraser = document.getElementById('eraser');
+    let delete_canvas = document.getElementById('delete_canvas');
+
 
     // This settings here have to be done because canvas CSS width and height do not get propagated
     // to the actual context, it's two different values
+
     visor.width = parseInt(window.getComputedStyle(visor).width);
     visor.height = parseInt(window.getComputedStyle(visor).height);
     background_canvas.width = parseInt(window.getComputedStyle(background_canvas).width);
@@ -32,7 +39,7 @@ var main = function () {
     drawable_canvas.height = parseInt(window.getComputedStyle(drawable_canvas).height);
 
     var drawable_canvas_ctx = drawable_canvas.getContext('2d');
-    var backgroud_canvas_ctx = background_canvas.getContext('2d');
+    var background_canvas_ctx = background_canvas.getContext('2d');
     var visor_ctx = visor.getContext('2d');
 
     // Cached images of the background and drawable canvas
@@ -61,8 +68,8 @@ var main = function () {
         visorState = {zoom: 1, zoomStep: 0.1, offsetX: 0, offsetY: 0};
 
         // Set zoom limits
-        MAX_ZOOM = visorState.zoom + 5 * visorState.zoomStep;
-        MIN_ZOOM = visorState.zoom - 3 * visorState.zoomStep;
+        MAX_ZOOM = visorState.zoom + 7 * visorState.zoomStep;
+        MIN_ZOOM = visorState.zoom - 7 * visorState.zoomStep;
 
         // Here we specify the color, the thickness etc.
         currentStyle = {color: "black", thickness: 2};
@@ -77,8 +84,23 @@ var main = function () {
     //BEGIN: Communication with backend
     //----------------------------------------------------------------------------------------------
 
-    function showPage() {
+
+    function initAndConnect(clientId){
         document.getElementById("loader").style.display = "none";
+        modal_initial_settings.style.display ="block";
+        let submit_button = document.getElementById('submit_dimensions');
+        submit_button.onclick = function() {
+            let width = document.getElementById('custom_width').value;
+            let height = document.getElementById('custom_height').value;
+            setupCanvases(width,height);
+            console.log(usesImage);
+            if (usesImage)
+                drawImageOnBackground();
+            modal_initial_settings.style.display ="none";
+            conn = establishConnection(BACKEND_URL, clientId, sessionId);
+        }
+    }
+    function showPage() {
         document.getElementById("after-load").style.display = "block";
     }
     function displayNetworkError(){
@@ -93,6 +115,7 @@ var main = function () {
         let height = drawable_canvas.height;
         var connection = new WebSocket(BACKEND_URL + '?clientId=' + clientId + '&sessionId=' + session_id + '&width=' + width + '&height=' + height);
         connection.onopen = function () {
+            sendBackgroundToServer();
             showPage()
         };
         connection.onmessage = function (ev) {
@@ -117,6 +140,7 @@ var main = function () {
     // This function will make an AJAX call to the server to get the session id
     function getSessionId() {
         let sessionRequest = new XMLHttpRequest();
+        let clientId = -1;
         sessionId = -1;
         sessionRequest.onreadystatechange = function (ev) {
             if (this.readyState === 4) {
@@ -124,12 +148,15 @@ var main = function () {
                     console.log("got session id: " + this.responseText);
                     var identityData = JSON.parse(this.responseText);
                     sessionId = identityData.sessionId;
-                    var clientId = identityData.clientId;
-                    conn = establishConnection(BACKEND_URL, clientId, sessionId);
+                    clientId = identityData.clientId;
+                    initAndConnect(clientId);
+                    // conn = establishConnection(BACKEND_URL, clientId, sessionId)
+
                 }
                 else {
                     // Running locally or got an error
-                    conn = establishConnection(BACKEND_URL, -1, sessionId);
+                    initAndConnect(clientId, sessionId);
+                    // conn = establishConnection(BACKEND_URL, clientId, sessionId);
                 }
 
             }
@@ -138,10 +165,11 @@ var main = function () {
         sessionRequest.send();
     }
 
-    var androidX = 100;
-    var androidY = 100;
-    var meterToPixel = 1000;
+
     function handleUpdate(data) {
+        var androidX = 100;
+        var androidY = 100;
+        var meterToPixel = 1000;
         let update = JSON.parse(data);
 
         function computeNewAndroidCoordinates(points, dx, dy) {
@@ -154,17 +182,16 @@ var main = function () {
             let drawable_image = new Image();
             drawable_image.onload = function (ev) {
                 drawable_canvas_ctx.drawImage(drawable_image, 0, 0);
+                drawable_cache_invalid = true;
             };
             drawable_image.src = update.drawable_canvas;
 
             let background_image = new Image();
             background_image.onload = function (ev) {
-                backgroud_canvas_ctx.drawImage(background_image, 0, 0);
+                background_canvas_ctx.drawImage(background_image, 0, 0);
+                background_cache_invalid = true;
             };
             background_image.src = update.background_canvas;
-            // Invalidate both caches
-            drawable_cache_invalid = true;
-            background_cache_invalid = true;
         }
         else {
             if (update.hasOwnProperty('android')) {
@@ -191,6 +218,13 @@ var main = function () {
                 [points.xTo, points.yTo] = transformCoordinates(visor_state, [points.xTo, points.yTo]);
                 console.log("drawing between points: ", JSON.stringify(points));
                 draw(drawable_canvas_ctx, points, current_style);
+
+                let update = points;
+                update['thickness'] = current_style.thickness;
+                update['color'] = current_style.color;
+
+                conn.send(JSON.stringify(update));
+
                 drawable_cache_invalid = true;
             }
             else {
@@ -246,8 +280,8 @@ var main = function () {
 
     // BEGIN: Handling mouse events
     //----------------------------------------------------------------------------------------------
-
     function draw(context, points, style) {
+        console.log(context.globalCompositeOperation, style.color, style.thickness);
         context.beginPath();
         context.moveTo(points.xFrom, points.yFrom);
         context.lineTo(points.xTo, points.yTo);
@@ -307,6 +341,7 @@ var main = function () {
         mouse_data.xFrom = mouse_data.xTo;
         mouse_data.yFrom = mouse_data.yTo;
     };
+
 
     // Desktop version
     visor.addEventListener('mousedown',drawBegun);
@@ -425,6 +460,7 @@ var main = function () {
     //----------------------------------------------------------------------------------------------
 
     switch_button.onclick = function (ev) {
+        switch_button.classList.toggle("icon-hover");
         mode = modes.PAINT + modes.SCROLL - mode;
     };
     color_picker.onchange = function () {
@@ -435,16 +471,45 @@ var main = function () {
         current_style.thickness = line_weight.value;
     };
 
+    let eraserMode = false;
+    eraser.onclick = function(){
+        eraser.classList.toggle("icon-hover");
+        eraserMode = !eraserMode;
+        if(eraserMode) {
+            drawable_canvas_ctx.globalCompositeOperation = "destination-out";
+            current_style.thickness = "12";
+        }
+        else {
+            drawable_canvas_ctx.globalCompositeOperation = "source-over";
+            current_style.thickness = line_weight.value;
+        }
+    };
+
     shareable_link.onclick = function(){
         if(sessionId !== -1) {
             document.getElementById('generated_shareable_link').innerText = SITE_URL + '?sessionId=' + sessionId;
             document.getElementById('modal_shareable_link').style.display = "block";
         }
-        else {
+        else
             document.getElementById('modal_connection').style.display = "block";
-        }
-
     };
+
+    delete_canvas.onclick = function(){
+        clearCanvases();
+        drawable_cache_invalid = true;
+    };
+
+    function clearCanvas(id){
+        let canvas = document.getElementById(id);
+        let canvas_ctx = canvas.getContext('2d');
+        canvas_ctx.clearRect(0,0,canvas.width, canvas.height);
+    }
+    function clearCanvases(){
+        clearCanvas('drawable_canvas');
+        // In case we decide to also delete background canvas
+        // clearCanvas('background_canvas');
+    }
+
 
 
     //BEGIN: Creating a transfer canvases in order not to mess up the data
@@ -459,7 +524,14 @@ var main = function () {
     //BEGIN: Update canvases
     //----------------------------------------------------------------------------------------------
 
-    function setCanvasDimensions(width, height) {
+    window.addEventListener('resize', function() {
+        visor.width = parseInt(window.getComputedStyle(visor).width);
+        visor.height = parseInt(window.getComputedStyle(visor).height);
+        background_cache_invalid = true;
+        drawable_cache_invalid = true;
+
+    }, true);
+    function setupCanvases(width, height) {
         background_canvas.style.width = width + 'px';
         background_canvas.style.height = height + 'px';
         drawable_canvas.style.width = width + 'px';
@@ -471,38 +543,47 @@ var main = function () {
         drawable_canvas.height = height;
 
         drawable_canvas_ctx = drawable_canvas.getContext('2d');
-        backgroud_canvas_ctx = background_canvas.getContext('2d');
-        visor_ctx = visor.getContext('2d');
+        background_canvas_ctx = background_canvas.getContext('2d');
+
+        // TODO make this configurable
+        background_canvas_ctx.fillStyle = 'white';
+        background_canvas_ctx.fillRect(0,0, background_canvas.width, background_canvas.height);
+
+        // Center the image
+        // This is minus because of the invertion of offsets since we are talking relative to the drawable canvas
+        visor_state.offsetX = -(visor.width - width) / 2;
+        visor_state.offsetY = -(visor.height - height) / 2;
+
+        background_cache_invalid = true;
     }
 
+    function drawImageOnBackground(){
+        background_canvas_ctx.clearRect(0,0, background_canvas.width, background_canvas.height);
+        background_canvas_ctx.drawImage(image_background_object, 0, 0, image_background_object.width, image_background_object.height
+            ,0,0,background_canvas.width, background_canvas.height);
+        background_cache_invalid = true;
+    }
     upload_image.onchange = function (event) {
-        transfer_canvas_ctx.clearRect(0, 0, transfer_canvas.width, transfer_canvas.height);
-        if (transfer_canvas.toDataURL() !== drawable_canvas.toDataURL()) {
-            document.getElementById('modal_background').style.display = "block";
-        }
-        else {
-            let image_file = event.target.files[0];
-            let image_type = /image.*/;
+        let image_file = event.target.files[0];
+        let image_type = /image.*/;
 
-            if (image_file.type.match(image_type)) {
-                let reader = new FileReader();
-                reader.onload = function (e) {
-                    let image_object = new Image();
-                    image_object.onload = function () {
-                        // FIXME need to use background canvas but it creates a "glitchy" effect
-                        setCanvasDimensions(image_object.width, image_object.height);
-                        backgroud_canvas_ctx.drawImage(image_object, 0, 0, image_object.width, image_object.height);
-                        sendBackgroundToServer();
-                        // Invalidate background cache
-                        background_cache_invalid = true;
-                    };
-                    image_object.src = e.target.result;
+        if (image_file.type.match(image_type)) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let image_object = new Image();
+                image_object.onload = function () {
+                    image_background_object = image_object;
+                    document.getElementById('custom_width').value = image_background_object.width;
+                    document.getElementById('custom_height').value = image_background_object.height;
+                    usesImage = true;
                 };
-                reader.readAsDataURL(image_file);
-            }
+                image_object.src = e.target.result;
+
+
+            };
+            reader.readAsDataURL(image_file);
         }
     };
-
     function renderVisor() {
         // We could make those very big (visor.widht / visor_state.MIN_ZOOM) from the start
         // so we don't have to adjust on the fly (maybe this is a performance issue)
@@ -512,6 +593,9 @@ var main = function () {
         visor_ctx.save();
         visor_ctx.clearRect(0, 0, visor.width, visor.height);
         visor_ctx.scale(visor_state.zoom, visor_state.zoom);
+
+        // Draw the off limit area
+        // drawOffLimitArea();
         // Draw the background
         transfer_canvas_ctx.putImageData(cached_background, 0, 0);
         visor_ctx.drawImage(transfer_canvas, 0, 0);
@@ -539,7 +623,7 @@ var main = function () {
     // e.g : when anything in visor_state changes and when we draw on the background canvas
     function updateBackgroundCache() {
         if (background_cache_invalid) {
-            cached_background = backgroud_canvas_ctx.getImageData(visor_state.offsetX, visor_state.offsetY,
+            cached_background = background_canvas_ctx.getImageData(visor_state.offsetX, visor_state.offsetY,
                 visor.width / visor_state.zoom, visor.height / visor_state.zoom);
             // This flag will be reset to true when the visor_state changes or we draw on the background canvas
             background_cache_invalid = false;
