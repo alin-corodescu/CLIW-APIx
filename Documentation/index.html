@@ -41,9 +41,9 @@
         <h2>Motivation</h2>
         <p>
             Similar applications, even though have a lot of drawing capabilities,
-            do not offer support for alternative pointing devices, like the phone inside your pocket!
-
-            [Experimental] -- responsive and good handle for static images
+            do not offer support for alternative input devices, like your smart phone.
+            We also wanted to offer a more adaptable application, to be able to edit your photos
+            on all devices, regarding of their size.
     </section>
 
     <section typeof="sa:Results" id="definition">
@@ -78,7 +78,7 @@
     <section id="">
         <h2>Application arhitecture</h2>
         <br>
-        <img src="./images/apix-architecture.png" style="float: center;" alt="Diagrama arhitecturală"/>
+        <img src="./images/apix-architecture.png" alt="Diagrama arhitecturală"/>
         <p class="imagetext">Fig. 1 - Application arhitecture diagram</p>
 
         <h2> The workflow of the application</h2>
@@ -127,7 +127,7 @@
         <img src="images/Fig5.PNG" alt="Side menu for different features"/>
         <p class="imagetext">Fig. 5 - Side menu for different features</p>
         </p>
-        <h3> Android companion - experimental</h3>
+        <h3> Android companion - TO EDIT</h3>
         The android companion is a simple-to-use app providing basic functionalities, enabling the device to be used as
         a pointer for APIx. On the main page, the application will render a HTML file linked to a Javascript file , which contains buttons
         for turning the pointer on and off, changing the color with which we are drawing, changing the brush thickness.
@@ -151,16 +151,15 @@
     <section id="file-headers">
 
         <h2>Technologies</h2>
+            <h3>Client Side</h3>
         <p>
-            <h4>Client Side</h4>
-        TO ADD: background/drawable chache, creating from scratch the zoom functionality
-        <p>
-            To create APix we have used <i>HTML5</i>, <i>CSS3</i> and <i>JavaScript</i> for the frontend part but also
+            To create APix we used <i>HTML5</i>, <i>CSS3</i> and <i>JavaScript</i> for the frontend part but also
             some Material Design icons and suggestions for a pleasant UI. The project has been created without any external libraries
-            for javascript and for that reason, HTML5 features & pure javascript to obtain different desired effects.
+            for javascript and for that reason, HTML5 features & pure javascript have been used to obtain different desired effects.
         </p>
-        <p>
-            The <i>canvas</i> element from HTML5 has been used repeatedly as the main object of this project
+        <div>
+            <h4> The HTML5 canvas element</h4>
+            The <i>canvas</i> element from HTML5 has been used repeatedly as the main focus of this project
             was to be able to draw in a browser. We used 3 canvases: <i>background_canvas</i>, <i>drawable_canvas</i> and <i>visor_canvas</i>.
             The main point from this layering was to separate different meaning canvases:
             <ul>
@@ -168,15 +167,41 @@
             <li>the drawable_canvas - the canvas on which we actually draw and needed to be updated regularly</li>
             <li>the visor_canvas - the view to the first 2 canvases, taking into account the scrolling and the zoom used by the user</li>
             </ul>
-        </p>
-        <p>
-            Regarding <i></i>javascript, we invested a lot of work into it as we needed to use only <i>pure javascript</i>.
-            Because of this we implemented first basic functions: color choice, line thickness and upload of image background.
-            Later on we tackled the issue of providing a reliable zoom effect and scroll effect. The zoom effect was later updated,
-            to take into account the position of the mouse in order to zoom in a specific area where the mouse was pointing.
 
-        </p>
-            <h4>Server Side </h4>
+            <p>
+                We focused on providing a reliable and stable way of providing our services on all devices,
+                so that, for example you could edit a 1050×1500 px photo on a smart phone or on a desktop computer.
+                A versatile and responsive application.
+            </p>
+
+            <h4> First steps into javascript</h4>
+            Regarding <i>javascript</i>, we invested a LOT of work into it as we needed to use only <i>pure javascript</i>.
+            Because of this we first implemented first basic functions: color choice, line thickness and upload of image background
+            but soon after things got much more complex.
+
+            <h4> Understanding javascript</h4>
+            Javascript is an event-based language, meaning you active something when an event is fired. In the beginning we
+            made rookies mistakes of assuming that our code will work sequentially, which made debugging it much harder but soon
+            after we got accustomed to it.
+
+
+            <h4> Hardcore javascript</h4>
+            Later on we tackled much bigger issues of providing a reliable zoom effect and scroll effect. It's safe to say that
+            to create from scratch a reliable zoom functionality proved to be much harder than anticipated: we had to understand
+            how to emulate this effect, because the canvas element does not provide it, so we had to redraw the whole picture
+            based on the scroll of the mouse wheel. As a later improvement, the zoom effect was updated, to take into account
+            the position of the mouse in order to zoom in a specific area where the mouse was pointing.
+
+
+            <h4> Javascript + networking</h4>
+            Having a real time connection with the server meant that if we wanted to deliver a pleasant user experience
+            we had to improve performance, because at a point things were snail speed slow. The main reason was because
+            we were redrawing everything at 30fps -- which even on local machine was causing the gpu to spike. So we solved
+            this issue by adding caches: whenever anything changed, we would re-render that thing. Our inspiration came
+            from working with javascript, an event-based language. Soon after that, we were pleased with the results.
+
+
+        <h3>Server Side</h3>
         <p>
             For the server side we decided to use <i>cloud-computing</i> <a href="http://aws.amazon.com">solutions</a>,
             specifically <a href="https://aws.amazon.com/elasticbeanstalk/">Elastic Beanstalk</a> for the Web server, and
@@ -221,26 +246,31 @@
                 Also, when trying to implement new features we usually created a new branch for further research and not to
                 stop the development the project.
             </p>
-        </p>
-        <p>
+        </div>
 
 
         <h3>Task distribution</h3>
+
+        <p>
+            The following list is an overview one. Both of us provided each other feedback and solutions,
+            or actually worked on the others part in order to create a better application. We believe that
+            a good product comes from great team-work and hard-work and we hope we delivered!
+        </p>
         <ul>
-        <li> Cristian Huma
+        <li> Cristian Huma - mostly client-side
             <ul>
                 <li>Frontend HTML5+CSS</li>
-                <li>Backend Javascript + Php</li>
+                <li>Backend Javascript</li>
                 <li>Documentation and demo</li>
             </ul>
         </li>
         </ul>
 
         <ul>
-        <li> Corodescu Alin Andrei
+        <li> Corodescu Alin Andrei - mostly backend-side + android
             <ul>
                 <li>Frontend HTML5+CSS</li>
-                <li>Backend Javascript + Php</li>
+                <li>Backend Javascript + Python + Deployment</li>
                 <li>Integration Android</li>
                 <li>Documentation and demo</li>
             </ul>
@@ -252,6 +282,10 @@
         <ul>
             <li><a href="https://material.io/icons/">https://material.io/icons/</a></li>
             <li><a href="http://cheatsheetworld.com/programming/html5-canvas-cheat-sheet/">Canvas cheat sheet</a></li>
+            <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial">
+                https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial
+            </a></li>
+            <li><a href="https://www.w3schools.com/html/html5_canvas.asp/">https://www.w3schools.com/html/html5_canvas.asp</a></li>
         </ul>
 
     </section>
