@@ -1,160 +1,220 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>APix</title>
-  <link rel="stylesheet" href="scholarly.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>APix</title>
+    <link rel="stylesheet" href="scholarly.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 <body prefix="schema: http://schema.org/ xsd: http://www.w3.org/2001/XMLSchema# sa: https://ns.science.ai/">
-  <header>
+<header>
     <p class="title">APix</p>
     <p class="subtitle">Documentation & Overview</p>
-  </header>
-  <article id="what" typeof="schema:ScholarlyArticle" resource="#">
+</header>
+<article id="what" typeof="schema:ScholarlyArticle" resource="#">
     <h1>Documentation APix</h1>
     <section>
-      <ol>
-        <li property="schema:author" typeof="sa:ContributorRole">
-          <a property="schema:author" typeof="schema:Person">
-            <span property="schema:givenName">Corodescu</span>
-            <span property="schema:familyName">Alin Andrei, </span>
-          </a>
-          <a property="schema:author" typeof="schema:Person">
-            <span property="schema:givenName">Humă</span>
-            <span property="schema:familyName">Cristian </span>
-          </a>
+        <ol>
+            <li property="schema:author" typeof="sa:ContributorRole">
+                <a property="schema:author" typeof="schema:Person">
+                    <span property="schema:givenName">Corodescu</span>
+                    <span property="schema:familyName">Alin Andrei, </span>
+                </a>
+                <a property="schema:author" typeof="schema:Person">
+                    <span property="schema:givenName">Humă</span>
+                    <span property="schema:familyName">Cristian </span>
+                </a>
 
-        </li>
-      </ol>
+            </li>
+        </ol>
     </section>
     <section typeof="sa:Abstract" id="abstract">
-      <h2>Abstract</h2>
-      <p>
-      	Apix is a web application that highlights teamwork and mobility in a small simple package, to enable users to draw collaboratively on a single canvas. Its working enviroment is a web browser (desktop and mobile) and also enables a user to use his/her phone as a pointer for drawing on the canvas. Aditional functionalities regard import and export capabilities in different image formats.
+        <h2>Abstract</h2>
+        <p>
+            APix is a web application that highlights teamwork and mobility in a small simple package,
+            to enable users to draw collaboratively on a single canvas. Its working enviroment is a web browser
+            (desktop and mobile orientated) but also offers its users to use their phone as a pointer for drawing on the
+            canvas
+            via an android application.
     </section>
     <section typeof="sa:MaterialsAndMethods" id="motivation">
-      <h2>Motivation</h2>
-      <p>
-      	Similar applications, even though have a lot of drawing capabilities, they do not offer support for alternative pointing devices, like the phone inside your pocket!
+        <h2>Motivation</h2>
+        <p>
+            Similar applications, even though have a lot of drawing capabilities,
+            do not offer support for alternative pointing devices, like the phone inside your pocket!
     </section>
 
     <section typeof="sa:Results" id="definition">
-      <h2>Application summary</h2>
-      <p>
-      	First, APix is a web based application where people can draw together on a web browser, on desktop or mobile, having multiple functionalities: to export their work as a GIF, PNG and SVG; to import a background image for the canvas from their device.
-      	An unique point of view is that APix also offers support for android devices to be used as pointers for the drawing canvas, using only their motion to draw.
-      </p>
+        <h2>Application summary</h2>
+        <h4>Web</h4>
+        <p>
+            APix is a web based application where people can draw together on a web browser, on desktop or mobile,
+            which offers multiple functionalities:
+        <ul>
+            <li>customizable canvas dimensions</li>
+            <li>import a background image from any device</li>
+            <li>basic drawing tools: brush thickness, color, eraser</li>
+            <li>zooming and scrolling inside canvas</li>
+            <li>export drawing in PNG/JPEG format</li>
+            <li>collaborative work via shareable link</li>
+        </ul>
+        </p>
 
-      <p>
-      	Being a web application means that we used HTML5, CSS3 and Javascript for the frontend.
-      </p>
-      <p>
-      	On a android side we developed a simple application using a "hybrid" approach, meaning that we create the user interface using HTML5, CSS3 and Javascript, which are interpreted inside an <i>WebView</i> component of the Android OS. This application will allow the user to connect to a session by scanning a QR code generated by APIx. Besides, it will provide handy controls such as color choosing, uploading a photo directly from the android device and brush thickness.
-      </p>
+        <p>
+            Being a web application means that we used HTML5, CSS3 and Javascript for the frontend.
+        </p>
+        <h4>Android - TO EDIT</h4>
+        <p>
+            On a android side we developed a simple application using a "hybrid" approach,
+            meaning that we create the user interface using HTML5, CSS3 and Javascript,
+            which are interpreted inside an <i>WebView</i> component of the Android OS.
+            This application will allow the user to connect to a session by scanning a QR code generated by APIx.
+            Besides, it will provide handy controls such as color choosing,
+            uploading a photo directly from the android device and brush thickness.
+        </p>
     </section>
 
 
+    <section id="">
+        <h2>Application arhitecture - TO EDIT</h2>
+        <br>
+        <img src=".\images\arhitectura.png" alt="Diagrama arhitecturală"/>
+        <p class="imagetext">Fig. 1 - Application arhitecture diagram</p>
 
-    <section id="file-headers">
-      <h2>Application arhitecture</h2>
-      <br>
-	      <img src=".\images\arhitectura.png" alt="Diagrama arhitecturală"/>
-	      <p class="imagetext">Fig. 1 - Application arhitecture diagram</p>
+        <h2> The workflow of the application</h2>
+        <p>
+        <p>
+            Upon entering on the website the user will be prompted with a dialog to set up the canvas suited for his
+            needs:
+            <ul>
+                <li>width and height of the canvas</li>
+                <li><i class="material-icons">image</i> - button to upload an image background</li>
+            </ul>
+            <img src="./images/Fig2.PNG" alt="Initial settings dialog for the user to enter in order to continue"/>
+            <p class="imagetext">Fig. 2 - Initial settings dialog</p>
+        </p>
+        <p>
+            <p>
+                Before preceding to the next step, the user may be prompted with another dialog,
+                in case the connection with the server could not be established.<br>
+                <img src="images/Fig3.PNG" alt=" Network error dialog image"/>
+                <p class="imagetext">Fig. 3 - Network error dialog</p>
+            </p>
+        <p>
+            After submitting the initial settings he will be prompted to the actual working space: the canvas with the
+            desired dimensions
+            where he will observe various functionalities right next to the actual canvas:
+            <ul>
+            <li><i class="material-icons icon">content_cut</i> - eraser</li>
+            <li><i class="material-icons icon">palette</i> - changing color input</li>
+            <li><i class="material-icons icon">line_weight</i> - change brush thickness</li>
+            <li><i class="material-icons icon">zoom_in</i> - enable zoom and scrolling inside canvas</li>
+            </ul>
+        <img src="images/Fig4.PNG" alt="Main page - the actual working space"/>
+        <p class="imagetext">Fig. 4 - Actual working space</p>
+        </p>
+        <p>
+            After the user got accustomed to drawing on the canvas and using all provided features,
+            he has several options left. The options are revealed by pressing the <i class="material-icons">menu</i> icon
+            in the top-left corner of the page and they consist of:
+            <ul>
+                <li><i class="material-icons icon">file_download</i>PNG - to export drawing in PNG format</li>
+                <li><i class="material-icons icon">file_download</i>JPEG - to export drawing in JPEG format</li>
+                <li><i class="material-icons icon">group_add</i> - to generate a shareable link to be sent to another drawing partner</li>
+                <li><i class="material-icons icon">delete</i> - to clear the canvas of all drawings</li>
+            </ul>
 
-      <h3> The workflow of the application</h3>
-      <p>
-      	For a new visitor things are pretty simple: as soon as you enter you can begin drawing and using all functionalities.
-      	Regarding the drawing part, the user can draw freely using multiple colors and brush thicknesses and export their creation afterwards.
-      	Adding a new member is a click away: pressing the  "Doodle with friends!" button, the user will get a shareable link for the current session, with which a newcomer can join!
-      </p>
-      	This list is a working progress and it grow over time, as the project does.
-      	<ul>
-      		<li><i class="material-icons icon">&#xE2C4;</i> - exporting the canvas as a SVG/PNG/GIF</li>
-      		<li><i class="material-icons icon ">&#xE7F0;</i> - generating a shareable link to invite a friend to join</li>
-      		<li><i class="material-icons icon ">&#xE872;</i> - discard curent work</li>
-      		<li><i class="material-icons icon icon-background">&#xE251;</i> - import an image canvas background</li>
-          <li><i class="material-icons icon icon-android">&#xE859;</i> - indicate starting position for android pointer</li>
-          <li><i class="material-icons icon">&#xE5D4;</i> - more functionalities</li>
-          <li><input name="Color picker" type="color" class="color-picker"/>
-            <button class="circle-button"></button> - HTML5 element, to change the current drawing colour</li>
-      	</ul>
-      <h3> Android companion </h3>
-      The android companion is a simple-to-use app providing basic functionalities, enabling the device to be used as a pointer for APIx. The application starts with a screen with a single button, which, when pressed, will open the camera (using HTML5 <i>input</i> tag) in order to scan the QR code generated by a session of the web application. If the QR code is valid, the application will then display the main page, which contains buttons for turning the pointer on and off, changing the color with which we are drawing, changing the brush thickness and taking and uploading a photo from the device to be used as canvas background. While initially we will offer support only for portrait orientation, later on we might introduce the ability to use the device as an eraser for the drawings when in landscape orientation.
+        <img src="images/Fig5.PNG" alt="Side menu for different features"/>
+        <p class="imagetext">Fig. 5 - Side menu for different features</p>
+        </p>
+        <h3> Android companion - TO EDIT</h3>
+        The android companion is a simple-to-use app providing basic functionalities, enabling the device to be used as
+        a pointer for APIx. The application starts with a screen with a single button, which, when pressed, will open
+        the camera (using HTML5 <i>input</i> tag) in order to scan the QR code generated by a session of the web
+        application. If the QR code is valid, the application will then display the main page, which contains buttons
+        for turning the pointer on and off, changing the color with which we are drawing, changing the brush thickness
+        and taking and uploading a photo from the device to be used as canvas background. While initially we will offer
+        support only for portrait orientation, later on we might introduce the ability to use the device as an eraser
+        for the drawings when in landscape orientation.
     </section>
     <div>
-      <div class="android-page1">
-      <img src=".\images\android-homepage2.jpg" alt="Home page Page"/>
-        <p class="imagetext">Fig. 1 - Android Landing Page </p>
-      </div>
-    <div class="android-page2">
-     <img src=".\images\android-homepage.jpg" alt="Home page Page"/>
-      <p class="imagetext">Fig. 2 - Android Mainpage </p>
+        <div class="android-page1">
+            <img src=".\images\android-homepage2.jpg" alt="Home page Page"/>
+            <p class="imagetext">Fig. 6 - Android Landing Page </p>
+        </div>
+        <div class="android-page2">
+            <img src=".\images\android-homepage.jpg" alt="Home page Page"/>
+            <p class="imagetext">Fig. 7 - Android Mainpage </p>
+        </div>
     </div>
-    </div>  
 
     <section id="file-headers">
 
         <h2>Technologies</h2>
         <p>
-	   		To create APix we will use <i>HTML5</i>, <i>CSS3</i> and <i>JavaScript</i> for the frontend part but also some Material Design icons and suggestions for a pleasant UI.
-
-	   		We will decide later upon the technology to be used for the backend to better fit our needs.
-
-	   		For the development process we will use <i>GitHub</i> to track down progress and fix bugs that may appear in later versions. For new features we will create new branches which, after finishing the implementation, will be added to the master branch.
+            <h4>Client Side</h4>
+        <p>
+            To create APix we have used <i>HTML5</i>, <i>CSS3</i> and <i>JavaScript</i> for the frontend part but also
+            some Material Design icons and suggestions for a pleasant UI. The project has been created without any external libraries
+            for javascript and for that reason, HTML5 features & pure javascript to obtain different desired effects.
+        </p>
+            <h4>Server Side - TO EDIT </h4>
+        <p>
+            We will decide later upon the technology to be used for the backend to better fit our needs.
+        </p>
+            <h4>Development method</h4>
+            <p>
+                For the development process we used <i>GitHub</i> to track down progress and fix bugs that appeared at some point.
+                For new features we will create new branches which, after finishing the implementation, will
+                be added to the master branch.
+                Also, when trying to implement new features we usually created a new branch for further research and not to
+                stop the development the project.
+            </p>
         </p>
         <p>
 
-        	<h3>Front-end</h3>
-
-        	<h4>Main Page</h4>
-        <p>
-          The main page is simple and wants to offer simple and fast usage for all devices.
-        </p>
-        <img src=".\images\homepage.png" alt="Home page Page"/>
-        <p class="imagetext">Fig. 3 - Homepage </p>
-        <img src=".\images\homepage2.png" alt="Home page Page"/>
-        <p class="imagetext">Fig. 4 - Homepage - opened menu</p>
-        <br><br>
-
-
-          <h2>Stages of the project</h2>
-          <ul>
+        <h2>Stages of the project</h2>
+        <ul>
             <li><b>Week 5:</b> Choosing project and documentation.</li>
             <li><b>Week 6,7:</b> Designing the frontend and implementing it.</li>
             <li><b>Week 8:</b> Finish frontend.</li>
             <li><b>Week 12,13,14:</b> Establish backend and implement it.</li>
-          </ul>
+        </ul>
 
-         <h3>Task distribution</h3>
-          <ul>
+        <h3>Task distribution</h3>
+        <ul>
 
-            </ul> </li>
-            <li> Cristian Huma  <ul>
-              <li>Frontend HTML5+CSS</li>
-              <li>Backend Javascript + Php</li>
-              <li>Documentation and demo</li>
-            </ul> </li>
+        </ul>
+        </li>
+        <li> Cristian Huma
+            <ul>
+                <li>Frontend HTML5+CSS</li>
+                <li>Backend Javascript + Php</li>
+                <li>Documentation and demo</li>
+            </ul>
+        </li>
 
-            </ul> </li>
-            <li> Corodescu Alin Andrei <ul>
-              <li>Frontend HTML5+CSS</li>
-              <li>Backend Javascript + Php</li>
-              <li>Integration Android</li>
-              <li>Documentation and demo</li>
-            </ul> </li>
+        </ul> </li>
+        <li> Corodescu Alin Andrei
+            <ul>
+                <li>Frontend HTML5+CSS</li>
+                <li>Backend Javascript + Php</li>
+                <li>Integration Android</li>
+                <li>Documentation and demo</li>
+            </ul>
+        </li>
 
-          </ul>
+        </ul>
 
 
-          <h2>Bibliography</h2>
-          <ul>
+        <h2>Bibliography</h2>
+        <ul>
             <li><a href="https://material.io/icons/">https://material.io/icons/</a></li>
-          </ul>
+        </ul>
 
-        </section>
+    </section>
 
-
-      </body>
-      </html>
+</article>
+</body>
+</html>
