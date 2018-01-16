@@ -47,16 +47,16 @@
             <div id="sidenav" class="sidenav">
                 <a href="javascript:void(0)" class="closeButton" onclick="closeNavigation()">&times;</a>
                 <a href="#" class="sidenavLink" onclick="exportCanvasPNG()"><i class="material-icons icon">file_download</i> PNG</a>
-                <a href="#" class="sidenavLink" id="shareable_link"><i class="material-icons icon icon-share">&#xE7F0;</i> Doodle with friends!</a>
-                <a href="#" class="sidenavLink"  onclick="clearCanvases()"><i class="material-icons icon icon-trash">&#xE872;</i> Delete</a>
-                <a><i class="material-icons">cast_connected</i> Generate QR code</a>
+                <a href="#" class="sidenavLink" onclick="exportCanvasJPEG()"><i class="material-icons icon">file_download</i> JPEG</a>
+                <a href="#" class="sidenavLink" id="shareable_link"><i class="material-icons icon icon-share">group_add</i> Doodle with friends!</a>
+                <a href="#" class="sidenavLink" id="delete_canvas"><i class="material-icons icon icon-trash">delete</i> Clear</a>
             </div>
 
             <!--Header-->
             <header class="header">
                 <div class="header-home">
                     <div>
-                        <button id="navButton" onclick="openNavigation()">&#9776;</button>
+                        <button id="navButton" onclick="openNavigation()"><i class="material-icons icon">menu</i></button>
                         APix: Doodling around with friends!
                     </div>
                 </div>
@@ -127,8 +127,8 @@
                     </div>
 
                     <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
-                        <i class="material-icons icon">more_vert</i>
-                        <span class="popuptext">More options!</span>
+                        <i class="material-icons icon" id="eraser">content_cut</i>
+                        <span class="popuptext">Eraser!</span>
                     </div>
 
                     <div class="popup" onmouseover="showPopupText(this)" onmouseout="hidePopupText(this)">
@@ -140,7 +140,7 @@
                         <i class="material-icons icon">line_weight </i>
                         <div class="popuptext" id="inputRangeContainer">
                             <span class="text-input-range">Change pencil thickness!</span>
-                            <input id="line_weight" type="range" min="0.2" value="2" max="10" step="0.2"/>
+                            <input id="line_weight" type="range" min="0.5" value="2" max="15" step="0.5"/>
                         </div>
 
                     </div>
