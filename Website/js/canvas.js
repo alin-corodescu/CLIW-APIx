@@ -85,18 +85,22 @@ var main = function () {
     //----------------------------------------------------------------------------------------------
 
 
-    function initAndConnect(clientId) {
+    function initAndConnect(clientId, existing_session) {
         document.getElementById("loader").style.display = "none";
-        modal_initial_settings.style.display ="block";
-        var submit_button = document.getElementById('submit_dimensions');
-        submit_button.onclick = function() {
-            var width = document.getElementById('custom_width').value;
-            var height = document.getElementById('custom_height').value;
-            setupCanvases(width,height);
-            if (usesImage)
-                drawImageOnBackground();
-            modal_initial_settings.style.display ="none";
+        if(existing_session)
             conn = establishConnection(BACKEND_URL, clientId, sessionId);
+        else {
+            modal_initial_settings.style.display = "block";
+            var submit_button = document.getElementById('submit_dimensions');
+            submit_button.onclick = function () {
+                var width = document.getElementById('custom_width').value;
+                var height = document.getElementById('custom_height').value;
+                setupCanvases(width, height);
+                if (usesImage)
+                    drawImageOnBackground();
+                modal_initial_settings.style.display = "none";
+                conn = establishConnection(BACKEND_URL, clientId, sessionId);
+            }
         }
     }
     function showPage() {
@@ -140,6 +144,7 @@ var main = function () {
     function getSessionId() {
         var sessionRequest = new XMLHttpRequest();
         var clientId = -1;
+        var existing_session = false;
         sessionId = -1;
         sessionRequest.onreadystatechange = function (ev) {
             if (this.readyState === 4) {
@@ -148,14 +153,14 @@ var main = function () {
                     var identityData = JSON.parse(this.responseText);
                     sessionId = identityData.sessionId;
                     clientId = identityData.clientId;
-
-                    initAndConnect(clientId);
+                    existing_session = identityData.existingSession;
+                    initAndConnect(clientId,existing_session);
                     // conn = establishConnection(BACKEND_URL, clientId, sessionId)
 
                 }
                 else {
                     // Running locally or got an error
-                    initAndConnect(clientId, sessionId);
+                    initAndConnect(clientId,existing_session);
                     // conn = establishConnection(BACKEND_URL, clientId, sessionId);
                 }
 
