@@ -63,7 +63,7 @@ var lastUpdateTime = 0;
 var epsilon = 1e-6;
 var currXAccel = 0, prevXAccel = 0, currYAccel = 0, prevYAccel = 0;
 var meterToPixelFactor = 1e2;
-var velocityDampeningFactor = 0.8;
+var velocityDampeningFactor = 0.95;
 function connectToServer(id) {
     if (!conn) {
         var connectionString = BACKEND_URL + "?c=" + id;
@@ -79,8 +79,8 @@ function connectToServer(id) {
 //                    alert("now:" + now);
 
                     var deltaT = (now - t0) / 1000;
-                    if (deltaT > 100) {
-                        deltaT = 100;
+                    if (deltaT > 20) {
+                        deltaT = 20;
                       }
 //                    alert("delta T " + deltaT);
                     prevXAccel = currXAccel;
@@ -145,8 +145,8 @@ function connectToServer(id) {
                                 dx: (dx / (dx + dy)) / meterToPixelFactor,
                                 dy: (dy / (dx + dy)) / meterToPixelFactor
                             };
-//                            t0 = undefined;
-                            dy = dx = 0;
+//                            t0 = undefined
+                            ax0 = ay0 = vx0 = vy0 = dy = dx = 0;
                             conn.send(JSON.stringify(update));
                          }
                     }
