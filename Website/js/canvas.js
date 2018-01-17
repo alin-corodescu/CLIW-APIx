@@ -85,6 +85,10 @@ var main = function () {
     //----------------------------------------------------------------------------------------------
 
 
+    function delete_cookie () {
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+
     function initAndConnect(clientId, existing_session) {
         document.getElementById("loader").style.display = "none";
         if (existing_session)
@@ -157,6 +161,9 @@ var main = function () {
                     sessionId = identityData.sessionId;
                     clientId = identityData.clientId;
                     existing_session = identityData.existingSession;
+                    delete_cookie('sessionId');
+                    delete_cookie('clientId');
+                    delete_cookie('existingSession');
                     initAndConnect(clientId, existing_session);
                     // conn = establishConnection(BACKEND_URL, clientId, sessionId)
 
