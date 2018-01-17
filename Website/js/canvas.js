@@ -1,5 +1,5 @@
 const BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/";
-const SITE_URL ="http://apix.eu-central-1.elasticbeanstalk.com/";
+const SITE_URL = "http://apix.eu-central-1.elasticbeanstalk.com/";
 
 var modes = {
     PAINT: 1,
@@ -87,7 +87,7 @@ var main = function () {
 
     function initAndConnect(clientId, existing_session) {
         document.getElementById("loader").style.display = "none";
-        if(existing_session)
+        if (existing_session)
             conn = establishConnection(BACKEND_URL, clientId, sessionId);
         else {
             modal_initial_settings.style.display = "block";
@@ -103,13 +103,16 @@ var main = function () {
             }
         }
     }
+
     function showPage() {
         document.getElementById("after-load").style.display = "block";
     }
-    function displayNetworkError(){
+
+    function displayNetworkError() {
         document.getElementById('modal_connection').style.display = "block";
-        setTimeout(function(){
-            document.getElementById('modal_connection').style.display = "none"; }, 3000);
+        setTimeout(function () {
+            document.getElementById('modal_connection').style.display = "none";
+        }, 3000);
     }
 
     // This function connects to the backend via WebSockets for synchronization
@@ -130,8 +133,8 @@ var main = function () {
         };
         //used to display error message in case the server has not yet respond
         //We wait 3 seconds before deciding that the server did not respond
-        setTimeout(function(){
-            if(connection.readyState === 0) {
+        setTimeout(function () {
+            if (connection.readyState === 0) {
                 connection.close();
                 displayNetworkError();
                 showPage();
@@ -154,13 +157,13 @@ var main = function () {
                     sessionId = identityData.sessionId;
                     clientId = identityData.clientId;
                     existing_session = identityData.existingSession;
-                    initAndConnect(clientId,existing_session);
+                    initAndConnect(clientId, existing_session);
                     // conn = establishConnection(BACKEND_URL, clientId, sessionId)
 
                 }
                 else {
                     // Running locally or got an error
-                    initAndConnect(clientId,existing_session);
+                    initAndConnect(clientId, existing_session);
                     // conn = establishConnection(BACKEND_URL, clientId, sessionId);
                 }
 
@@ -172,6 +175,7 @@ var main = function () {
 
     var androidX = 100;
     var androidY = 100;
+
     function handleUpdate(data) {
 
         const meterToPixel = 1000;
@@ -214,6 +218,10 @@ var main = function () {
                     points.xTo = visor.width;
                 if (points.yTo > visor.height)
                     points.yTo = visor.height;
+                if (points.xTo < 0)
+                    points.xTo = 0;
+                if (points.yTo < 0)
+                    points.yTo = 0;
 
                 androidX = points.xTo;
                 androidY = points.yTo;
@@ -240,11 +248,12 @@ var main = function () {
         }
     }
 
-    function sendBackgroundToServer(){
-         var background_data =
-        {   "target" : "background",
-            "dataUrl" : background_canvas.toDataURL()
-        };
+    function sendBackgroundToServer() {
+        var background_data =
+            {
+                "target": "background",
+                "dataUrl": background_canvas.toDataURL()
+            };
         conn.send(JSON.stringify(background_data));
     }
 
@@ -295,15 +304,17 @@ var main = function () {
         context.closePath();
     }
 
-    function drawBegun(event){
+    function drawBegun(event) {
         mouse_active = true;
         [mouse_data.xFrom, mouse_data.yFrom] = computeActualMousePosition(event);
     }
-    function drawProgress(event){
+
+    function drawProgress(event) {
         if (mouse_active)
             handleNewMouseCoords(event);
     }
-    function drawFinished(){
+
+    function drawFinished() {
         mouse_active = false;
     }
 
@@ -348,18 +359,24 @@ var main = function () {
 
 
     // Desktop version
-    visor.addEventListener('mousedown',drawBegun);
-    visor.addEventListener('mousemove',drawProgress);
-    visor.addEventListener('mouseup',drawFinished);
-    visor.addEventListener('mouseout',drawFinished);
+    visor.addEventListener('mousedown', drawBegun);
+    visor.addEventListener('mousemove', drawProgress);
+    visor.addEventListener('mouseup', drawFinished);
+    visor.addEventListener('mouseout', drawFinished);
 
 
     // Mobile version
 
     // prevent default behavior when on canvas
-    visor.addEventListener('touchstart', function(e) {e.preventDefault()}, false);
-    visor.addEventListener('touchmove', function(e) {e.preventDefault()}, false);
-    visor.addEventListener('touchend', function(e) {e.preventDefault()}, false);
+    visor.addEventListener('touchstart', function (e) {
+        e.preventDefault()
+    }, false);
+    visor.addEventListener('touchmove', function (e) {
+        e.preventDefault()
+    }, false);
+    visor.addEventListener('touchend', function (e) {
+        e.preventDefault()
+    }, false);
 
     //  interpretation of each touch events for DRAWING
     visor.addEventListener("touchstart", function (event) {
@@ -382,7 +399,6 @@ var main = function () {
         var mouseEvent = new MouseEvent("mouseup", {});
         visor.dispatchEvent(mouseEvent);
     }, false);
-
 
 
     // BEGIN: Handling zoom functionality
@@ -476,10 +492,10 @@ var main = function () {
     };
 
     var eraserMode = false;
-    eraser.onclick = function(){
+    eraser.onclick = function () {
         eraser.classList.toggle("icon-hover");
         eraserMode = !eraserMode;
-        if(eraserMode) {
+        if (eraserMode) {
             drawable_canvas_ctx.globalCompositeOperation = "destination-out";
             current_style.thickness = "12";
         }
@@ -489,8 +505,8 @@ var main = function () {
         }
     };
 
-    shareable_link.onclick = function(){
-        if(sessionId !== -1) {
+    shareable_link.onclick = function () {
+        if (sessionId !== -1) {
             document.getElementById('generated_shareable_link').innerText = SITE_URL + '?sessionId=' + sessionId;
             document.getElementById('modal_shareable_link').style.display = "block";
         }
@@ -498,7 +514,7 @@ var main = function () {
             document.getElementById('modal_connection').style.display = "block";
     };
 
-    refresh_page.onclick = function(){
+    refresh_page.onclick = function () {
         window.location.replace(SITE_URL);
     };
 
@@ -514,7 +530,6 @@ var main = function () {
     // }
 
 
-
     //BEGIN: Creating a transfer canvases in order not to mess up the data
     //----------------------------------------------------------------------------------------------
 
@@ -527,13 +542,14 @@ var main = function () {
     //BEGIN: Update canvases
     //----------------------------------------------------------------------------------------------
 
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         visor.width = parseInt(window.getComputedStyle(visor).width);
         visor.height = parseInt(window.getComputedStyle(visor).height);
         background_cache_invalid = true;
         drawable_cache_invalid = true;
 
     }, true);
+
     function setupCanvases(width, height) {
         background_canvas.style.width = width + 'px';
         background_canvas.style.height = height + 'px';
@@ -550,7 +566,7 @@ var main = function () {
 
         // TODO make this configurable
         background_canvas_ctx.fillStyle = 'white';
-        background_canvas_ctx.fillRect(0,0, background_canvas.width, background_canvas.height);
+        background_canvas_ctx.fillRect(0, 0, background_canvas.width, background_canvas.height);
 
         // Center the image
         // This is minus because of the invertion of offsets since we are talking relative to the drawable canvas
@@ -560,12 +576,13 @@ var main = function () {
         background_cache_invalid = true;
     }
 
-    function drawImageOnBackground(){
-        background_canvas_ctx.clearRect(0,0, background_canvas.width, background_canvas.height);
+    function drawImageOnBackground() {
+        background_canvas_ctx.clearRect(0, 0, background_canvas.width, background_canvas.height);
         background_canvas_ctx.drawImage(image_background_object, 0, 0, image_background_object.width, image_background_object.height
-            ,0,0,background_canvas.width, background_canvas.height);
+            , 0, 0, background_canvas.width, background_canvas.height);
         background_cache_invalid = true;
     }
+
     upload_image.onchange = function (event) {
         var image_file = event.target.files[0];
         var image_type = /image.*/;
@@ -587,6 +604,7 @@ var main = function () {
             reader.readAsDataURL(image_file);
         }
     };
+
     function renderVisor() {
         // We could make those very big (visor.widht / visor_state.MIN_ZOOM) from the start
         // so we don't have to adjust on the fly (maybe this is a performance issue)
