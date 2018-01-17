@@ -49,9 +49,6 @@ def get_session():
     r[session_id_param_name] = session[session_id_param_name]
     r[cliend_id_param_name] = session[cliend_id_param_name]
     r[existing_session_param_name] = session[existing_session_param_name]
-    session.pop(session_id_param_name, None)
-    session.pop(cliend_id_param_name, None)
-    session.pop(existing_session_param_name, None)
     response = flask.Response(response = json.dumps(r), status = 200, mimetype='text/plain')
     return response
 
