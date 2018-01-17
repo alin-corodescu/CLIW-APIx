@@ -86,7 +86,7 @@ var main = function () {
 
 
     function delete_cookie () {
-        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     }
 
     function initAndConnect(clientId, existing_session) {
@@ -161,9 +161,7 @@ var main = function () {
                     sessionId = identityData.sessionId;
                     clientId = identityData.clientId;
                     existing_session = identityData.existingSession;
-                    delete_cookie('sessionId');
-                    delete_cookie('clientId');
-                    delete_cookie('existingSession');
+                    delete_cookie('session');
                     initAndConnect(clientId, existing_session);
                     // conn = establishConnection(BACKEND_URL, clientId, sessionId)
 
