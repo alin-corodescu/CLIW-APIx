@@ -51,14 +51,19 @@ function updateColorPickerButton() {
 var BACKEND_URL = "ws://ec2-18-194-162-230.eu-central-1.compute.amazonaws.com:5000/";
 // value below which the velocity is considered to be 0
 var VELOCITY_NOISE_THRESHOLD = 0;
+// value below which the distance is not considered
 var DISTANCE_NOISE_THRESHOLD = 0.01;
-var ACCELERATION_NOISE_THRESHOLD = 1;
+// var ACCELERATION_NOISE_THRESHOLD = 1;
 var t0;
 var vx0 = 0, vy0 = 0;
 var ax0 = 0, ay0 = 0;
 var dx = 0, dy = 0;
 var conn;
 var lastUpdateTime = 0;
+var epsilon = 1e-6;
+var currXAccel = 0, prevXAccel = 0, currYAccel = 0, prevYAccel = 0;
+var meterToPixelFactor = 1e2;
+var velocityDampeningFactor = 0.8;
 function connectToServer(id) {
     if (!conn) {
         var connectionString = BACKEND_URL + "?c=" + id;
@@ -78,15 +83,25 @@ function connectToServer(id) {
                         deltaT = 100;
                       }
 //                    alert("delta T " + deltaT);
+                    prevXAccel = currXAccel;
+                    currXAccel = Math.abs(event.acceleration.x);
+
+                    prevYAccel = currYAccel;
+                    currYAccel = Math.abs(event.acceleration.z);
+
+                    currXAccel = currXAccel / (currXAccel + currYAccel + epsilon);
+                    currYAccel = currYAccel / (currXAccel + currYAccel + epsilon);
+
+                    // Inversion of axis
+                    if (event.acceleration.z > 0)
+                        currYAccel = -currYAccel;
+                    if (event.acceleration.x < 0)
+                        currXAccel = -currXAccel;
+
 
                     // Acceleration on x we consider
-                    var xAccel = 0;
-                    if (event.acceleration.x > ACCELERATION_NOISE_THRESHOLD || event.acceleration.x < -ACCELERATION_NOISE_THRESHOLD) {
-                        xAccel = event.acceleration.x;
-                    }
-                    else {
-                        vx0 *= 0.9;
-                    }
+                    var xAccel = currXAccel;
+
                     var axPrime = (xAccel + ax0) / 2;
 //                    alert("acceleration" + event.acceleration.x);
 //                    alert("prev accel" + ax0);
@@ -101,13 +116,7 @@ function connectToServer(id) {
 //                    alert(dx);
 
 
-                    var yAccel = 0;
-                    if (event.acceleration.z > ACCELERATION_NOISE_THRESHOLD || event.acceleration.z < -ACCELERATION_NOISE_THRESHOLD) {
-                        yAccel = event.acceleration.z;
-                    }
-                    else {
-                        vy0 *= 0.9;
-                    }
+                    var yAccel = currYAccel;
                     // Acceleration on y we consider
                     var ayPrime = (yAccel + ay0) / 2;
 
@@ -121,8 +130,8 @@ function connectToServer(id) {
                     t0 = now;
                     ax0 = xAccel;
                     ay0 = yAccel;
-                    vx0 = vx1;
-                    vy0 = vy1;
+                    vx0 = vx1 * velocityDampeningFactor;
+                    vy0 = vy1 * velocityDampeningFactor;
 
                     // Send updates once every 0.05s
                     if (now - lastUpdateTime > 50) {
@@ -130,10 +139,11 @@ function connectToServer(id) {
                          if (dx < -DISTANCE_NOISE_THRESHOLD || dx > DISTANCE_NOISE_THRESHOLD ||
                              dy < -DISTANCE_NOISE_THRESHOLD || dy > DISTANCE_NOISE_THRESHOLD) {
                             lastUpdateTime = now;
+                            // Normalize the distances
                             var update = {
                                 android: 'true',
-                                dx: dx,
-                                dy: dy
+                                dx: (dx / (dx + dy)) / meterToPixelFactor,
+                                dy: (dy / (dx + dy)) / meterToPixelFactor
                             };
 //                            t0 = undefined;
                             dy = dx = 0;
