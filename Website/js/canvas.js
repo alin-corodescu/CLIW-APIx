@@ -161,9 +161,7 @@ var main = function () {
                     sessionId = identityData.sessionId;
                     clientId = identityData.clientId;
                     existing_session = identityData.existingSession;
-                    delete_cookie('sessionId');
-                    delete_cookie('clientId');
-                    delete_cookie('existingSession');
+                    delete_cookie('session');
                     initAndConnect(clientId, existing_session);
                     // conn = establishConnection(BACKEND_URL, clientId, sessionId)
 
